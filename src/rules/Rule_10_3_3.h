@@ -10,6 +10,7 @@
 
 #include "misracpp2008.h"
 #include "clang/AST/RecursiveASTVisitor.h"
+#include "clang/Basic/Diagnostic.h"
 
 namespace clang {
 class ASTContext;
@@ -18,10 +19,11 @@ class Decl;
 
 namespace misracpp2008 {
 
-class Rule_10_3_3 : public RuleChecker,
+class Rule_10_3_3 : public RuleCheckerASTContext,
                     public clang::RecursiveASTVisitor<Rule_10_3_3> {
 public:
-  explicit Rule_10_3_3(clang::ASTContext &context);
+  explicit Rule_10_3_3(clang::ASTContext &context,
+                       clang::DiagnosticsEngine::Level diagLevel);
   bool VisitCXXMethodDecl(clang::CXXMethodDecl *decl);
   virtual ~Rule_10_3_3();
 

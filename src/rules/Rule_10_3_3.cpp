@@ -8,6 +8,7 @@
 #include "misracpp2008.h"
 #include "Rule_10_3_3.h"
 #include "clang/AST/ASTContext.h"
+#include "clang/Basic/Diagnostic.h"
 
 using namespace clang;
 
@@ -15,7 +16,9 @@ namespace misracpp2008 {
 
 const static std::string ruleName = "10-3-3";
 
-Rule_10_3_3::Rule_10_3_3(clang::ASTContext &context) : RuleChecker(context) {}
+Rule_10_3_3::Rule_10_3_3(clang::ASTContext &context,
+                         clang::DiagnosticsEngine::Level diagLevel)
+    : RuleCheckerASTContext(context, diagLevel) {}
 
 bool Rule_10_3_3::VisitCXXMethodDecl(clang::CXXMethodDecl *decl) {
   if (decl->isPure()) {

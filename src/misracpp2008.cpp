@@ -27,9 +27,9 @@ using namespace llvm;
 
 namespace misracpp2008 {
 
-Consumer::RegCheckersMap &Consumer::getRegisteredCheckers() {
-  static RegCheckersMap registeredChecks;
-  return registeredChecks;
+Consumer::RegCheckersMap &Consumer::getRegisteredASTCheckers() {
+  static RegCheckersMap registeredAstCheckers;
+  return registeredAstCheckers;
 }
 
 std::set<std::string> &Consumer::getEnabledCheckers() {
@@ -37,17 +37,17 @@ std::set<std::string> &Consumer::getEnabledCheckers() {
   return enabledCheckers;
 }
 
-void
-Consumer::registerChecker(const std::string &name,
-                          std::shared_ptr<RuleCheckerFactoryBase> factory) {
-  auto &registeredCheckers = getRegisteredCheckers();
-  assert(registeredCheckers.count(name) == 0 &&
-         "Registering multiple checkers for the same rule is not supported.");
+void Consumer::registerCheckerASTContext(
+    const std::string &name, std::shared_ptr<RuleCheckerFactoryBase> factory) {
+  auto &registeredCheckers = getRegisteredASTCheckers();
+  assert(
+      registeredCheckers.count(name) == 0 &&
+      "Registering multiple AST checkers for the same rule is not supported.");
   registeredCheckers[name] = factory;
 }
 
 bool Consumer::enableChecker(const std::string &name) {
-  if (getRegisteredCheckers().count(name) == 0) {
+  if (getRegisteredASTCheckers().count(name) == 0) {
     return false;
   }
   if (getEnabledCheckers().count(name) != 0) {
@@ -59,7 +59,7 @@ bool Consumer::enableChecker(const std::string &name) {
 
 void Consumer::dumpRegisteredCheckers(raw_ostream &OS) {
   OS << "Registered checks: ";
-  for (const auto &checker : getRegisteredCheckers()) {
+  for (const auto &checker : getRegisteredASTCheckers()) {
     OS << checker.first << ",";
   }
   OS << "\n";
@@ -79,8 +79,8 @@ void Consumer::HandleTranslationUnit(ASTContext &ctx) {
   Consumer::dumpRegisteredCheckers(llvm::outs());
   Consumer::dumpRequestedCheckers(llvm::outs());
   for (const std::string &checkerName : getEnabledCheckers()) {
-    auto checkerFactory = getRegisteredCheckers().at(checkerName);
-    auto checker = checkerFactory->create(ctx);
+    auto checkerFactory = getRegisteredASTCheckers().at(checkerName);
+    auto checker = checkerFactory->create(ctx, clang::DiagnosticsEngine::Error);
     checker->doWork();
   }
 }
@@ -119,7 +119,9 @@ void Action::PrintHelp(llvm::raw_ostream &ros) {
 static FrontendPluginRegistry::Add<Action> X("misra.cpp.2008",
                                              "MISRA C++ 2008");
 
-RuleChecker::RuleChecker(ASTContext &context) : context(context) {}
+RuleCheckerASTContext::RuleCheckerASTContext(ASTContext &context,
+                                             DiagnosticsEngine::Level diagLevel)
+    : context(context), diagLevel(diagLevel) {}
 
-RuleChecker::~RuleChecker() {}
+RuleCheckerASTContext::~RuleCheckerASTContext() {}
 }

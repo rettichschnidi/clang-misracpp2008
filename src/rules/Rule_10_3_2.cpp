@@ -15,7 +15,9 @@ namespace misracpp2008 {
 
 const static std::string ruleName = "10-3-2";
 
-Rule_10_3_2::Rule_10_3_2(clang::ASTContext &context) : RuleChecker(context) {}
+Rule_10_3_2::Rule_10_3_2(clang::ASTContext &context,
+                         clang::DiagnosticsEngine::Level diagLevel)
+    : RuleCheckerASTContext(context, diagLevel) {}
 
 bool Rule_10_3_2::VisitCXXRecordDecl(clang::CXXRecordDecl *decl) {
   CXXRecordDecl::method_iterator B = decl->method_begin();

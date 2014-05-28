@@ -15,6 +15,7 @@
 #include "clang/AST/ASTConsumer.h"
 #include "clang/Frontend/FrontendAction.h"
 #include "clang/AST/RecursiveASTVisitor.h"
+#include "clang/Basic/Diagnostic.h"
 
 namespace clang {
 class CompilerInstance;
@@ -29,27 +30,31 @@ class raw_ostream;
 
 namespace misracpp2008 {
 
-class RuleChecker {
+class RuleCheckerASTContext {
 protected:
-  explicit RuleChecker(clang::ASTContext &context);
+  explicit RuleCheckerASTContext(clang::ASTContext &context,
+                                 clang::DiagnosticsEngine::Level diagLevel);
   clang::ASTContext &context;
+  clang::DiagnosticsEngine::Level diagLevel;
 
 public:
-  virtual ~RuleChecker();
+  virtual ~RuleCheckerASTContext();
   virtual void doWork() = 0;
 };
 
 class RuleCheckerFactoryBase {
 public:
-  typedef std::shared_ptr<RuleChecker> SpRuleChecker;
-  virtual SpRuleChecker create(clang::ASTContext &context) = 0;
+  typedef std::shared_ptr<RuleCheckerASTContext> SpRuleChecker;
+  virtual SpRuleChecker create(clang::ASTContext &context,
+                               clang::DiagnosticsEngine::Level diagLevel) = 0;
   virtual ~RuleCheckerFactoryBase() {}
 };
 
 template <typename RuleCheckerType>
 class RuleCheckerCreatorFactory : public RuleCheckerFactoryBase {
-  virtual SpRuleChecker create(clang::ASTContext &context) {
-    RuleChecker *p = new RuleCheckerType(context);
+  virtual SpRuleChecker create(clang::ASTContext &context,
+                               clang::DiagnosticsEngine::Level diagLevel) {
+    RuleCheckerASTContext *p = new RuleCheckerType(context, diagLevel);
     return SpRuleChecker(p);
   }
 };
@@ -58,7 +63,7 @@ class Consumer : public clang::ASTConsumer {
 private:
   typedef std::map<std::string, std::shared_ptr<RuleCheckerFactoryBase>>
   RegCheckersMap;
-  static RegCheckersMap &getRegisteredCheckers();
+  static RegCheckersMap &getRegisteredASTCheckers();
   static std::set<std::string> &getEnabledCheckers();
 
 public:
@@ -66,15 +71,16 @@ public:
   virtual void HandleTranslationUnit(clang::ASTContext &ctx);
   static void dumpRegisteredCheckers(llvm::raw_ostream &OS);
   static void dumpRequestedCheckers(llvm::raw_ostream &OS);
-  static void registerChecker(const std::string &name,
-                              std::shared_ptr<RuleCheckerFactoryBase> factory);
+  static void
+  registerCheckerASTContext(const std::string &name,
+                            std::shared_ptr<RuleCheckerFactoryBase> factory);
   static bool enableChecker(const std::string &name);
 
   class RegisterChecker {
   public:
     RegisterChecker(const std::string &name,
                     std::shared_ptr<RuleCheckerFactoryBase> factory) {
-      Consumer::registerChecker(name, factory);
+      Consumer::registerCheckerASTContext(name, factory);
     }
   };
 };
