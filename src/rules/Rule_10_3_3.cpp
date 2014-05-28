@@ -28,9 +28,8 @@ bool Rule_10_3_3::VisitCXXMethodDecl(clang::CXXMethodDecl *decl) {
     while (B != E) {
       const CXXMethodDecl &m = **B;
       if (m.isPure() == false) {
-        DiagnosticsEngine &diagEngine = context.getDiagnostics();
         unsigned diagID = diagEngine.getCustomDiagID(
-            DiagnosticsEngine::Error,
+            diagLevel,
             "A virtual function shall only be overridden by a pure virtual"
             " function if it is itself declared as pure virtual.");
         SourceLocation location = decl->getLocation();

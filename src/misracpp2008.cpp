@@ -21,6 +21,7 @@
 #include <map>
 #include <set>
 #include <sstream>
+#include <utility>
 
 using namespace clang;
 using namespace llvm;
@@ -37,6 +38,11 @@ std::set<std::string> &Consumer::getEnabledCheckers() {
   return enabledCheckers;
 }
 
+Consumer::DiagLevelMap &Consumer::getDiagnosticLevels() {
+  static DiagLevelMap diagLevelMap;
+  return diagLevelMap;
+}
+
 void Consumer::registerCheckerASTContext(
     const std::string &name, std::shared_ptr<RuleCheckerFactoryBase> factory) {
   auto &registeredCheckers = getRegisteredASTCheckers();
@@ -46,13 +52,15 @@ void Consumer::registerCheckerASTContext(
   registeredCheckers[name] = factory;
 }
 
-bool Consumer::enableChecker(const std::string &name) {
+bool Consumer::enableChecker(const std::string &name,
+                             clang::DiagnosticsEngine::Level diagLevel) {
   if (getRegisteredASTCheckers().count(name) == 0) {
     return false;
   }
   if (getEnabledCheckers().count(name) != 0) {
     return false;
   }
+  getDiagnosticLevels().insert(std::make_pair(name, diagLevel));
   getEnabledCheckers().insert(name);
   return true;
 }
@@ -80,7 +88,8 @@ void Consumer::HandleTranslationUnit(ASTContext &ctx) {
   Consumer::dumpRequestedCheckers(llvm::outs());
   for (const std::string &checkerName : getEnabledCheckers()) {
     auto checkerFactory = getRegisteredASTCheckers().at(checkerName);
-    auto checker = checkerFactory->create(ctx, clang::DiagnosticsEngine::Error);
+    auto diagLevel = getDiagnosticLevels().at(checkerName);
+    auto checker = checkerFactory->create(ctx, diagLevel);
     checker->doWork();
   }
 }
@@ -100,7 +109,17 @@ bool Action::ParseArgs(const CompilerInstance &CI,
     std::istringstream ss(args[i]);
     std::string token;
     while (std::getline(ss, token, ',')) {
-      if (Consumer::enableChecker(token) == false) {
+      DiagnosticsEngine::Level diagLevel;
+      if (token.find("--") == 0) {
+        token.erase(0, 2);
+        diagLevel = DiagnosticsEngine::Remark;
+      } else if (token.find('-') == 0) {
+        token.erase(0, 1);
+        diagLevel = DiagnosticsEngine::Warning;
+      } else {
+        diagLevel = DiagnosticsEngine::Error;
+      }
+      if (Consumer::enableChecker(token, diagLevel) == false) {
         llvm::errs() << "Unknown checker: " << token << "\n";
         Consumer::dumpRegisteredCheckers(llvm::errs());
         return false;
@@ -114,6 +133,8 @@ bool Action::ParseArgs(const CompilerInstance &CI,
 void Action::PrintHelp(llvm::raw_ostream &ros) {
   ros << "Enable rules: [rule[,rule[,...]]]\n";
   ros << "Example for enabling the rules 0-1-8 and 0-1-9: 0-1-8,0-1-9\n";
+  ros << "Prefixing a rule number with dashes allows to downgrad a specific"
+         " rule to become a warning (one dash) or a remark (two dashes).\n";
 }
 
 static FrontendPluginRegistry::Add<Action> X("misra.cpp.2008",
@@ -121,7 +142,8 @@ static FrontendPluginRegistry::Add<Action> X("misra.cpp.2008",
 
 RuleCheckerASTContext::RuleCheckerASTContext(ASTContext &context,
                                              DiagnosticsEngine::Level diagLevel)
-    : context(context), diagLevel(diagLevel) {}
+    : context(context), diagEngine(context.getDiagnostics()),
+      diagLevel(diagLevel) {}
 
 RuleCheckerASTContext::~RuleCheckerASTContext() {}
 }

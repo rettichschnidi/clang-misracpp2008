@@ -24,10 +24,9 @@ bool Rule_10_3_2::VisitCXXRecordDecl(clang::CXXRecordDecl *decl) {
   CXXRecordDecl::method_iterator E = decl->method_end();
   while (B != E) {
     if (B->isVirtual() && !B->isVirtualAsWritten()) {
-      DiagnosticsEngine &diagEngine = context.getDiagnostics();
       unsigned diagID = diagEngine.getCustomDiagID(
-          DiagnosticsEngine::Error, "Each overriding virtual function shall be "
-                                    "declared with the virtual keyword.");
+          diagLevel, "Each overriding virtual function shall be declared with"
+                     " the virtual keyword.");
       SourceLocation location = B->getLocation();
       diagEngine.Report(location, diagID);
       return false;

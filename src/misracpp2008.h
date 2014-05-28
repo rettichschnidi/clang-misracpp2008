@@ -35,6 +35,7 @@ protected:
   explicit RuleCheckerASTContext(clang::ASTContext &context,
                                  clang::DiagnosticsEngine::Level diagLevel);
   clang::ASTContext &context;
+  clang::DiagnosticsEngine &diagEngine;
   clang::DiagnosticsEngine::Level diagLevel;
 
 public:
@@ -63,8 +64,10 @@ class Consumer : public clang::ASTConsumer {
 private:
   typedef std::map<std::string, std::shared_ptr<RuleCheckerFactoryBase>>
   RegCheckersMap;
+  typedef std::map<std::string, clang::DiagnosticsEngine::Level> DiagLevelMap;
   static RegCheckersMap &getRegisteredASTCheckers();
   static std::set<std::string> &getEnabledCheckers();
+  static DiagLevelMap &getDiagnosticLevels();
 
 public:
   Consumer();
@@ -74,7 +77,8 @@ public:
   static void
   registerCheckerASTContext(const std::string &name,
                             std::shared_ptr<RuleCheckerFactoryBase> factory);
-  static bool enableChecker(const std::string &name);
+  static bool enableChecker(const std::string &name,
+                            clang::DiagnosticsEngine::Level diagLevel);
 
   class RegisterChecker {
   public:
