@@ -48,20 +48,7 @@ bool enableChecker(const std::string &name,
 
 void dumpRegisteredCheckers(raw_ostream &OS) {
   OS << "Registered checks: ";
-  for (RuleCheckerASTContextRegistry::iterator
-           it = RuleCheckerASTContextRegistry::begin(),
-           ie = RuleCheckerASTContextRegistry::end();
-       it != ie; ++it) {
-    const std::string checkerName =
-        RuleCheckerASTContextRegistry::traits::nameof(*it);
-    OS << checkerName << ", ";
-  }
-  for (RuleCheckerPreprocessorRegistry::iterator
-           it = RuleCheckerPreprocessorRegistry::begin(),
-           ie = RuleCheckerPreprocessorRegistry::end();
-       it != ie; ++it) {
-    const std::string checkerName =
-        RuleCheckerPreprocessorRegistry::traits::nameof(*it);
+  for (const auto& checkerName: getRegisteredCheckers()) {
     OS << checkerName << ", ";
   }
   OS << "\n";
@@ -69,13 +56,13 @@ void dumpRegisteredCheckers(raw_ostream &OS) {
 
 void dumpActiveCheckers(raw_ostream &OS) {
   OS << "Active checks: ";
-  for (const auto &checkerName : getEnabledCheckers()) {
+  for (const auto &checkerName: getEnabledCheckers()) {
     OS << checkerName << ",";
   }
   OS << "\n";
 }
 
-Consumer::Consumer() {}
+
 
 void Consumer::HandleTranslationUnit(ASTContext &ctx) {
   // Iterate over registered ASTContext checkers and execute the ones active
@@ -191,4 +178,29 @@ void RuleCheckerPreprocessor::setDiagLevel(DiagnosticsEngine::Level diagLevel) {
 void RuleCheckerPreprocessor::setDiagEngine(DiagnosticsEngine &diagEngine) {
   this->diagEngine = &diagEngine;
 }
+
+std::set<std::string> getRegisteredCheckers()
+{
+  std::set<std::string> registeredCheckers;
+
+  for (RuleCheckerASTContextRegistry::iterator
+           it = RuleCheckerASTContextRegistry::begin(),
+           ie = RuleCheckerASTContextRegistry::end();
+       it != ie; ++it) {
+    const std::string checkerName =
+        RuleCheckerASTContextRegistry::traits::nameof(*it);
+    registeredCheckers.insert(checkerName);
+  }
+  for (RuleCheckerPreprocessorRegistry::iterator
+           it = RuleCheckerPreprocessorRegistry::begin(),
+           ie = RuleCheckerPreprocessorRegistry::end();
+       it != ie; ++it) {
+    const std::string checkerName =
+        RuleCheckerPreprocessorRegistry::traits::nameof(*it);
+    registeredCheckers.insert(checkerName);
+  }
+
+  return registeredCheckers;
+}
+
 }

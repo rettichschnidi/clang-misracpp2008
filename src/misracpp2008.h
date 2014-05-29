@@ -64,7 +64,7 @@ typedef llvm::Registry<RuleCheckerPreprocessor> RuleCheckerPreprocessorRegistry;
 
 class Consumer : public clang::ASTConsumer {
 public:
-  Consumer();
+  Consumer() {}
   virtual void HandleTranslationUnit(clang::ASTContext &ctx);
 };
 
@@ -80,6 +80,7 @@ protected:
 typedef std::map<std::string, clang::DiagnosticsEngine::Level> DiagLevelMap;
 DiagLevelMap &getDiagnosticLevels();
 std::set<std::string> &getEnabledCheckers();
+std::set<std::string> getRegisteredCheckers();
 bool enableChecker(const std::string &name,
                    clang::DiagnosticsEngine::Level diagLevel);
 void dumpRegisteredCheckers(llvm::raw_ostream &OS);
