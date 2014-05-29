@@ -67,8 +67,8 @@ void dumpRegisteredCheckers(raw_ostream &OS) {
   OS << "\n";
 }
 
-void dumpRequestedCheckers(raw_ostream &OS) {
-  OS << "Requested checks: ";
+void dumpActiveCheckers(raw_ostream &OS) {
+  OS << "Active checks: ";
   for (const auto &checkerName : getEnabledCheckers()) {
     OS << checkerName << ",";
   }
@@ -101,7 +101,7 @@ void Consumer::HandleTranslationUnit(ASTContext &ctx) {
 ASTConsumer *Action::CreateASTConsumer(CompilerInstance &CI, llvm::StringRef) {
   // Dump the available and activated checkers
   dumpRegisteredCheckers(llvm::outs());
-  dumpRequestedCheckers(llvm::outs());
+  dumpActiveCheckers(llvm::outs());
 
   // Iterate over registered preprocessor checkers and execute the ones active
   const auto &enabledCheckers = getEnabledCheckers();

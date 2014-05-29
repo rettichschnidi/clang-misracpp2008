@@ -83,7 +83,7 @@ std::set<std::string> &getEnabledCheckers();
 bool enableChecker(const std::string &name,
                    clang::DiagnosticsEngine::Level diagLevel);
 void dumpRegisteredCheckers(llvm::raw_ostream &OS);
-void dumpRequestedCheckers(llvm::raw_ostream &OS);
+void dumpActiveCheckers(llvm::raw_ostream &OS);
 }
 
 #endif
