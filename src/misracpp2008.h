@@ -16,6 +16,7 @@
 #include "clang/Frontend/FrontendAction.h"
 #include "clang/AST/RecursiveASTVisitor.h"
 #include "clang/Basic/Diagnostic.h"
+#include "clang/Lex/PPCallbacks.h"
 #include "llvm/Support/Registry.h"
 
 namespace clang {
@@ -47,19 +48,24 @@ public:
 
 typedef llvm::Registry<RuleCheckerASTContext> RuleCheckerASTContextRegistry;
 
-class Consumer : public clang::ASTConsumer {
-private:
-  typedef std::map<std::string, clang::DiagnosticsEngine::Level> DiagLevelMap;
-  static std::set<std::string> &getEnabledCheckers();
-  static DiagLevelMap &getDiagnosticLevels();
+class RuleCheckerPreprocessor : public clang::PPCallbacks {
+protected:
+  clang::DiagnosticsEngine::Level diagLevel;
+  clang::DiagnosticsEngine *diagEngine;
+  RuleCheckerPreprocessor() {}
 
+public:
+  virtual ~RuleCheckerPreprocessor() {}
+  void setDiagLevel(clang::DiagnosticsEngine::Level diagLevel);
+  void setDiagEngine(clang::DiagnosticsEngine &diagEngine);
+};
+
+typedef llvm::Registry<RuleCheckerPreprocessor> RuleCheckerPreprocessorRegistry;
+
+class Consumer : public clang::ASTConsumer {
 public:
   Consumer();
   virtual void HandleTranslationUnit(clang::ASTContext &ctx);
-  static void dumpRegisteredCheckers(llvm::raw_ostream &OS);
-  static void dumpRequestedCheckers(llvm::raw_ostream &OS);
-  static bool enableChecker(const std::string &name,
-                            clang::DiagnosticsEngine::Level diagLevel);
 };
 
 class Action : public clang::PluginASTAction {
@@ -70,6 +76,14 @@ protected:
                  const std::vector<std::string> &args);
   void PrintHelp(llvm::raw_ostream &ros);
 };
+
+typedef std::map<std::string, clang::DiagnosticsEngine::Level> DiagLevelMap;
+DiagLevelMap &getDiagnosticLevels();
+std::set<std::string> &getEnabledCheckers();
+bool enableChecker(const std::string &name,
+                   clang::DiagnosticsEngine::Level diagLevel);
+void dumpRegisteredCheckers(llvm::raw_ostream &OS);
+void dumpRequestedCheckers(llvm::raw_ostream &OS);
 }
 
 #endif

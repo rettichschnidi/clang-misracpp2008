@@ -17,6 +17,7 @@
 #include "clang/Frontend/CompilerInstance.h"
 #include "llvm/Support/raw_ostream.h"
 #include "llvm/ADT/StringExtras.h"
+#include "clang/Lex/Preprocessor.h"
 #include <cassert>
 #include <map>
 #include <set>
@@ -28,44 +29,70 @@ using namespace llvm;
 
 namespace misracpp2008 {
 
-std::set<std::string> &Consumer::getEnabledCheckers() {
+std::set<std::string> &getEnabledCheckers() {
   static std::set<std::string> enabledCheckers;
   return enabledCheckers;
 }
 
-Consumer::DiagLevelMap &Consumer::getDiagnosticLevels() {
+DiagLevelMap &getDiagnosticLevels() {
   static DiagLevelMap diagLevelMap;
   return diagLevelMap;
 }
 
-bool Consumer::enableChecker(const std::string &name,
-                             clang::DiagnosticsEngine::Level diagLevel) {
+bool enableChecker(const std::string &name,
+                   clang::DiagnosticsEngine::Level diagLevel) {
   getDiagnosticLevels().insert(std::make_pair(name, diagLevel));
   getEnabledCheckers().insert(name);
   return true;
 }
 
-void Consumer::dumpRegisteredCheckers(raw_ostream &OS) {}
+void dumpRegisteredCheckers(raw_ostream &OS) {
+  OS << "Registered checks: ";
+  for (RuleCheckerASTContextRegistry::iterator
+           it = RuleCheckerASTContextRegistry::begin(),
+           ie = RuleCheckerASTContextRegistry::end();
+       it != ie; ++it) {
+    const std::string checkerName =
+        RuleCheckerASTContextRegistry::traits::nameof(*it);
+    OS << checkerName << ", ";
+  }
+  for (RuleCheckerPreprocessorRegistry::iterator
+           it = RuleCheckerPreprocessorRegistry::begin(),
+           ie = RuleCheckerPreprocessorRegistry::end();
+       it != ie; ++it) {
+    const std::string checkerName =
+        RuleCheckerPreprocessorRegistry::traits::nameof(*it);
+    OS << checkerName << ", ";
+  }
+  OS << "\n";
+}
 
-void Consumer::dumpRequestedCheckers(raw_ostream &OS) {}
+void dumpRequestedCheckers(raw_ostream &OS) {
+  OS << "Requested checks: ";
+  for (const auto &checkerName : getEnabledCheckers()) {
+    OS << checkerName << ",";
+  }
+  OS << "\n";
+}
 
 Consumer::Consumer() {}
 
 void Consumer::HandleTranslationUnit(ASTContext &ctx) {
   // Dump the available and activated checkers
-  Consumer::dumpRegisteredCheckers(llvm::outs());
-  Consumer::dumpRequestedCheckers(llvm::outs());
+  dumpRegisteredCheckers(llvm::outs());
+  dumpRequestedCheckers(llvm::outs());
 
-  // Iterate over all activated ASTContext checkers and execute them
+  // Iterate over registered ASTContext checkers and execute the ones active
   const auto &enabledCheckers = getEnabledCheckers();
   for (RuleCheckerASTContextRegistry::iterator
-       it = RuleCheckerASTContextRegistry::begin(),
-       ie = RuleCheckerASTContextRegistry::end();
+           it = RuleCheckerASTContextRegistry::begin(),
+           ie = RuleCheckerASTContextRegistry::end();
        it != ie; ++it) {
-    const std::string checkerName = RuleCheckerASTContextRegistry::traits::nameof(*it);
+    const std::string checkerName =
+        RuleCheckerASTContextRegistry::traits::nameof(*it);
     assert(checkerName.size() >= 5 && checkerName.size() <= 6 &&
            "Each checkers has to have its rule number as name");
-    if(enabledCheckers.count(checkerName) > 0) {
+    if (enabledCheckers.count(checkerName) > 0) {
       auto diagLevel = getDiagnosticLevels().at(checkerName);
       auto instance = it->instantiate();
       instance->setContext(ctx);
@@ -76,6 +103,24 @@ void Consumer::HandleTranslationUnit(ASTContext &ctx) {
 }
 
 ASTConsumer *Action::CreateASTConsumer(CompilerInstance &CI, llvm::StringRef) {
+  // Iterate over registered preprocessor checkers and execute the ones active
+  const auto &enabledCheckers = getEnabledCheckers();
+  for (RuleCheckerPreprocessorRegistry::iterator
+           it = RuleCheckerPreprocessorRegistry::begin(),
+           ie = RuleCheckerPreprocessorRegistry::end();
+       it != ie; ++it) {
+    const std::string checkerName =
+        RuleCheckerPreprocessorRegistry::traits::nameof(*it);
+    assert(checkerName.size() >= 5 && checkerName.size() <= 6 &&
+           "Each checkers has to have its rule number as name");
+    if (enabledCheckers.count(checkerName) > 0) {
+      auto diagLevel = getDiagnosticLevels().at(checkerName);
+      std::unique_ptr<RuleCheckerPreprocessor> ppCallback = it->instantiate();
+      ppCallback->setDiagLevel(diagLevel);
+      ppCallback->setDiagEngine(CI.getDiagnostics());
+      CI.getPreprocessor().addPPCallbacks(ppCallback.release());
+    }
+  }
   return new Consumer();
 }
 
@@ -100,9 +145,9 @@ bool Action::ParseArgs(const CompilerInstance &CI,
       } else {
         diagLevel = DiagnosticsEngine::Error;
       }
-      if (Consumer::enableChecker(token, diagLevel) == false) {
+      if (enableChecker(token, diagLevel) == false) {
         llvm::errs() << "Unknown checker: " << token << "\n";
-        Consumer::dumpRegisteredCheckers(llvm::errs());
+        dumpRegisteredCheckers(llvm::errs());
         return false;
       }
     }
@@ -137,5 +182,13 @@ RuleCheckerASTContext::RuleCheckerASTContext()
 void RuleCheckerASTContext::doWork() {
   assert(context && "The context has to be set before calling this function.");
   assert(diagEngine);
+}
+
+void RuleCheckerPreprocessor::setDiagLevel(DiagnosticsEngine::Level diagLevel) {
+  this->diagLevel = diagLevel;
+}
+
+void RuleCheckerPreprocessor::setDiagEngine(DiagnosticsEngine &diagEngine) {
+  this->diagEngine = &diagEngine;
 }
 }
