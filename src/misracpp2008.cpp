@@ -39,10 +39,13 @@ DiagLevelMap &getDiagnosticLevels() {
   return diagLevelMap;
 }
 
-bool enableChecker(const std::string &name,
+bool enableChecker(const std::string &checkerName,
                    clang::DiagnosticsEngine::Level diagLevel) {
-  getDiagnosticLevels().insert(std::make_pair(name, diagLevel));
-  getEnabledCheckers().insert(name);
+  if( getRegisteredCheckers().count(checkerName) == 0) {
+    return false;
+  }
+  getDiagnosticLevels().insert(std::make_pair(checkerName, diagLevel));
+  getEnabledCheckers().insert(checkerName);
   return true;
 }
 
