@@ -40,5 +40,5 @@ void Rule_10_3_2::doWork() {
 }
 
 static RuleCheckerASTContextRegistry::Add<Rule_10_3_2>
-X("10-3-2", "MISRA C++ 2008 rule 10-3-2 checker.");
+  X(ruleName.c_str(), "MISRA C++ 2008 rule 10-3-2 checker");
 }
