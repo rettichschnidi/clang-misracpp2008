@@ -16,6 +16,7 @@
 #include "clang/Frontend/FrontendAction.h"
 #include "clang/AST/RecursiveASTVisitor.h"
 #include "clang/Basic/Diagnostic.h"
+#include "llvm/Support/Registry.h"
 
 namespace clang {
 class CompilerInstance;
@@ -32,40 +33,23 @@ namespace misracpp2008 {
 
 class RuleCheckerASTContext {
 protected:
-  explicit RuleCheckerASTContext(clang::ASTContext &context,
-                                 clang::DiagnosticsEngine::Level diagLevel);
-  clang::ASTContext &context;
-  clang::DiagnosticsEngine &diagEngine;
+  clang::ASTContext *context;
+  clang::DiagnosticsEngine *diagEngine;
   clang::DiagnosticsEngine::Level diagLevel;
+  RuleCheckerASTContext();
 
 public:
-  virtual ~RuleCheckerASTContext();
+  virtual ~RuleCheckerASTContext() {}
+  void setContext(clang::ASTContext &context);
+  void setDiagLevel(clang::DiagnosticsEngine::Level diagLevel);
   virtual void doWork() = 0;
 };
 
-class RuleCheckerFactoryBase {
-public:
-  typedef std::shared_ptr<RuleCheckerASTContext> SpRuleChecker;
-  virtual SpRuleChecker create(clang::ASTContext &context,
-                               clang::DiagnosticsEngine::Level diagLevel) = 0;
-  virtual ~RuleCheckerFactoryBase() {}
-};
-
-template <typename RuleCheckerType>
-class RuleCheckerCreatorFactory : public RuleCheckerFactoryBase {
-  virtual SpRuleChecker create(clang::ASTContext &context,
-                               clang::DiagnosticsEngine::Level diagLevel) {
-    RuleCheckerASTContext *p = new RuleCheckerType(context, diagLevel);
-    return SpRuleChecker(p);
-  }
-};
+typedef llvm::Registry<RuleCheckerASTContext> RuleCheckerASTContextRegistry;
 
 class Consumer : public clang::ASTConsumer {
 private:
-  typedef std::map<std::string, std::shared_ptr<RuleCheckerFactoryBase>>
-  RegCheckersMap;
   typedef std::map<std::string, clang::DiagnosticsEngine::Level> DiagLevelMap;
-  static RegCheckersMap &getRegisteredASTCheckers();
   static std::set<std::string> &getEnabledCheckers();
   static DiagLevelMap &getDiagnosticLevels();
 
@@ -74,19 +58,8 @@ public:
   virtual void HandleTranslationUnit(clang::ASTContext &ctx);
   static void dumpRegisteredCheckers(llvm::raw_ostream &OS);
   static void dumpRequestedCheckers(llvm::raw_ostream &OS);
-  static void
-  registerCheckerASTContext(const std::string &name,
-                            std::shared_ptr<RuleCheckerFactoryBase> factory);
   static bool enableChecker(const std::string &name,
                             clang::DiagnosticsEngine::Level diagLevel);
-
-  class RegisterChecker {
-  public:
-    RegisterChecker(const std::string &name,
-                    std::shared_ptr<RuleCheckerFactoryBase> factory) {
-      Consumer::registerCheckerASTContext(name, factory);
-    }
-  };
 };
 
 class Action : public clang::PluginASTAction {

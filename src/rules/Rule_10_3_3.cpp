@@ -16,24 +16,20 @@ namespace misracpp2008 {
 
 const static std::string ruleName = "10-3-3";
 
-Rule_10_3_3::Rule_10_3_3(clang::ASTContext &context,
-                         clang::DiagnosticsEngine::Level diagLevel)
-    : RuleCheckerASTContext(context, diagLevel) {}
-
 bool Rule_10_3_3::VisitCXXMethodDecl(clang::CXXMethodDecl *decl) {
   if (decl->isPure()) {
-    auto B = context.overridden_methods_begin(decl);
-    auto E = context.overridden_methods_end(decl);
+    auto B = context->overridden_methods_begin(decl);
+    auto E = context->overridden_methods_end(decl);
 
     while (B != E) {
       const CXXMethodDecl &m = **B;
       if (m.isPure() == false) {
-        unsigned diagID = diagEngine.getCustomDiagID(
+        unsigned diagID = diagEngine->getCustomDiagID(
             diagLevel,
             "A virtual function shall only be overridden by a pure virtual"
             " function if it is itself declared as pure virtual.");
         SourceLocation location = decl->getLocation();
-        diagEngine.Report(location, diagID);
+        diagEngine->Report(location, diagID);
         return false;
       }
       B++;
@@ -45,10 +41,10 @@ bool Rule_10_3_3::VisitCXXMethodDecl(clang::CXXMethodDecl *decl) {
 Rule_10_3_3::~Rule_10_3_3() {}
 
 void Rule_10_3_3::doWork() {
-  this->TraverseDecl(this->context.getTranslationUnitDecl());
+  RuleCheckerASTContext::doWork();
+  this->TraverseDecl(context->getTranslationUnitDecl());
 }
 
-static auto dummy = Consumer::RegisterChecker(
-    ruleName, std::shared_ptr<RuleCheckerFactoryBase>(
-                  new RuleCheckerCreatorFactory<Rule_10_3_3>));
+static RuleCheckerASTContextRegistry::Add<Rule_10_3_3>
+X("10-3-3", "MISRA C++ 2008 rule 10-3-3 checker.");
 }

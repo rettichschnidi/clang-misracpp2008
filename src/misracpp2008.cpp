@@ -28,11 +28,6 @@ using namespace llvm;
 
 namespace misracpp2008 {
 
-Consumer::RegCheckersMap &Consumer::getRegisteredASTCheckers() {
-  static RegCheckersMap registeredAstCheckers;
-  return registeredAstCheckers;
-}
-
 std::set<std::string> &Consumer::getEnabledCheckers() {
   static std::set<std::string> enabledCheckers;
   return enabledCheckers;
@@ -43,54 +38,40 @@ Consumer::DiagLevelMap &Consumer::getDiagnosticLevels() {
   return diagLevelMap;
 }
 
-void Consumer::registerCheckerASTContext(
-    const std::string &name, std::shared_ptr<RuleCheckerFactoryBase> factory) {
-  auto &registeredCheckers = getRegisteredASTCheckers();
-  assert(
-      registeredCheckers.count(name) == 0 &&
-      "Registering multiple AST checkers for the same rule is not supported.");
-  registeredCheckers[name] = factory;
-}
-
 bool Consumer::enableChecker(const std::string &name,
                              clang::DiagnosticsEngine::Level diagLevel) {
-  if (getRegisteredASTCheckers().count(name) == 0) {
-    return false;
-  }
-  if (getEnabledCheckers().count(name) != 0) {
-    return false;
-  }
   getDiagnosticLevels().insert(std::make_pair(name, diagLevel));
   getEnabledCheckers().insert(name);
   return true;
 }
 
-void Consumer::dumpRegisteredCheckers(raw_ostream &OS) {
-  OS << "Registered checks: ";
-  for (const auto &checker : getRegisteredASTCheckers()) {
-    OS << checker.first << ",";
-  }
-  OS << "\n";
-}
+void Consumer::dumpRegisteredCheckers(raw_ostream &OS) {}
 
-void Consumer::dumpRequestedCheckers(raw_ostream &OS) {
-  OS << "Requested checks: ";
-  for (const auto &checker : getEnabledCheckers()) {
-    OS << checker << ",";
-  }
-  OS << "\n";
-}
+void Consumer::dumpRequestedCheckers(raw_ostream &OS) {}
 
 Consumer::Consumer() {}
 
 void Consumer::HandleTranslationUnit(ASTContext &ctx) {
+  // Dump the available and activated checkers
   Consumer::dumpRegisteredCheckers(llvm::outs());
   Consumer::dumpRequestedCheckers(llvm::outs());
-  for (const std::string &checkerName : getEnabledCheckers()) {
-    auto checkerFactory = getRegisteredASTCheckers().at(checkerName);
-    auto diagLevel = getDiagnosticLevels().at(checkerName);
-    auto checker = checkerFactory->create(ctx, diagLevel);
-    checker->doWork();
+
+  // Iterate over all activated ASTContext checkers and execute them
+  const auto &enabledCheckers = getEnabledCheckers();
+  for (RuleCheckerASTContextRegistry::iterator
+       it = RuleCheckerASTContextRegistry::begin(),
+       ie = RuleCheckerASTContextRegistry::end();
+       it != ie; ++it) {
+    const std::string checkerName = RuleCheckerASTContextRegistry::traits::nameof(*it);
+    assert(checkerName.size() >= 5 && checkerName.size() <= 6 &&
+           "Each checkers has to have its rule number as name");
+    if(enabledCheckers.count(checkerName) > 0) {
+      auto diagLevel = getDiagnosticLevels().at(checkerName);
+      auto instance = it->instantiate();
+      instance->setContext(ctx);
+      instance->setDiagLevel(diagLevel);
+      instance->doWork();
+    }
   }
 }
 
@@ -140,10 +121,21 @@ void Action::PrintHelp(llvm::raw_ostream &ros) {
 static FrontendPluginRegistry::Add<Action> X("misra.cpp.2008",
                                              "MISRA C++ 2008");
 
-RuleCheckerASTContext::RuleCheckerASTContext(ASTContext &context,
-                                             DiagnosticsEngine::Level diagLevel)
-    : context(context), diagEngine(context.getDiagnostics()),
-      diagLevel(diagLevel) {}
+void RuleCheckerASTContext::setContext(ASTContext &context) {
+  this->context = &context;
+  this->diagEngine = &context.getDiagnostics();
+}
 
-RuleCheckerASTContext::~RuleCheckerASTContext() {}
+void RuleCheckerASTContext::setDiagLevel(DiagnosticsEngine::Level diagLevel) {
+  this->diagLevel = diagLevel;
+}
+
+RuleCheckerASTContext::RuleCheckerASTContext()
+    : context(nullptr), diagEngine(nullptr),
+      diagLevel(DiagnosticsEngine::Error) {}
+
+void RuleCheckerASTContext::doWork() {
+  assert(context && "The context has to be set before calling this function.");
+  assert(diagEngine);
+}
 }

@@ -15,20 +15,16 @@ namespace misracpp2008 {
 
 const static std::string ruleName = "10-3-2";
 
-Rule_10_3_2::Rule_10_3_2(clang::ASTContext &context,
-                         clang::DiagnosticsEngine::Level diagLevel)
-    : RuleCheckerASTContext(context, diagLevel) {}
-
 bool Rule_10_3_2::VisitCXXRecordDecl(clang::CXXRecordDecl *decl) {
   CXXRecordDecl::method_iterator B = decl->method_begin();
   CXXRecordDecl::method_iterator E = decl->method_end();
   while (B != E) {
     if (B->isVirtual() && !B->isVirtualAsWritten()) {
-      unsigned diagID = diagEngine.getCustomDiagID(
+      unsigned diagID = diagEngine->getCustomDiagID(
           diagLevel, "Each overriding virtual function shall be declared with"
                      " the virtual keyword.");
       SourceLocation location = B->getLocation();
-      diagEngine.Report(location, diagID);
+      diagEngine->Report(location, diagID);
       return false;
     }
     B++;
@@ -39,10 +35,10 @@ bool Rule_10_3_2::VisitCXXRecordDecl(clang::CXXRecordDecl *decl) {
 Rule_10_3_2::~Rule_10_3_2() {}
 
 void Rule_10_3_2::doWork() {
-  this->TraverseDecl(this->context.getTranslationUnitDecl());
+  RuleCheckerASTContext::doWork();
+  this->TraverseDecl(context->getTranslationUnitDecl());
 }
 
-static auto dummy = Consumer::RegisterChecker(
-    ruleName, std::shared_ptr<RuleCheckerFactoryBase>(
-                  new RuleCheckerCreatorFactory<Rule_10_3_2>));
+static RuleCheckerASTContextRegistry::Add<Rule_10_3_2>
+X("10-3-2", "MISRA C++ 2008 rule 10-3-2 checker.");
 }

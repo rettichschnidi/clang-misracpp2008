@@ -22,8 +22,7 @@ namespace misracpp2008 {
 class Rule_10_3_3 : public RuleCheckerASTContext,
                     public clang::RecursiveASTVisitor<Rule_10_3_3> {
 public:
-  explicit Rule_10_3_3(clang::ASTContext &context,
-                       clang::DiagnosticsEngine::Level diagLevel);
+  Rule_10_3_3() : RuleCheckerASTContext() {}
   bool VisitCXXMethodDecl(clang::CXXMethodDecl *decl);
   virtual ~Rule_10_3_3();
 
