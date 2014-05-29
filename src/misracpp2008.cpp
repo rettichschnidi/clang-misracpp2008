@@ -78,10 +78,6 @@ void dumpRequestedCheckers(raw_ostream &OS) {
 Consumer::Consumer() {}
 
 void Consumer::HandleTranslationUnit(ASTContext &ctx) {
-  // Dump the available and activated checkers
-  dumpRegisteredCheckers(llvm::outs());
-  dumpRequestedCheckers(llvm::outs());
-
   // Iterate over registered ASTContext checkers and execute the ones active
   const auto &enabledCheckers = getEnabledCheckers();
   for (RuleCheckerASTContextRegistry::iterator
@@ -103,6 +99,10 @@ void Consumer::HandleTranslationUnit(ASTContext &ctx) {
 }
 
 ASTConsumer *Action::CreateASTConsumer(CompilerInstance &CI, llvm::StringRef) {
+  // Dump the available and activated checkers
+  dumpRegisteredCheckers(llvm::outs());
+  dumpRequestedCheckers(llvm::outs());
+
   // Iterate over registered preprocessor checkers and execute the ones active
   const auto &enabledCheckers = getEnabledCheckers();
   for (RuleCheckerPreprocessorRegistry::iterator
