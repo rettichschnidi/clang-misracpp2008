@@ -374,7 +374,7 @@ Language support library - Other runtime support
 Rule 18-7-1 Implemented (1 of 1)
 
 Diagnostics library - Error numbers
-Rule 19-3-1 TBD
+Rule 19-3-1 Implemented (2 of 2)
 
 Input/output library - General
 Rule 27-0-1 Implemented (1 of 1)
