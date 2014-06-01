@@ -39,5 +39,5 @@ public:
 const std::string Rule_27_0_1::illegalInclude = "cstdio";
 
 static RuleCheckerPreprocessorRegistry::Add<Rule_27_0_1>
-X(ruleName.c_str(), "MISRA C++ 2008 rule 27-0-1 checker");
+X(ruleName.c_str(), "MISRA C++ 2008 rule checker");
 }
