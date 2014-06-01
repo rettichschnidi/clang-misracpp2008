@@ -1,0 +1,3 @@
+[submodule "doc/wiki"]
+	path = doc/wiki
+	url = git@github.com:rettichschnidi/clang-misracpp2008.wiki.git
