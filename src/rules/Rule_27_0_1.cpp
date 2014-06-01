@@ -19,6 +19,7 @@ const static std::string ruleName = "27-0-1";
 class Rule_27_0_1 : public RuleCheckerPreprocessor {
 private:
   static const std::string illegalInclude;
+
 public:
   virtual void InclusionDirective(SourceLocation HashLoc,
                                   const Token &IncludeTok, StringRef FileName,
@@ -26,10 +27,10 @@ public:
                                   const FileEntry *File, StringRef SearchPath,
                                   StringRef RelativePath,
                                   const Module *Imported) {
-    if(FileName == illegalInclude) {
+    if (FileName == illegalInclude) {
       unsigned diagID = diagEngine->getCustomDiagID(
-            diagLevel,
-            "The stream input/output library <cstdio> shall not be used.");
+          diagLevel,
+          "The stream input/output library <cstdio> shall not be used.");
       diagEngine->Report(HashLoc, diagID);
     }
   }
@@ -38,5 +39,5 @@ public:
 const std::string Rule_27_0_1::illegalInclude = "cstdio";
 
 static RuleCheckerPreprocessorRegistry::Add<Rule_27_0_1>
-  X(ruleName.c_str(), "MISRA C++ 2008 rule 27-0-1 checker");
+X(ruleName.c_str(), "MISRA C++ 2008 rule 27-0-1 checker");
 }

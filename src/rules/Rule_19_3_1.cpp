@@ -21,15 +21,15 @@ const static std::string ruleName = "19-3-1";
 class Rule_19_3_1 : public RuleCheckerPreprocessor {
 private:
   static const std::string illegalVariableName;
+
 public:
   // Abuse the fact that errno is defined as a macro (at least on my system)
   virtual void MacroExpands(const Token &MacroNameTok, const MacroDirective *MD,
                             SourceRange Range, const MacroArgs *Args) {
-    const std::string& name = MacroNameTok.getIdentifierInfo()->getName();
-    if(name == illegalVariableName) {
+    const std::string &name = MacroNameTok.getIdentifierInfo()->getName();
+    if (name == illegalVariableName) {
       unsigned diagID = diagEngine->getCustomDiagID(
-            diagLevel,
-            "The error indicator errno shall not be used.");
+          diagLevel, "The error indicator errno shall not be used.");
       diagEngine->Report(Range.getBegin(), diagID);
     }
   }
@@ -38,5 +38,5 @@ public:
 const std::string Rule_19_3_1::illegalVariableName = "errno";
 
 static RuleCheckerPreprocessorRegistry::Add<Rule_19_3_1>
-  X(ruleName.c_str(), "MISRA C++ 2008 rule 19-3-1 checker");
+X(ruleName.c_str(), "MISRA C++ 2008 rule 19-3-1 checker");
 }

@@ -19,6 +19,7 @@ const static std::string ruleName = "18-7-1";
 class Rule_18_7_1 : public RuleCheckerPreprocessor {
 private:
   static const std::string illegalInclude;
+
 public:
   virtual void InclusionDirective(SourceLocation HashLoc,
                                   const Token &IncludeTok, StringRef FileName,
@@ -26,10 +27,10 @@ public:
                                   const FileEntry *File, StringRef SearchPath,
                                   StringRef RelativePath,
                                   const Module *Imported) {
-    if(FileName == illegalInclude) {
+    if (FileName == illegalInclude) {
       unsigned diagID = diagEngine->getCustomDiagID(
-            diagLevel,
-            "The signal handling facilities of <csignal> shall not be used.");
+          diagLevel,
+          "The signal handling facilities of <csignal> shall not be used.");
       diagEngine->Report(HashLoc, diagID);
     }
   }
@@ -38,5 +39,5 @@ public:
 const std::string Rule_18_7_1::illegalInclude = "csignal";
 
 static RuleCheckerPreprocessorRegistry::Add<Rule_18_7_1>
-  X(ruleName.c_str(), "MISRA C++ 2008 rule 18-7-1 checker");
+X(ruleName.c_str(), "MISRA C++ 2008 rule 18-7-1 checker");
 }

@@ -41,7 +41,7 @@ DiagLevelMap &getDiagnosticLevels() {
 
 bool enableChecker(const std::string &checkerName,
                    clang::DiagnosticsEngine::Level diagLevel) {
-  if( getRegisteredCheckers().count(checkerName) == 0) {
+  if (getRegisteredCheckers().count(checkerName) == 0) {
     return false;
   }
   getDiagnosticLevels().insert(std::make_pair(checkerName, diagLevel));
@@ -51,7 +51,7 @@ bool enableChecker(const std::string &checkerName,
 
 void dumpRegisteredCheckers(raw_ostream &OS) {
   OS << "Registered checks: ";
-  for (const auto& checkerName: getRegisteredCheckers()) {
+  for (const auto &checkerName : getRegisteredCheckers()) {
     OS << checkerName << ", ";
   }
   OS << "\n";
@@ -59,13 +59,11 @@ void dumpRegisteredCheckers(raw_ostream &OS) {
 
 void dumpActiveCheckers(raw_ostream &OS) {
   OS << "Active checks: ";
-  for (const auto &checkerName: getEnabledCheckers()) {
+  for (const auto &checkerName : getEnabledCheckers()) {
     OS << checkerName << ",";
   }
   OS << "\n";
 }
-
-
 
 void Consumer::HandleTranslationUnit(ASTContext &ctx) {
   // Iterate over registered ASTContext checkers and execute the ones active
@@ -104,7 +102,7 @@ ASTConsumer *Action::CreateASTConsumer(CompilerInstance &CI, llvm::StringRef) {
     assert(checkerName.size() >= 5 && checkerName.size() <= 6 &&
            "Each checkers has to have its rule number as name");
     if (enabledCheckers.count(checkerName) > 0) {
-      assert(CI.hasPreprocessor()  && "Compiler instance has no preprocessor!");
+      assert(CI.hasPreprocessor() && "Compiler instance has no preprocessor!");
       auto diagLevel = getDiagnosticLevels().at(checkerName);
       std::unique_ptr<RuleCheckerPreprocessor> ppCallback = it->instantiate();
       ppCallback->setDiagLevel(diagLevel);
@@ -176,10 +174,7 @@ void RuleCheckerASTContext::doWork() {
 }
 
 RuleCheckerPreprocessor::RuleCheckerPreprocessor()
-  : diagLevel(DiagnosticsEngine::Error)
-  , diagEngine(nullptr)
-{
-}
+    : diagLevel(DiagnosticsEngine::Error), diagEngine(nullptr) {}
 
 void RuleCheckerPreprocessor::setDiagLevel(DiagnosticsEngine::Level diagLevel) {
   this->diagLevel = diagLevel;
@@ -189,8 +184,7 @@ void RuleCheckerPreprocessor::setDiagEngine(DiagnosticsEngine &diagEngine) {
   this->diagEngine = &diagEngine;
 }
 
-std::set<std::string> getRegisteredCheckers()
-{
+std::set<std::string> getRegisteredCheckers() {
   std::set<std::string> registeredCheckers;
 
   for (RuleCheckerASTContextRegistry::iterator
@@ -212,5 +206,4 @@ std::set<std::string> getRegisteredCheckers()
 
   return registeredCheckers;
 }
-
 }
