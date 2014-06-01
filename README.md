@@ -25,3 +25,7 @@ Please note that currently only the CMake build system is supported.
 Running tests
 =============
 Go to the LLVM/Clang build directory and run `make check-misracpp2008`
+
+Usage
+=====
+This section will be written when it is actually possible to use the plugin.
