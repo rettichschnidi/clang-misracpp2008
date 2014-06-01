@@ -6,8 +6,9 @@
 //===----------------------------------------------------------------------===//
 
 #include "misracpp2008.h"
-#include "Rule_10_3_2.h"
 #include "clang/AST/ASTContext.h"
+#include "clang/AST/RecursiveASTVisitor.h"
+#include "clang/Basic/Diagnostic.h"
 
 using namespace clang;
 
@@ -15,29 +16,51 @@ namespace misracpp2008 {
 
 const static std::string ruleName = "10-3-2";
 
-bool Rule_10_3_2::VisitCXXRecordDecl(clang::CXXRecordDecl *decl) {
-  CXXRecordDecl::method_iterator B = decl->method_begin();
-  CXXRecordDecl::method_iterator E = decl->method_end();
-  while (B != E) {
-    if (B->isVirtual() && !B->isVirtualAsWritten()) {
-      unsigned diagID = diagEngine->getCustomDiagID(
-          diagLevel, "Each overriding virtual function shall be declared with"
-                     " the virtual keyword.");
-      SourceLocation location = B->getLocation();
-      diagEngine->Report(location, diagID);
-      break;
+
+class Rule_10_3_2 : public RuleCheckerASTContext,
+                    public clang::RecursiveASTVisitor<Rule_10_3_2> {
+public:
+  Rule_10_3_2() : RuleCheckerASTContext() {}
+  bool VisitCXXRecordDecl(CXXRecordDecl *decl) {
+    SourceManager &sourceManager = diagEngine->getSourceManager();
+    if(sourceManager.isInSystemHeader (decl->getLocStart()) ) {
+      return true;
     }
-    B++;
+
+    CXXRecordDecl::method_iterator B = decl->method_begin();
+    CXXRecordDecl::method_iterator E = decl->method_end();
+    while (B != E) {
+      if (!B->isImplicit() && B->isVirtual() && !B->isVirtualAsWritten()) {
+        unsigned diagID = diagEngine->getCustomDiagID(
+            diagLevel, "Each overriding virtual function shall be declared with"
+                       " the virtual keyword.");
+        SourceLocation location = B->getLocation();
+        diagEngine->Report(location, diagID);
+        break;
+      }
+      B++;
+    }
+    return true;
   }
-  return true;
-}
+  bool VisitCXXDestructorDecl(clang::CXXDestructorDecl *decl) {
+      if (decl->isVirtual() && !decl->isVirtualAsWritten()) {
+        unsigned diagID = diagEngine->getCustomDiagID(
+            diagLevel, "Each overriding virtual function shall be declared with"
+                       " the virtual keyword.");
+        SourceLocation location = decl->getLocation();
+        diagEngine->Report(location, diagID);
+      }
+    return true;
+  }
 
-Rule_10_3_2::~Rule_10_3_2() {}
+  virtual ~Rule_10_3_2() {}
 
-void Rule_10_3_2::doWork() {
-  RuleCheckerASTContext::doWork();
-  this->TraverseDecl(context->getTranslationUnitDecl());
-}
+protected:
+  virtual void doWork() {
+    RuleCheckerASTContext::doWork();
+    this->TraverseDecl(context->getTranslationUnitDecl());
+  }
+};
 
 static RuleCheckerASTContextRegistry::Add<Rule_10_3_2>
 X(ruleName.c_str(), "MISRA C++ 2008 rule checker");

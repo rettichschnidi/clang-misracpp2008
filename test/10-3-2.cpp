@@ -4,6 +4,7 @@ class A
 public:
   virtual void badMethod();
   virtual void goodMethod();
+  virtual ~A();
 };
 
 class B1 : public A
@@ -11,6 +12,7 @@ class B1 : public A
 public:
   void badMethod();          // expected-error {{Each overriding virtual function shall be declared with the virtual keyword.}}
   virtual void goodMethod(); // Compliant - Explicitly declared virtual
+  virtual ~B1();
 };
 
 class B2 : public A
@@ -18,5 +20,10 @@ class B2 : public A
 public:
   void badMethod();          // expected-error {{Each overriding virtual function shall be declared with the virtual keyword.}}
   virtual void goodMethod(); // Compliant - Explicitly declared virtual
+  ~B2();                     // expected-error {{Each overriding virtual function shall be declared with the virtual keyword.}}
 };
 
+class B3 : public A
+{
+    // ~B3();               // Compliant - implicit destructor is OK, even when virtual
+};
