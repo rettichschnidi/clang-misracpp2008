@@ -1,4 +1,4 @@
-//===-  Rule_18_4_1.h - Checker for MISRA C++ 2008 rule 18-4-1-------------===//
+//===-  Rule_18_4_1.cpp - Checker for MISRA C++ 2008 rule 18-4-1-----------===//
 //
 // This file is distributed under the University of Illinois Open Source
 // License. See LICENSE.TXT for details.
