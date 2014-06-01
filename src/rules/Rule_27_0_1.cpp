@@ -6,6 +6,7 @@
 //===----------------------------------------------------------------------===//
 
 #include "misracpp2008.h"
+#include "clang/Basic/SourceManager.h"
 #include <string>
 
 using namespace clang;
@@ -26,6 +27,11 @@ public:
                                   StringRef RelativePath,
                                   const Module *Imported) {
     if (FileName == illegalInclude) {
+      SourceManager &sourceManager = diagEngine->getSourceManager();
+      if(sourceManager.isInSystemHeader (HashLoc) ) {
+        return;
+      }
+
       unsigned diagID = diagEngine->getCustomDiagID(
           diagLevel,
           "The stream input/output library <cstdio> shall not be used.");

@@ -26,6 +26,11 @@ public:
                             SourceRange Range, const MacroArgs *Args) {
     const std::string &name = MacroNameTok.getIdentifierInfo()->getName();
     if (name == illegalVariableName) {
+      SourceManager &sourceManager = diagEngine->getSourceManager();
+      if(sourceManager.isInSystemHeader (Range.getBegin()) ) {
+        return;
+      }
+
       unsigned diagID = diagEngine->getCustomDiagID(
           diagLevel, "The error indicator errno shall not be used.");
       diagEngine->Report(Range.getBegin(), diagID);

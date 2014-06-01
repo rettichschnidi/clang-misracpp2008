@@ -37,6 +37,11 @@ public:
       }
     }
 
+    SourceManager &sourceManager = diagEngine->getSourceManager();
+    if(sourceManager.isInSystemHeader (decl->getLocStart()) ) {
+      return true;
+    }
+
     // This new expr does not look like a placement new. Generate an error.
     unsigned diagID = diagEngine->getCustomDiagID(
         diagLevel, "Dynamic heap memory allocation shall not be used.");
