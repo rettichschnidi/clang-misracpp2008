@@ -13,3 +13,10 @@ public:
   virtual void goodMethod(); // Compliant - Explicitly declared virtual
 };
 
+class B2 : public A
+{
+public:
+  void badMethod();          // expected-error {{Each overriding virtual function shall be declared with the virtual keyword.}}
+  virtual void goodMethod(); // Compliant - Explicitly declared virtual
+};
+

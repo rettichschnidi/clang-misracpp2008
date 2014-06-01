@@ -30,7 +30,7 @@ bool Rule_10_3_3::VisitCXXMethodDecl(clang::CXXMethodDecl *decl) {
             " function if it is itself declared as pure virtual.");
         SourceLocation location = decl->getLocation();
         diagEngine->Report(location, diagID);
-        return false;
+        break;
       }
       B++;
     }

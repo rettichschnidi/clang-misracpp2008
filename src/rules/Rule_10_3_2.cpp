@@ -25,7 +25,7 @@ bool Rule_10_3_2::VisitCXXRecordDecl(clang::CXXRecordDecl *decl) {
                      " the virtual keyword.");
       SourceLocation location = B->getLocation();
       diagEngine->Report(location, diagID);
-      return false;
+      break;
     }
     B++;
   }
