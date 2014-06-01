@@ -52,7 +52,7 @@ class RuleCheckerPreprocessor : public clang::PPCallbacks {
 protected:
   clang::DiagnosticsEngine::Level diagLevel;
   clang::DiagnosticsEngine *diagEngine;
-  RuleCheckerPreprocessor() {}
+  RuleCheckerPreprocessor();
 
 public:
   virtual ~RuleCheckerPreprocessor() {}

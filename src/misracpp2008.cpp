@@ -104,6 +104,7 @@ ASTConsumer *Action::CreateASTConsumer(CompilerInstance &CI, llvm::StringRef) {
     assert(checkerName.size() >= 5 && checkerName.size() <= 6 &&
            "Each checkers has to have its rule number as name");
     if (enabledCheckers.count(checkerName) > 0) {
+      assert(CI.hasPreprocessor()  && "Compiler instance has no preprocessor!");
       auto diagLevel = getDiagnosticLevels().at(checkerName);
       std::unique_ptr<RuleCheckerPreprocessor> ppCallback = it->instantiate();
       ppCallback->setDiagLevel(diagLevel);
@@ -172,6 +173,12 @@ RuleCheckerASTContext::RuleCheckerASTContext()
 void RuleCheckerASTContext::doWork() {
   assert(context && "The context has to be set before calling this function.");
   assert(diagEngine);
+}
+
+RuleCheckerPreprocessor::RuleCheckerPreprocessor()
+  : diagLevel(DiagnosticsEngine::Error)
+  , diagEngine(nullptr)
+{
 }
 
 void RuleCheckerPreprocessor::setDiagLevel(DiagnosticsEngine::Level diagLevel) {
