@@ -11,7 +11,7 @@ are therefore realized as plugin.
 Installation
 ============
 
-It is assumend that you have already have compiled LLVM/Clang from SVN. To add
+It is assumed that you have already have compiled LLVM/Clang from SVN. To add
 clang-misracpp2008, the following steps are required:
 
     cd ~/${LLVM_CHECKOUT_FOLDER}/tools/clang/tools 
