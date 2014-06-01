@@ -44,7 +44,8 @@ bool enableChecker(const std::string &checkerName,
   if (getRegisteredCheckers().count(checkerName) == 0) {
     return false;
   }
-  getDiagnosticLevels().insert(std::make_pair(checkerName, diagLevel));
+  auto &checkerDiagLevelMap = getDiagnosticLevels();
+  checkerDiagLevelMap[checkerName] = diagLevel;
   getEnabledCheckers().insert(checkerName);
   return true;
 }
@@ -134,7 +135,13 @@ bool Action::ParseArgs(const CompilerInstance &CI,
       } else {
         diagLevel = DiagnosticsEngine::Error;
       }
-      if (enableChecker(token, diagLevel) == false) {
+      if (token == "all") {
+        for (const auto &checkerName : getRegisteredCheckers()) {
+          bool success = enableChecker(checkerName, diagLevel);
+          assert(success &&
+                 "Registered checkers have to be enabled successfully.");
+        }
+      } else if (enableChecker(token, diagLevel) == false) {
         llvm::errs() << "Unknown checker: " << token << "\n";
         dumpRegisteredCheckers(llvm::errs());
         return false;
@@ -150,6 +157,8 @@ void Action::PrintHelp(llvm::raw_ostream &ros) {
   ros << "Example for enabling the rules 0-1-8 and 0-1-9: 0-1-8,0-1-9\n";
   ros << "Prefixing a rule number with dashes allows to downgrad a specific"
          " rule to become a warning (one dash) or a remark (two dashes).\n";
+  ros << "Instead of a specific rule, it is also possible to use \"all\" to "
+         "enable all available checkers at once.\n";
 }
 
 static FrontendPluginRegistry::Add<Action> X("misra.cpp.2008",
