@@ -6,8 +6,6 @@
 //===----------------------------------------------------------------------===//
 
 #include "misracpp2008.h"
-#include "clang/AST/ASTContext.h"
-#include "clang/Lex/PPCallbacks.h"
 #include <string>
 
 using namespace clang;

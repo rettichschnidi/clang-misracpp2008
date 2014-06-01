@@ -14,14 +14,12 @@
 #include <memory>
 #include "clang/AST/ASTConsumer.h"
 #include "clang/Frontend/FrontendAction.h"
-#include "clang/AST/RecursiveASTVisitor.h"
 #include "clang/Basic/Diagnostic.h"
 #include "clang/Lex/PPCallbacks.h"
 #include "llvm/Support/Registry.h"
 
 namespace clang {
 class CompilerInstance;
-class ASTConsumer;
 class IdentifierTable;
 class ASTContext;
 }

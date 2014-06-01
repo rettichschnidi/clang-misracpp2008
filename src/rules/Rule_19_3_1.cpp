@@ -6,10 +6,8 @@
 //===----------------------------------------------------------------------===//
 
 #include "misracpp2008.h"
-#include "clang/AST/ASTContext.h"
-#include "clang/Frontend/CompilerInstance.h"
-#include "clang/Serialization/ASTReader.h"
-#include "clang/Lex/Preprocessor.h"
+#include "clang/Lex/Token.h"
+#include "clang/Basic/IdentifierTable.h"
 #include <string>
 
 using namespace clang;
