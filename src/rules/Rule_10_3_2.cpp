@@ -16,7 +16,6 @@ namespace misracpp2008 {
 
 const static std::string ruleName = "10-3-2";
 
-
 class Rule_10_3_2 : public RuleCheckerASTContext,
                     public clang::RecursiveASTVisitor<Rule_10_3_2> {
 public:
