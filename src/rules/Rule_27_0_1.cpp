@@ -17,7 +17,7 @@ const static std::string ruleName = "27-0-1";
 
 class Rule_27_0_1 : public RuleCheckerPreprocessor {
 private:
-  static const std::string illegalInclude;
+  static const std::set<std::string> illegalIncludes;
 
 public:
   virtual void InclusionDirective(SourceLocation HashLoc,
@@ -26,14 +26,14 @@ public:
                                   const FileEntry *File, StringRef SearchPath,
                                   StringRef RelativePath,
                                   const Module *Imported) {
-    if (FileName == illegalInclude) {
+    if (illegalIncludes.count(FileName)) {
       reportError("The stream input/output library <cstdio> shall not be used.",
                   HashLoc);
     }
   }
 };
 
-const std::string Rule_27_0_1::illegalInclude = "cstdio";
+const std::set<std::string> Rule_27_0_1::illegalIncludes = {"cstdio"};
 
 static RuleCheckerPreprocessorRegistry::Add<Rule_27_0_1>
 X(ruleName.c_str(), "MISRA C++ 2008 rule checker");

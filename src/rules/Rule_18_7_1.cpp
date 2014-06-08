@@ -18,7 +18,7 @@ const static std::string ruleName = "18-7-1";
 
 class Rule_18_7_1 : public RuleCheckerPreprocessor {
 private:
-  static const std::string illegalInclude;
+  static const std::set<std::string> illegalIncludes;
 
 public:
   virtual void InclusionDirective(SourceLocation HashLoc,
@@ -27,7 +27,7 @@ public:
                                   const FileEntry *File, StringRef SearchPath,
                                   StringRef RelativePath,
                                   const Module *Imported) {
-    if (FileName == illegalInclude) {
+    if (illegalIncludes.count(FileName)) {
       reportError(
           "The signal handling facilities of <csignal> shall not be used.",
           HashLoc);
@@ -35,7 +35,7 @@ public:
   }
 };
 
-const std::string Rule_18_7_1::illegalInclude = "csignal";
+const std::set<std::string> Rule_18_7_1::illegalIncludes = {"csignal"};
 
 static RuleCheckerPreprocessorRegistry::Add<Rule_18_7_1>
 X(ruleName.c_str(), "MISRA C++ 2008 rule checker");
