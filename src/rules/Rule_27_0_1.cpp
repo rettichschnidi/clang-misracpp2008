@@ -27,10 +27,6 @@ public:
                                   StringRef RelativePath,
                                   const Module *Imported) {
     if (FileName == illegalInclude) {
-      if (isInSystemHeader(HashLoc)) {
-        return;
-      }
-
       reportError("The stream input/output library <cstdio> shall not be used.",
                   HashLoc);
     }
