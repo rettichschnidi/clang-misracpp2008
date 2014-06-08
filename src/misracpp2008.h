@@ -50,7 +50,7 @@ public:
   }
 };
 
-class RuleCheckerASTContext : public RuleChecker {
+class RuleCheckerASTContext : public virtual RuleChecker {
 protected:
   clang::ASTContext *context;
   RuleCheckerASTContext();
@@ -62,7 +62,8 @@ public:
 
 typedef llvm::Registry<RuleCheckerASTContext> RuleCheckerASTContextRegistry;
 
-class RuleCheckerPreprocessor : public RuleChecker, public clang::PPCallbacks {
+class RuleCheckerPreprocessor : public virtual RuleChecker,
+                                public clang::PPCallbacks {
 protected:
   RuleCheckerPreprocessor();
 
