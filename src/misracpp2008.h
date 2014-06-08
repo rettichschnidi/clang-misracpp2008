@@ -30,34 +30,42 @@ class raw_ostream;
 
 namespace misracpp2008 {
 
-class RuleCheckerASTContext {
+class RuleChecker {
 protected:
-  clang::ASTContext *context;
   clang::DiagnosticsEngine *diagEngine;
   clang::DiagnosticsEngine::Level diagLevel;
-  RuleCheckerASTContext();
-  bool isInSystemHeader(clang::SourceLocation Loc);
+  RuleChecker();
 
 public:
-  virtual ~RuleCheckerASTContext() {}
-  void setContext(clang::ASTContext &context);
+  virtual ~RuleChecker() {}
   void setDiagLevel(clang::DiagnosticsEngine::Level diagLevel);
+  void setDiagEngine(clang::DiagnosticsEngine &diagEngine);
+  bool isInSystemHeader(clang::SourceLocation loc);
+  template <unsigned N>
+  void reportError(const char (&FormatString)[N], clang::SourceLocation loc) {
+    unsigned diagID = diagEngine->getCustomDiagID(diagLevel, FormatString);
+    diagEngine->Report(loc, diagID);
+  }
+};
+
+class RuleCheckerASTContext : public RuleChecker {
+protected:
+  clang::ASTContext *context;
+  RuleCheckerASTContext();
+
+public:
+  void setContext(clang::ASTContext &context);
   virtual void doWork() = 0;
 };
 
 typedef llvm::Registry<RuleCheckerASTContext> RuleCheckerASTContextRegistry;
 
-class RuleCheckerPreprocessor : public clang::PPCallbacks {
+class RuleCheckerPreprocessor : public RuleChecker, public clang::PPCallbacks {
 protected:
-  clang::DiagnosticsEngine::Level diagLevel;
-  clang::DiagnosticsEngine *diagEngine;
   RuleCheckerPreprocessor();
-  bool isInSystemHeader(clang::SourceLocation Loc);
 
 public:
   virtual ~RuleCheckerPreprocessor() {}
-  void setDiagLevel(clang::DiagnosticsEngine::Level diagLevel);
-  void setDiagEngine(clang::DiagnosticsEngine &diagEngine);
 };
 
 typedef llvm::Registry<RuleCheckerPreprocessor> RuleCheckerPreprocessorRegistry;

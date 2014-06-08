@@ -21,12 +21,11 @@ class Rule_18_4_1 : public RuleCheckerASTContext,
 public:
   Rule_18_4_1() : RuleCheckerASTContext() {}
   bool VisitCXXNewExpr(CXXNewExpr *decl) {
-    if(isInSystemHeader(decl->getStartLoc())) {
+    if (isInSystemHeader(decl->getStartLoc())) {
       return true;
     }
 
     bool doesNotThrow = decl->shouldNullCheckAllocation(*context);
-
     if (doesNotThrow) {
       // Iterate over children and try to figure out if this new expr
       // looks like a placement new which can be used legally.
@@ -42,9 +41,8 @@ public:
     }
 
     // This new expr does not look like a placement new. Generate an error.
-    unsigned diagID = diagEngine->getCustomDiagID(
-        diagLevel, "Dynamic heap memory allocation shall not be used.");
-    diagEngine->Report(decl->getLocStart(), diagID);
+    reportError("Dynamic heap memory allocation shall not be used.",
+                decl->getLocStart());
     return true;
   }
 

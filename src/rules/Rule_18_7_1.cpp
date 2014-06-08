@@ -28,10 +28,9 @@ public:
                                   StringRef RelativePath,
                                   const Module *Imported) {
     if (FileName == illegalInclude) {
-      unsigned diagID = diagEngine->getCustomDiagID(
-          diagLevel,
-          "The signal handling facilities of <csignal> shall not be used.");
-      diagEngine->Report(HashLoc, diagID);
+      reportError(
+          "The signal handling facilities of <csignal> shall not be used.",
+          HashLoc);
     }
   }
 };

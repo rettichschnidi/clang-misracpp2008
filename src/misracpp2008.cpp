@@ -29,6 +29,22 @@ using namespace llvm;
 
 namespace misracpp2008 {
 
+RuleChecker::RuleChecker()
+    : diagEngine(nullptr), diagLevel(DiagnosticsEngine::Error) {}
+
+void RuleChecker::setDiagLevel(DiagnosticsEngine::Level diagLevel) {
+  this->diagLevel = diagLevel;
+}
+
+void RuleChecker::setDiagEngine(DiagnosticsEngine &diagEngine) {
+  this->diagEngine = &diagEngine;
+}
+
+bool RuleChecker::isInSystemHeader(clang::SourceLocation loc) {
+  SourceManager &sourceManager = diagEngine->getSourceManager();
+  return sourceManager.isInSystemHeader(loc);
+}
+
 std::set<std::string> &getEnabledCheckers() {
   static std::set<std::string> enabledCheckers;
   return enabledCheckers;
@@ -169,18 +185,8 @@ void RuleCheckerASTContext::setContext(ASTContext &context) {
   this->diagEngine = &context.getDiagnostics();
 }
 
-void RuleCheckerASTContext::setDiagLevel(DiagnosticsEngine::Level diagLevel) {
-  this->diagLevel = diagLevel;
-}
-
 RuleCheckerASTContext::RuleCheckerASTContext()
-    : context(nullptr), diagEngine(nullptr),
-      diagLevel(DiagnosticsEngine::Error) {}
-
-bool RuleCheckerASTContext::isInSystemHeader(clang::SourceLocation loc) {
-  SourceManager &sourceManager = diagEngine->getSourceManager();
-  return sourceManager.isInSystemHeader(loc);
-}
+    : RuleChecker(), context(nullptr) {}
 
 void RuleCheckerASTContext::doWork() {
   assert(context && "The context has to be set before calling this function.");
@@ -188,20 +194,7 @@ void RuleCheckerASTContext::doWork() {
 }
 
 RuleCheckerPreprocessor::RuleCheckerPreprocessor()
-    : diagLevel(DiagnosticsEngine::Error), diagEngine(nullptr) {}
-
-bool RuleCheckerPreprocessor::isInSystemHeader(clang::SourceLocation loc) {
-  SourceManager &sourceManager = diagEngine->getSourceManager();
-  return sourceManager.isInSystemHeader(loc);
-}
-
-void RuleCheckerPreprocessor::setDiagLevel(DiagnosticsEngine::Level diagLevel) {
-  this->diagLevel = diagLevel;
-}
-
-void RuleCheckerPreprocessor::setDiagEngine(DiagnosticsEngine &diagEngine) {
-  this->diagEngine = &diagEngine;
-}
+    : RuleChecker(), PPCallbacks() {}
 
 std::set<std::string> getRegisteredCheckers() {
   std::set<std::string> registeredCheckers;

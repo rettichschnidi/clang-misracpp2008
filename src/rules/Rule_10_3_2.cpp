@@ -20,8 +20,13 @@ class Rule_10_3_2 : public RuleCheckerASTContext,
                     public clang::RecursiveASTVisitor<Rule_10_3_2> {
 public:
   Rule_10_3_2() : RuleCheckerASTContext() {}
+  void reportError(SourceLocation loc) {
+    RuleChecker::reportError("Each overriding virtual function shall be "
+                             "declared with the virtual keyword.",
+                             loc);
+  }
   bool VisitCXXRecordDecl(CXXRecordDecl *decl) {
-    if(isInSystemHeader(decl->getLocStart())) {
+    if (isInSystemHeader(decl->getLocStart())) {
       return true;
     }
 
@@ -29,11 +34,7 @@ public:
     CXXRecordDecl::method_iterator E = decl->method_end();
     while (B != E) {
       if (!B->isImplicit() && B->isVirtual() && !B->isVirtualAsWritten()) {
-        unsigned diagID = diagEngine->getCustomDiagID(
-            diagLevel, "Each overriding virtual function shall be declared with"
-                       " the virtual keyword.");
-        SourceLocation location = B->getLocation();
-        diagEngine->Report(location, diagID);
+        reportError(B->getLocation());
         break;
       }
       B++;
@@ -41,13 +42,9 @@ public:
     return true;
   }
   bool VisitCXXDestructorDecl(clang::CXXDestructorDecl *decl) {
-      if (decl->isVirtual() && !decl->isVirtualAsWritten()) {
-        unsigned diagID = diagEngine->getCustomDiagID(
-            diagLevel, "Each overriding virtual function shall be declared with"
-                       " the virtual keyword.");
-        SourceLocation location = decl->getLocation();
-        diagEngine->Report(location, diagID);
-      }
+    if (decl->isVirtual() && !decl->isVirtualAsWritten()) {
+      reportError(decl->getLocation());
+    }
     return true;
   }
 

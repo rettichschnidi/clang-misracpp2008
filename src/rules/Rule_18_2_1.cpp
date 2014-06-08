@@ -21,9 +21,7 @@ class Rule_18_2_1 : public RuleCheckerASTContext,
 public:
   Rule_18_2_1() : RuleCheckerASTContext() {}
   bool VisitOffsetOfExpr(OffsetOfExpr *expr) {
-    unsigned diagID = diagEngine->getCustomDiagID(
-        diagLevel, "The macro offsetof shall not be used.");
-    diagEngine->Report(expr->getLocStart(), diagID);
+    reportError("The macro offsetof shall not be used.", expr->getLocStart());
     return true;
   }
 

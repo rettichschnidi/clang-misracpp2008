@@ -22,14 +22,15 @@ class Rule_18_0_5 : public RuleCheckerASTContext,
                     public RecursiveASTVisitor<Rule_18_0_5> {
 private:
   static const std::set<std::string> illegalFunctions;
+
 public:
   Rule_18_0_5() : RuleCheckerASTContext() {}
   bool VisitDeclRefExpr(DeclRefExpr *expr) {
     std::string funName = expr->getNameInfo().getAsString();
-    if(illegalFunctions.count(funName)) {
-      unsigned diagID = diagEngine->getCustomDiagID(
-            diagLevel, "The unbounded functions of library <cstring> shall not be used.");
-      diagEngine->Report(expr->getLocStart(), diagID);
+    if (illegalFunctions.count(funName)) {
+      reportError(
+          "The unbounded functions of library <cstring> shall not be used.",
+          expr->getLocStart());
     }
     return true;
   }
@@ -41,18 +42,10 @@ protected:
   }
 };
 
-const std::set<std::string> Rule_18_0_5::illegalFunctions = { "strcpy",
-                                                              "strcmp",
-                                                              "strcat",
-                                                              "strchr",
-                                                              "strspn",
-                                                              "strcspn",
-                                                              "strpbrk",
-                                                              "strrchr",
-                                                              "strstr",
-                                                              "strtok",
-                                                              "strlen" };
+const std::set<std::string> Rule_18_0_5::illegalFunctions = {
+    "strcpy",  "strcmp",  "strcat", "strchr", "strspn", "strcspn",
+    "strpbrk", "strrchr", "strstr", "strtok", "strlen"};
 
 static RuleCheckerASTContextRegistry::Add<Rule_18_0_5>
-  X(ruleName.c_str(), "MISRA C++ 2008 rule checker");
+X(ruleName.c_str(), "MISRA C++ 2008 rule checker");
 }

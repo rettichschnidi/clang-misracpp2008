@@ -26,13 +26,12 @@ public:
                             SourceRange Range, const MacroArgs *Args) {
     const std::string &name = MacroNameTok.getIdentifierInfo()->getName();
     if (name == illegalVariableName) {
-      if(isInSystemHeader(Range.getBegin())) {
+      if (isInSystemHeader(Range.getBegin())) {
         return;
       }
 
-      unsigned diagID = diagEngine->getCustomDiagID(
-          diagLevel, "The error indicator errno shall not be used.");
-      diagEngine->Report(Range.getBegin(), diagID);
+      reportError("The error indicator errno shall not be used.",
+                  Range.getBegin());
     }
   }
 };

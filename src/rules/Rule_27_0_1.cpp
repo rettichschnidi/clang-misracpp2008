@@ -27,15 +27,12 @@ public:
                                   StringRef RelativePath,
                                   const Module *Imported) {
     if (FileName == illegalInclude) {
-      SourceManager &sourceManager = diagEngine->getSourceManager();
-      if(sourceManager.isInSystemHeader (HashLoc) ) {
+      if (isInSystemHeader(HashLoc)) {
         return;
       }
 
-      unsigned diagID = diagEngine->getCustomDiagID(
-          diagLevel,
-          "The stream input/output library <cstdio> shall not be used.");
-      diagEngine->Report(HashLoc, diagID);
+      reportError("The stream input/output library <cstdio> shall not be used.",
+                  HashLoc);
     }
   }
 };
