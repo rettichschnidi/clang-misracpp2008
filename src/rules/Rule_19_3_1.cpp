@@ -18,14 +18,14 @@ const static std::string ruleName = "19-3-1";
 
 class Rule_19_3_1 : public RuleCheckerPreprocessor {
 private:
-  static const std::string illegalVariableName;
+  static const std::string illegalMacroName;
 
 public:
-  // Abuse the fact that errno is defined as a macro (at least on my system)
+  // errno is a macro.
   virtual void MacroExpands(const Token &MacroNameTok, const MacroDirective *MD,
                             SourceRange Range, const MacroArgs *Args) {
     const std::string &name = MacroNameTok.getIdentifierInfo()->getName();
-    if (name == illegalVariableName) {
+    if (name == illegalMacroName) {
       if (doIgnore(Range.getBegin())) {
         return;
       }
@@ -36,7 +36,7 @@ public:
   }
 };
 
-const std::string Rule_19_3_1::illegalVariableName = "errno";
+const std::string Rule_19_3_1::illegalMacroName = "errno";
 
 static RuleCheckerPreprocessorRegistry::Add<Rule_19_3_1>
 X(ruleName.c_str(), "MISRA C++ 2008 rule checker");
