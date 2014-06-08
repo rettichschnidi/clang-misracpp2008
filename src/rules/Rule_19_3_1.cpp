@@ -26,7 +26,7 @@ public:
                             SourceRange Range, const MacroArgs *Args) {
     const std::string &name = MacroNameTok.getIdentifierInfo()->getName();
     if (name == illegalMacroName) {
-      if (doIgnore(Range.getBegin())) {
+      if (doIgnore(MacroNameTok.getLastLoc())) {
         return;
       }
 
