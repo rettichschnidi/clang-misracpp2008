@@ -36,6 +36,7 @@ protected:
   clang::DiagnosticsEngine *diagEngine;
   clang::DiagnosticsEngine::Level diagLevel;
   RuleCheckerASTContext();
+  bool isInSystemHeader(clang::SourceLocation Loc);
 
 public:
   virtual ~RuleCheckerASTContext() {}
@@ -51,6 +52,7 @@ protected:
   clang::DiagnosticsEngine::Level diagLevel;
   clang::DiagnosticsEngine *diagEngine;
   RuleCheckerPreprocessor();
+  bool isInSystemHeader(clang::SourceLocation Loc);
 
 public:
   virtual ~RuleCheckerPreprocessor() {}

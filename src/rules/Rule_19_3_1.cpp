@@ -26,8 +26,7 @@ public:
                             SourceRange Range, const MacroArgs *Args) {
     const std::string &name = MacroNameTok.getIdentifierInfo()->getName();
     if (name == illegalVariableName) {
-      SourceManager &sourceManager = diagEngine->getSourceManager();
-      if(sourceManager.isInSystemHeader (Range.getBegin()) ) {
+      if(isInSystemHeader(Range.getBegin())) {
         return;
       }
 

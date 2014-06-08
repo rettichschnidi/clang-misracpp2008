@@ -177,6 +177,11 @@ RuleCheckerASTContext::RuleCheckerASTContext()
     : context(nullptr), diagEngine(nullptr),
       diagLevel(DiagnosticsEngine::Error) {}
 
+bool RuleCheckerASTContext::isInSystemHeader(clang::SourceLocation loc) {
+  SourceManager &sourceManager = diagEngine->getSourceManager();
+  return sourceManager.isInSystemHeader(loc);
+}
+
 void RuleCheckerASTContext::doWork() {
   assert(context && "The context has to be set before calling this function.");
   assert(diagEngine);
@@ -184,6 +189,11 @@ void RuleCheckerASTContext::doWork() {
 
 RuleCheckerPreprocessor::RuleCheckerPreprocessor()
     : diagLevel(DiagnosticsEngine::Error), diagEngine(nullptr) {}
+
+bool RuleCheckerPreprocessor::isInSystemHeader(clang::SourceLocation loc) {
+  SourceManager &sourceManager = diagEngine->getSourceManager();
+  return sourceManager.isInSystemHeader(loc);
+}
 
 void RuleCheckerPreprocessor::setDiagLevel(DiagnosticsEngine::Level diagLevel) {
   this->diagLevel = diagLevel;

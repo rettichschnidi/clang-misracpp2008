@@ -21,6 +21,10 @@ class Rule_18_4_1 : public RuleCheckerASTContext,
 public:
   Rule_18_4_1() : RuleCheckerASTContext() {}
   bool VisitCXXNewExpr(CXXNewExpr *decl) {
+    if(isInSystemHeader(decl->getStartLoc())) {
+      return true;
+    }
+
     bool doesNotThrow = decl->shouldNullCheckAllocation(*context);
 
     if (doesNotThrow) {
@@ -35,11 +39,6 @@ public:
           }
         }
       }
-    }
-
-    SourceManager &sourceManager = diagEngine->getSourceManager();
-    if(sourceManager.isInSystemHeader (decl->getLocStart()) ) {
-      return true;
     }
 
     // This new expr does not look like a placement new. Generate an error.

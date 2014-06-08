@@ -21,8 +21,7 @@ class Rule_10_3_2 : public RuleCheckerASTContext,
 public:
   Rule_10_3_2() : RuleCheckerASTContext() {}
   bool VisitCXXRecordDecl(CXXRecordDecl *decl) {
-    SourceManager &sourceManager = diagEngine->getSourceManager();
-    if(sourceManager.isInSystemHeader (decl->getLocStart()) ) {
+    if(isInSystemHeader(decl->getLocStart())) {
       return true;
     }
 
