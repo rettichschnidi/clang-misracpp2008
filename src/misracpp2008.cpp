@@ -30,7 +30,8 @@ using namespace llvm;
 namespace misracpp2008 {
 
 RuleChecker::RuleChecker()
-    : diagEngine(nullptr), diagLevel(DiagnosticsEngine::Error) {}
+    : diagEngine(nullptr), diagLevel(DiagnosticsEngine::Error),
+      doIgnoreSystemHeaders(true) {}
 
 void RuleChecker::setDiagLevel(DiagnosticsEngine::Level diagLevel) {
   this->diagLevel = diagLevel;
@@ -43,6 +44,10 @@ void RuleChecker::setDiagEngine(DiagnosticsEngine &diagEngine) {
 bool RuleChecker::isInSystemHeader(clang::SourceLocation loc) {
   SourceManager &sourceManager = diagEngine->getSourceManager();
   return sourceManager.isInSystemHeader(loc);
+}
+
+bool RuleChecker::doIgnore(clang::SourceLocation loc) {
+  return doIgnoreSystemHeaders && isInSystemHeader(loc);
 }
 
 std::set<std::string> &getEnabledCheckers() {

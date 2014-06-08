@@ -21,7 +21,7 @@ class Rule_18_4_1 : public RuleCheckerASTContext,
 public:
   Rule_18_4_1() : RuleCheckerASTContext() {}
   bool VisitCXXNewExpr(CXXNewExpr *decl) {
-    if (isInSystemHeader(decl->getStartLoc())) {
+    if (doIgnore(decl->getStartLoc())) {
       return true;
     }
 

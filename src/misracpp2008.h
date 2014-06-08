@@ -34,13 +34,15 @@ class RuleChecker {
 protected:
   clang::DiagnosticsEngine *diagEngine;
   clang::DiagnosticsEngine::Level diagLevel;
+  bool doIgnoreSystemHeaders;
   RuleChecker();
+  bool isInSystemHeader(clang::SourceLocation loc);
 
 public:
   virtual ~RuleChecker() {}
   void setDiagLevel(clang::DiagnosticsEngine::Level diagLevel);
   void setDiagEngine(clang::DiagnosticsEngine &diagEngine);
-  bool isInSystemHeader(clang::SourceLocation loc);
+  bool doIgnore(clang::SourceLocation loc);
   template <unsigned N>
   void reportError(const char (&FormatString)[N], clang::SourceLocation loc) {
     unsigned diagID = diagEngine->getCustomDiagID(diagLevel, FormatString);

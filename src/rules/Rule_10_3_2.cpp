@@ -26,7 +26,7 @@ public:
                              loc);
   }
   bool VisitCXXRecordDecl(CXXRecordDecl *decl) {
-    if (isInSystemHeader(decl->getLocStart())) {
+    if (doIgnore(decl->getLocStart())) {
       return true;
     }
 

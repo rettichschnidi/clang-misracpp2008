@@ -28,6 +28,9 @@ public:
                                   StringRef RelativePath,
                                   const Module *Imported) {
     if (illegalIncludes.count(FileName)) {
+      if (doIgnore(HashLoc)) {
+        return;
+      }
       reportError("The C library shall not be used.", HashLoc);
     }
   }
