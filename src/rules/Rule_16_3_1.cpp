@@ -29,14 +29,15 @@ public:
                                     E = macroInfo->tokens_end();
          I != E; ++I) {
       const std::string tokenType = I->getName();
-      // Count occurrences of "hash" and "hashhas"
-      if (tokenType.find_first_of("hashhash") == 0) {
+      // Count occurrences of "hash" and "hashhash"
+      if (tokenType.find("hash") == 0) {
         counter++;
         // Report only the first illegal hash
         if (counter == 2) {
           reportError("There shall be at most one occurrence of the # or ## "
                       "operators in a single macro definition.",
                       I->getLocation());
+          break;
         }
       }
     }
