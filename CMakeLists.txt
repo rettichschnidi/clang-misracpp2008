@@ -6,8 +6,8 @@ aux_source_directory(src/rules SRC_RULE_LIST)
 aux_source_directory(src/ SRC_MAIN_LIST)
 
 include_directories(
-    src/
-    src/rules/
+  src/
+  src/rules/
 )
 
 set(SRC_LIST
