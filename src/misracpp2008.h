@@ -19,6 +19,7 @@
 #include "clang/Basic/Diagnostic.h"
 #include "clang/Lex/PPCallbacks.h"
 #include "llvm/Support/Registry.h"
+#include "RuleHeadlineTexts.h"
 
 namespace clang {
 class CompilerInstance;

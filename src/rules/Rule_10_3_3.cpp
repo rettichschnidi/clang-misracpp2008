@@ -30,10 +30,7 @@ public:
       while (B != E) {
         const CXXMethodDecl &m = **B;
         if (m.isPure() == false) {
-          reportError("A virtual function shall only be overridden by a pure "
-                      "virtual function if it is itself declared as pure "
-                      "virtual.",
-                      decl->getLocation());
+          reportError(RULE_TEXT_10_3_3, decl->getLocation());
           break;
         }
         B++;

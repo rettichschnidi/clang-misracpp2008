@@ -36,9 +36,7 @@ public:
         counter++;
         // Report only the first illegal hash
         if (counter == 2) {
-          reportError("There shall be at most one occurrence of the # or ## "
-                      "operators in a single macro definition.",
-                      I->getLocation());
+          reportError(RULE_TEXT_16_3_1, I->getLocation());
           break;
         }
       }

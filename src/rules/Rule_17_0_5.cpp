@@ -24,8 +24,7 @@ protected:
     return illegalFunction;
   }
   virtual void reportRuleViolation(SourceLocation loc) {
-    RuleChecker::reportError(
-        "The setjmp macro and the longjmp function shall not be used.", loc);
+    RuleChecker::reportError(RULE_TEXT_17_0_5, loc);
   }
 };
 

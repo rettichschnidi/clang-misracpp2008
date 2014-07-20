@@ -23,9 +23,7 @@ class Rule_10_3_2 : public RuleCheckerASTContext,
 public:
   Rule_10_3_2() : RuleCheckerASTContext() {}
   void reportError(SourceLocation loc) {
-    RuleChecker::reportError("Each overriding virtual function shall be "
-                             "declared with the virtual keyword.",
-                             loc);
+    RuleChecker::reportError(RULE_TEXT_10_3_2, loc);
   }
   bool VisitCXXRecordDecl(CXXRecordDecl *decl) {
     if (doIgnore(decl->getLocStart())) {

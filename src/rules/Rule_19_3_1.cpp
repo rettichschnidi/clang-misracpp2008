@@ -32,8 +32,7 @@ public:
         return;
       }
 
-      reportError("The error indicator errno shall not be used.",
-                  Range.getBegin());
+      reportError(RULE_TEXT_19_3_1, Range.getBegin());
     }
   }
 };

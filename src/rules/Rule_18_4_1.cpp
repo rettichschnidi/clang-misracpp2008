@@ -43,8 +43,7 @@ public:
     }
 
     // This new expr does not look like a placement new. Generate an error.
-    reportError("Dynamic heap memory allocation shall not be used.",
-                decl->getLocStart());
+    reportError(RULE_TEXT_18_4_1, decl->getLocStart());
     return true;
   }
 

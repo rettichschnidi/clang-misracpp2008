@@ -32,8 +32,7 @@ public:
       const std::string tokenType = I->getName();
       // Count occurrences of "hash" and "hashhash"
       if (tokenType.find("hash") == 0) {
-        reportError("The # and ## operators should not be used.",
-                    I->getLocation());
+        reportError(RULE_TEXT_16_3_2, I->getLocation());
         break;
       }
     }

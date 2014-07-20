@@ -23,7 +23,7 @@ class Rule_18_2_1 : public RuleCheckerASTContext,
 public:
   Rule_18_2_1() : RuleCheckerASTContext() {}
   bool VisitOffsetOfExpr(OffsetOfExpr *expr) {
-    reportError("The macro offsetof shall not be used.", expr->getLocStart());
+    reportError(RULE_TEXT_18_2_1, expr->getLocStart());
     return true;
   }
 

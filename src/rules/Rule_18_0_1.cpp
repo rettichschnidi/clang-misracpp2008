@@ -33,7 +33,7 @@ public:
       if (doIgnore(HashLoc)) {
         return;
       }
-      reportError("The C library shall not be used.", HashLoc);
+      reportError(RULE_TEXT_18_0_1, HashLoc);
     }
   }
 };

@@ -30,9 +30,7 @@ public:
                                   StringRef RelativePath,
                                   const Module *Imported) {
     if (illegalIncludes.count(FileName)) {
-      reportError(
-          "The time handling functions of library <ctime> shall not be used.",
-          HashLoc);
+      reportError(RULE_TEXT_18_0_4, HashLoc);
     }
   }
 };

@@ -30,9 +30,7 @@ public:
   bool VisitDeclRefExpr(DeclRefExpr *expr) {
     std::string funName = expr->getNameInfo().getAsString();
     if (illegalFunctions.count(funName)) {
-      reportError(
-          "The unbounded functions of library <cstring> shall not be used.",
-          expr->getLocStart());
+      reportError(RULE_TEXT_18_0_5, expr->getLocStart());
     }
     return true;
   }

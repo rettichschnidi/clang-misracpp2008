@@ -29,9 +29,7 @@ public:
   bool VisitDeclRefExpr(DeclRefExpr *expr) {
     std::string funName = expr->getNameInfo().getAsString();
     if (illegalFunctions.count(funName)) {
-      reportError("The library functions abort, exit, getenv and system from "
-                  "library <cstdlib> shall not be used.",
-                  expr->getLocStart());
+      reportError(RULE_TEXT_18_0_3, expr->getLocStart());
     }
     return true;
   }

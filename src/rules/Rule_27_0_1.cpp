@@ -29,8 +29,7 @@ public:
                                   StringRef RelativePath,
                                   const Module *Imported) {
     if (illegalIncludes.count(FileName)) {
-      reportError("The stream input/output library <cstdio> shall not be used.",
-                  HashLoc);
+      reportError(RULE_TEXT_0_1_1, HashLoc);
     }
   }
 };

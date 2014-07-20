@@ -29,9 +29,7 @@ private:
       if (doIgnore(loc)) {
         return;
       }
-      reportError("Reserved identifiers, macros and functions in the standard "
-                  "library shall not be defined, redefined or undefined.",
-                  loc);
+      reportError(RULE_TEXT_17_0_1, loc);
     }
   }
 

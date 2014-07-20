@@ -30,9 +30,7 @@ public:
                                   StringRef RelativePath,
                                   const Module *Imported) {
     if (illegalIncludes.count(FileName)) {
-      reportError(
-          "The signal handling facilities of <csignal> shall not be used.",
-          HashLoc);
+      reportError(RULE_TEXT_18_7_1, HashLoc);
     }
   }
 };
