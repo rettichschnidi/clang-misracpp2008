@@ -29,7 +29,7 @@ public:
                                   StringRef RelativePath,
                                   const Module *Imported) {
     if (illegalIncludes.count(FileName)) {
-      reportError(RULE_TEXT_0_1_1, HashLoc);
+      reportError(RULE_TEXT_27_0_1, HashLoc);
     }
   }
 };
