@@ -199,9 +199,10 @@ protected:
         }
         if (token == "all") {
           for (const auto &checkerName : getRegisteredCheckers()) {
-            bool success = enableChecker(checkerName, diagLevel);
-            assert(success &&
-                   "Registered checkers have to be enabled successfully.");
+            if (enableChecker(checkerName, diagLevel) == false) {
+              assert(false &&
+                     "Registered checkers have to be enabled successfully.");
+            }
           }
         } else if (enableChecker(token, diagLevel) == false) {
           llvm::errs() << "Unknown checker: " << token << "\n";
