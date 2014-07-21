@@ -14,17 +14,21 @@ Installation
 It is assumed that you have already have compiled LLVM/Clang from SVN. To add
 clang-misracpp2008, the following steps are required:
 
-    cd ~/${LLVM_CHECKOUT_FOLDER}/tools/clang/tools 
+    cd ~/${LLVM_CHECKOUT_FOLDER}/tools/clang/tools
     git clone https://github.com/rettichschnidi/clang-misracpp2008.git
     echo 'add_subdirectory(clang-misracpp2008)' >>  CMakeLists.txt
-    
+
 The next time you build LLVM/Clang, clang-misracpp2008 gets picked up and built.
 
 Please note that currently only the CMake build system is supported.
 
 Running tests
 =============
-Go to the LLVM/Clang build directory and run `make check-misracpp2008`
+Build the target check-misracpp2008: `make check-misracpp2008`
+
+Building documentation
+======================
+Build the target doxygen-misracpp2008: `make doxygen-misracpp2008`
 
 Usage
 =====
