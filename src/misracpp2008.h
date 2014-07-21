@@ -68,12 +68,12 @@ public:
   /**
    * @brief Set the level of the diagnostic to be used when a violation gets
    * reported.
-   * @param diagLevel
+   * @param diagLevel New diagnostic level.
    */
   void setDiagLevel(clang::DiagnosticsEngine::Level diagLevel);
   /**
    * @brief Set the diagnostic engine to be used when a violation gets reported.
-   * @param diagEngine
+   * @param diagEngine New diagnostics engine to be used.
    */
   void setDiagEngine(clang::DiagnosticsEngine &diagEngine);
   /**
@@ -81,8 +81,8 @@ public:
    * or command-line-specified code most likely should not be checked. Also,
    * code from the system headers probably not even close to MISRA conformity
    * and have to be excluded as well.
-   * @param loc
-   * @return
+   * @param loc Location to evaluate.
+   * @return True if \c loc should be ignored (not checked), false if not.
    */
   bool doIgnore(clang::SourceLocation loc);
   template <unsigned N>
