@@ -17,8 +17,6 @@ if(DOXYGEN_FOUND)
   if(LLVM_BUILD_DOCS)
     add_dependencies(doxygen doxygen-misracpp2008)
   endif()
-else()
-  message(FATAL_ERROR "FAIL")
 endif()
 
 #Glob all sources files.
