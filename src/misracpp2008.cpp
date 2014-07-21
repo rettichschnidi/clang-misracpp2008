@@ -67,7 +67,10 @@ bool RuleChecker::doIgnore(clang::SourceLocation loc) {
   if (isCommandLine(loc)) {
     return true;
   }
-  return doIgnoreSystemHeaders && isInSystemHeader(loc);
+  if (isInSystemHeader(loc)) {
+    return doIgnoreSystemHeaders;
+  }
+  return false;
 }
 
 std::set<std::string> &getEnabledCheckers() {
