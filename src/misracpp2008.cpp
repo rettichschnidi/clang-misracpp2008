@@ -32,7 +32,6 @@ using namespace llvm;
 
 namespace misracpp2008 {
 
-
 typedef std::map<std::string, clang::DiagnosticsEngine::Level> DiagLevelMap;
 DiagLevelMap &getDiagnosticLevels();
 std::set<std::string> &getEnabledCheckers();
@@ -128,8 +127,8 @@ public:
     // Iterate over registered ASTContext checkers and execute the ones active
     const auto &enabledCheckers = getEnabledCheckers();
     for (RuleCheckerASTContextRegistry::iterator
-         it = RuleCheckerASTContextRegistry::begin(),
-         ie = RuleCheckerASTContextRegistry::end();
+             it = RuleCheckerASTContextRegistry::begin(),
+             ie = RuleCheckerASTContextRegistry::end();
          it != ie; ++it) {
       const std::string checkerName =
           RuleCheckerASTContextRegistry::traits::nameof(*it);
@@ -165,7 +164,8 @@ protected:
       assert(checkerName.size() >= 5 && checkerName.size() <= 6 &&
              "Each checkers has to have its rule number as name");
       if (enabledCheckers.count(checkerName) > 0) {
-        assert(CI.hasPreprocessor() && "Compiler instance has no preprocessor!");
+        assert(CI.hasPreprocessor() &&
+               "Compiler instance has no preprocessor!");
         auto diagLevel = getDiagnosticLevels().at(checkerName);
         std::unique_ptr<RuleCheckerPreprocessor> ppCallback = it->instantiate();
         ppCallback->setDiagLevel(diagLevel);
@@ -177,7 +177,7 @@ protected:
   }
 
   bool ParseArgs(const clang::CompilerInstance &CI,
-                 const std::vector<std::string> &args)  {
+                 const std::vector<std::string> &args) {
     for (unsigned i = 0, e = args.size(); i != e; ++i) {
       // Handle help request
       if (args[i] == "help") {
@@ -265,4 +265,3 @@ std::set<std::string> getRegisteredCheckers() {
   return registeredCheckers;
 }
 }
-

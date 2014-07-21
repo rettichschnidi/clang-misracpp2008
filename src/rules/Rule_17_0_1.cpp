@@ -52,14 +52,15 @@ public:
 };
 
 const std::set<std::string> Rule_17_0_1::illegalMacroNames = {
-    "__cplusplus",                      "__DATE__",
-    "__FILE__",                         "__LINE__",
-    "__STDC_HOSTED__",                  "__TIME__",
-    "__STDC__",                         "__STDC_MB_MIGHT_NEQ_WC__",
-    "__STDC_VERSION__",                 "__STDC_ISO_10646__",
-    "__STDCPP_STRICT_POINTER_SAFETY__", "__STDCPP_THREADS__",
-    "define",                           "errno",
-    "assert"};
+  "__cplusplus",                      "__DATE__",
+  "__FILE__",                         "__LINE__",
+  "__STDC_HOSTED__",                  "__TIME__",
+  "__STDC__",                         "__STDC_MB_MIGHT_NEQ_WC__",
+  "__STDC_VERSION__",                 "__STDC_ISO_10646__",
+  "__STDCPP_STRICT_POINTER_SAFETY__", "__STDCPP_THREADS__",
+  "define",                           "errno",
+  "assert"
+};
 
 static RuleCheckerPreprocessorRegistry::Add<Rule_17_0_1>
 X(ruleName.c_str(), "MISRA C++ 2008 rule checker");

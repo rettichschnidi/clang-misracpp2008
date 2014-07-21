@@ -38,7 +38,7 @@ public:
   }
 };
 
-const std::set<std::string> Rule_27_0_1::illegalIncludes = {"cstdio"};
+const std::set<std::string> Rule_27_0_1::illegalIncludes = { "cstdio" };
 
 static RuleCheckerPreprocessorRegistry::Add<Rule_27_0_1>
 X(ruleName.c_str(), "MISRA C++ 2008 rule checker");

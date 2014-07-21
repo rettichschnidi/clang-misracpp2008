@@ -28,8 +28,8 @@ protected:
   }
 };
 
-const std::set<std::string> Rule_17_0_5::illegalFunction = {"longjmp",
-                                                            "setjmp"};
+const std::set<std::string> Rule_17_0_5::illegalFunction = { "longjmp",
+                                                             "setjmp" };
 
 static RuleCheckerASTContextRegistry::Add<Rule_17_0_5>
 X(ruleName.c_str(), "MISRA C++ 2008 rule checker");

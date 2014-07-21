@@ -47,8 +47,9 @@ protected:
 };
 
 const std::set<std::string> Rule_18_0_5::illegalFunctions = {
-    "strcpy",  "strcmp",  "strcat", "strchr", "strspn", "strcspn",
-    "strpbrk", "strrchr", "strstr", "strtok", "strlen"};
+  "strcpy",  "strcmp",  "strcat", "strchr", "strspn", "strcspn",
+  "strpbrk", "strrchr", "strstr", "strtok", "strlen"
+};
 
 static RuleCheckerASTContextRegistry::Add<Rule_18_0_5>
 X(ruleName.c_str(), "MISRA C++ 2008 rule checker");

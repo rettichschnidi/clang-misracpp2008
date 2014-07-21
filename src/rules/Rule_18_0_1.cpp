@@ -39,10 +39,11 @@ public:
 };
 
 const std::set<std::string> Rule_18_0_1::illegalIncludes = {
-    "assert.h", "ctype.h",   "errno.h",  "fenv.h",   "float.h",  "inttypes.h",
-    "iso646.h", "limits.h",  "locale.h", "math.h",   "setjmp.h", "signal.h",
-    "stdarg.h", "stdbool.h", "stddef.h", "stdint.h", "stdlib.h", "string.h",
-    "tgmath.h", "time.h",    "uchar.h",  "wchar.h",  "wctype.h"};
+  "assert.h", "ctype.h",   "errno.h",  "fenv.h",   "float.h",  "inttypes.h",
+  "iso646.h", "limits.h",  "locale.h", "math.h",   "setjmp.h", "signal.h",
+  "stdarg.h", "stdbool.h", "stddef.h", "stdint.h", "stdlib.h", "string.h",
+  "tgmath.h", "time.h",    "uchar.h",  "wchar.h",  "wctype.h"
+};
 
 static RuleCheckerPreprocessorRegistry::Add<Rule_18_0_1>
 X(ruleName.c_str(), "MISRA C++ 2008 rule checker");
