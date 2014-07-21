@@ -4,7 +4,7 @@ set(CLANG_MISRACPP2008_BINARY_DIR ${CMAKE_CURRENT_BINARY_DIR})
 #Enable target doxygen-misracpp2008 to build the doxygen documentation
 find_package(Doxygen)
 if(DOXYGEN_FOUND)
-  set(DOC_OUTPUT_PATH ${CMAKE_BINARY_DIR}/doc)
+  set(DOC_OUTPUT_PATH ${CMAKE_BINARY_DIR}/docs)
 
   configure_file(${CLANG_MISRACPP2008_SOURCE_DIR}/doc/Doxyfile.in
     ${CMAKE_CURRENT_BINARY_DIR}/Doxyfile @ONLY)
