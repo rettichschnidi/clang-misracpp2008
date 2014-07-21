@@ -1,5 +1,5 @@
-#ifndef RULE_HEADLINES_H
-#define RULE_HEADLINES_H
+#ifndef RULE_HEADLINE_TEXTS_H
+#define RULE_HEADLINE_TEXTS_H
 
 //===-  RuleHeadlineTexts.h - MISRA C++:2008 rule headlines----------------===//
 //
@@ -384,4 +384,4 @@ extern const char RULE_TEXT_19_3_1[45];
 extern const char RULE_TEXT_27_0_1[60];
 }
 
-#endif // RULE_HEADLINES_H
+#endif // RULE_HEADLINE_TEXTS_H
