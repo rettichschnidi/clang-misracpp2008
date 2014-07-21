@@ -23,6 +23,9 @@ class Rule_18_2_1 : public RuleCheckerASTContext,
 public:
   Rule_18_2_1() : RuleCheckerASTContext() {}
   bool VisitOffsetOfExpr(OffsetOfExpr *expr) {
+    if (doIgnore(expr->getLocStart())) {
+      return true;
+    }
     reportError(RULE_TEXT_18_2_1, expr->getLocStart());
     return true;
   }

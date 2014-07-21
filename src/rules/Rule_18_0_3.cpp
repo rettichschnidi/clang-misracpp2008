@@ -27,6 +27,10 @@ private:
 
 public:
   bool VisitDeclRefExpr(DeclRefExpr *expr) {
+    if (doIgnore(expr->getLocation())) {
+      return true;
+    }
+
     std::string funName = expr->getNameInfo().getAsString();
     if (illegalFunctions.count(funName)) {
       reportError(RULE_TEXT_18_0_3, expr->getLocStart());

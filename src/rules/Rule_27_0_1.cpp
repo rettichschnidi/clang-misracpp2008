@@ -28,6 +28,10 @@ public:
                                   const FileEntry *File, StringRef SearchPath,
                                   StringRef RelativePath,
                                   const Module *Imported) {
+    if (doIgnore(HashLoc)) {
+      return;
+    }
+
     if (illegalIncludes.count(FileName)) {
       reportError(RULE_TEXT_27_0_1, HashLoc);
     }

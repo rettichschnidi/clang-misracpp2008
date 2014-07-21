@@ -29,6 +29,10 @@ class BannedFunctionUsageChecker
 public:
   BannedFunctionUsageChecker() {}
   bool VisitDeclRefExpr(DeclRefExpr *expr) {
+    if (doIgnore(expr->getLocation())) {
+      return true;
+    }
+
     std::string funName = expr->getNameInfo().getAsString();
     if (getIllegalFunctions().count(funName)) {
       reportRuleViolation(expr->getLocStart());
@@ -37,6 +41,10 @@ public:
   }
   virtual void MacroExpands(const Token &MacroNameTok, const MacroDirective *MD,
                             SourceRange Range, const MacroArgs *Args) {
+    if (doIgnore(MacroNameTok.getLocation())) {
+      return;
+    }
+
     const std::string &macroName = MacroNameTok.getIdentifierInfo()->getName();
     if (getIllegalFunctions().count(macroName)) {
       if (doIgnore(Range.getBegin())) {

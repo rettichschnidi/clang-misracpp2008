@@ -26,6 +26,10 @@ public:
                             const MacroDirective *MD) {
     const MacroInfo *macroInfo = MD->getMacroInfo();
 
+    if (doIgnore(MD->getLocation())) {
+      return;
+    }
+
     for (MacroInfo::tokens_iterator I = macroInfo->tokens_begin(),
                                     E = macroInfo->tokens_end();
          I != E; ++I) {

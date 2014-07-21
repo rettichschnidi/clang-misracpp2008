@@ -23,6 +23,10 @@ class Rule_10_3_3 : public RuleCheckerASTContext,
 public:
   Rule_10_3_3() : RuleCheckerASTContext() {}
   bool VisitCXXMethodDecl(clang::CXXMethodDecl *decl) {
+    if (doIgnore(decl->getLocStart())) {
+      return true;
+    }
+
     if (decl->isPure()) {
       auto B = context->overridden_methods_begin(decl);
       auto E = context->overridden_methods_end(decl);

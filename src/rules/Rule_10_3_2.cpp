@@ -42,6 +42,10 @@ public:
     return true;
   }
   bool VisitCXXDestructorDecl(clang::CXXDestructorDecl *decl) {
+    if (doIgnore(decl->getLocStart())) {
+      return true;
+    }
+
     if (decl->isVirtual() && !decl->isVirtualAsWritten()) {
       reportError(decl->getLocation());
     }

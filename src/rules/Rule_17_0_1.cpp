@@ -24,12 +24,17 @@ private:
   void detectViolation(const Token &MacroNameTok) {
     const std::string &name = MacroNameTok.getIdentifierInfo()->getName();
 
+    if (doIgnore(MacroNameTok.getLocation())) {
+      return;
+    }
+
     if (illegalMacroNames.count(name) || (name.find('_') == 0)) {
       const SourceLocation &loc = MacroNameTok.getLocation();
       if (doIgnore(loc)) {
         return;
       }
       reportError(RULE_TEXT_17_0_1, loc);
+      llvm::outs() << "FAIL: " << name << "\n";
     }
   }
 

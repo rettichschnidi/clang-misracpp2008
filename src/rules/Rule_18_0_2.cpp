@@ -27,6 +27,10 @@ private:
 
 public:
   bool VisitDeclRefExpr(DeclRefExpr *expr) {
+    if (doIgnore(expr->getLocation())) {
+      return true;
+    }
+
     std::string funName = expr->getNameInfo().getAsString();
     if (illegalFunctions.count(funName)) {
       reportError("The library functions atof, atoi and atol from library "

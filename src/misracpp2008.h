@@ -40,6 +40,8 @@ protected:
   bool doIgnoreSystemHeaders;
   RuleChecker();
   bool isInSystemHeader(clang::SourceLocation loc);
+  bool isBuiltIn(clang::SourceLocation loc);
+  bool isCommandLine(clang::SourceLocation loc);
 
 public:
   virtual ~RuleChecker() {}

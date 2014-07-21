@@ -44,11 +44,29 @@ void RuleChecker::setDiagEngine(DiagnosticsEngine &diagEngine) {
 }
 
 bool RuleChecker::isInSystemHeader(clang::SourceLocation loc) {
-  SourceManager &sourceManager = diagEngine->getSourceManager();
+  const SourceManager &sourceManager = diagEngine->getSourceManager();
   return sourceManager.isInSystemHeader(loc);
 }
 
+bool RuleChecker::isBuiltIn(clang::SourceLocation loc) {
+  const SourceManager &sourceManager = diagEngine->getSourceManager();
+  const char *const filename = sourceManager.getPresumedLoc(loc).getFilename();
+  return (strcmp(filename, "<built-in>") == 0);
+}
+
+bool RuleChecker::isCommandLine(clang::SourceLocation loc) {
+  const SourceManager &sourceManager = diagEngine->getSourceManager();
+  const char *const filename = sourceManager.getPresumedLoc(loc).getFilename();
+  return (strcmp(filename, "<command line>") == 0);
+}
+
 bool RuleChecker::doIgnore(clang::SourceLocation loc) {
+  if (isBuiltIn(loc)) {
+    return true;
+  }
+  if (isCommandLine(loc)) {
+    return true;
+  }
   return doIgnoreSystemHeaders && isInSystemHeader(loc);
 }
 
