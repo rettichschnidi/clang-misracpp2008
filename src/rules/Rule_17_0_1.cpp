@@ -34,7 +34,6 @@ private:
         return;
       }
       reportError(RULE_TEXT_17_0_1, loc);
-      llvm::outs() << "FAIL: " << name << "\n";
     }
   }
 
