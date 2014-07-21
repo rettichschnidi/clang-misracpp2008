@@ -8,6 +8,10 @@ Some rules can easily be checked by enabling compiler-provided warnings. For
 those rules we simply name those switches. Other rules require custom logic and
 are therefore realized as plugin.
 
+Progress
+========
+Have a look at the [progress page in the wiki](https://github.com/rettichschnidi/clang-misracpp2008/wiki/Progress).
+
 Installation
 ============
 It is assumed that you have already have compiled LLVM/Clang from SVN. To add
