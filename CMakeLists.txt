@@ -9,7 +9,7 @@ aux_source_directory(src/ SRC_MAIN_LIST)
 include_directories(
   src/
   src/rules/
-)
+  )
 
 #When building with clang, warn about faulty Doxygen comments.
 if(CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
