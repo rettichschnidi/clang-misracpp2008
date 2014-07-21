@@ -10,7 +10,6 @@ are therefore realized as plugin.
 
 Installation
 ============
-
 It is assumed that you have already have compiled LLVM/Clang from SVN. To add
 clang-misracpp2008, the following steps are required:
 
