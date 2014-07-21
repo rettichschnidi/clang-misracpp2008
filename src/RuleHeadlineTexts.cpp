@@ -387,7 +387,8 @@ extern const char RULE_TEXT_27_0_1[] = R"ruletext(The stream input/output librar
 
 
 /**
- * @brief Assertions to make sure the array sizes and the string lengths match exactly. Unfortunatelly, strlen can not be used in a static assertion, therefore this nasty hack is required. :(
+ * @brief Assertions to make sure the array sizes and the string lengths match exactly.
+ * Unfortunatelly, strlen can not be used in a static assertion, therefore this nasty hack is required.
  * @return 1
  * @todo Improve this hack!
  */

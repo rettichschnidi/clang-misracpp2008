@@ -102,11 +102,18 @@ public:
  */
 class RuleCheckerASTContext : public virtual RuleChecker {
 protected:
-  clang::ASTContext *context;
+  clang::ASTContext *context; ///< AST context of the translation unit to be checked
   RuleCheckerASTContext();
 
 public:
+  /**
+   * @brief Set the AST context to be working on when calling doWork().
+   * @param context New AST context to be used by this instance.
+   */
   void setContext(clang::ASTContext &context);
+  /**
+   * @brief To be implemented by derived classes.
+   */
   virtual void doWork() = 0;
 };
 
