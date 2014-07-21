@@ -16,6 +16,13 @@ if(CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wdocumentation")
 endif()
 
+# Turn warnings into errors
+if(CMAKE_CXX_COMPILER_ID STREQUAL "Clang" OR CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
+  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Werror")
+else()
+  message(FATAL_ERROR "Unknown (and therefore untested) compiler!")
+endif()
+
 #Register the source code files to the LLVM build system
 set(SRC_LIST
   ${SRC_RULE_LIST}
