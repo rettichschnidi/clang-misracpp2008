@@ -1,6 +1,26 @@
 set(CLANG_MISRACPP2008_SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR})
 set(CLANG_MISRACPP2008_BINARY_DIR ${CMAKE_CURRENT_BINARY_DIR})
 
+#Enable target doxygen-misracpp2008 to build the doxygen documentation
+find_package(Doxygen)
+if(DOXYGEN_FOUND)
+  set(DOC_OUTPUT_PATH ${CMAKE_BINARY_DIR}/doc)
+
+  configure_file(${CLANG_MISRACPP2008_SOURCE_DIR}/doc/Doxyfile.in
+    ${CMAKE_CURRENT_BINARY_DIR}/Doxyfile @ONLY)
+
+  add_custom_target(doxygen-misracpp2008
+    COMMAND ${DOXYGEN_EXECUTABLE} ${CMAKE_CURRENT_BINARY_DIR}/Doxyfile
+    WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
+    COMMENT "Generating clang-misracpp2008 doxygen documentation." VERBATIM)
+
+  if(LLVM_BUILD_DOCS)
+    add_dependencies(doxygen doxygen-misracpp2008)
+  endif()
+else()
+  message(FATAL_ERROR "FAIL")
+endif()
+
 #Glob all sources files.
 aux_source_directory(src/rules SRC_RULE_LIST)
 aux_source_directory(src/ SRC_MAIN_LIST)
