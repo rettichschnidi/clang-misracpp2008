@@ -23,15 +23,15 @@ class Rule_5_14_1 : public RuleCheckerASTContext,
 public:
   Rule_5_14_1() : RuleCheckerASTContext() {}
 
-  bool VisitBinLAnd(BinaryOperator *S) {
+  bool VisitBinLAnd(const BinaryOperator *S) {
     return rightHandOperatorHasSideEffect(S);
   }
-  bool VisitBinLOr(BinaryOperator *S) {
+  bool VisitBinLOr(const BinaryOperator *S) {
     return rightHandOperatorHasSideEffect(S);
   }
 
 protected:
-  bool rightHandOperatorHasSideEffect(BinaryOperator *S) {
+  bool rightHandOperatorHasSideEffect(const BinaryOperator *S) {
     Expr *rightHandExpr = S->getRHS();
     if (rightHandExpr->HasSideEffects(*context)) {
       reportError(RULE_TEXT_5_14_1, rightHandExpr->getLocStart());

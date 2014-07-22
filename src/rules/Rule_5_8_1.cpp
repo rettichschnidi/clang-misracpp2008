@@ -22,17 +22,17 @@ class Rule_5_8_1 : public RuleCheckerASTContext,
                    public RecursiveASTVisitor<Rule_5_8_1> {
 public:
   Rule_5_8_1() : RuleCheckerASTContext() {}
-  bool VisitBinShl(BinaryOperator *S) { return isShiftStatementValid(S); }
-  bool VisitBinShr(BinaryOperator *S) { return isShiftStatementValid(S); }
-  bool VisitBinShrAssign(CompoundAssignOperator *S) {
+  bool VisitBinShl(const BinaryOperator *S) { return isShiftStatementValid(S); }
+  bool VisitBinShr(const BinaryOperator *S) { return isShiftStatementValid(S); }
+  bool VisitBinShrAssign(const CompoundAssignOperator *S) {
     return isShiftStatementValid(S);
   }
-  bool VisitBinShlAssign(CompoundAssignOperator *S) {
+  bool VisitBinShlAssign(const CompoundAssignOperator *S) {
     return isShiftStatementValid(S);
   }
 
 protected:
-  bool isShiftStatementValid(BinaryOperator *S) {
+  bool isShiftStatementValid(const BinaryOperator *S) {
     const Expr *additiveExpr = S->getRHS();
     if (additiveExpr->isEvaluatable(*context)) {
       const llvm::APSInt bitsToShift =
