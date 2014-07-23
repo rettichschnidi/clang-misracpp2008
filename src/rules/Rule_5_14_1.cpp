@@ -32,6 +32,10 @@ public:
 
 protected:
   bool rightHandOperatorHasSideEffect(const BinaryOperator *S) {
+    if (doIgnore(S->getLocStart())) {
+      return true;
+    }
+
     Expr *rightHandExpr = S->getRHS();
     if (rightHandExpr->HasSideEffects(*context)) {
       reportError(RULE_TEXT_5_14_1, rightHandExpr->getLocStart());

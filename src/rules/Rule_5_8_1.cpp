@@ -33,6 +33,10 @@ public:
 
 protected:
   bool isValidIntShiftStmt(const BinaryOperator *S) {
+    if (doIgnore(S->getLocStart())) {
+      return true;
+    }
+
     const Expr *rhsExpr = S->getRHS();
     const Expr *lhsExpr = S->getLHS();
     const bool lhsIsInteger = lhsExpr->getType()->isIntegerType();
