@@ -9,7 +9,7 @@ public:
 class DerivedNonPure : public BasePure
 {
 public:
-  virtual void badMethod(); 
+  virtual void badMethod();
   virtual void goodMethod() =0;
 };
 

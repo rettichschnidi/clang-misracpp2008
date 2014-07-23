@@ -10,4 +10,3 @@ struct A
 void func() {
     int i = offsetof(A, one); // expected-error {{The macro offsetof shall not be used.}}
 }
-

@@ -22,7 +22,7 @@
 #include <wchar.h> // expected-error {{The C library shall not be used.}}
 #include <wctype.h> // expected-error {{The C library shall not be used.}}
 
-#include <cassert> 
+#include <cassert>
 #include <cctype>
 #include <cerrno>
 #include <cfenv>

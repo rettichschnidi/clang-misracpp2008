@@ -11,4 +11,3 @@ void useAtoi() {
 void useAtol() {
     long i = atol("1234556790"); // expected-error {{The library functions atof, atoi and atol from library <cstdlib> shall not be used.}}
 }
-

@@ -15,9 +15,9 @@
 #undef FILE
 #undef LINE
 #undef STDC_HOSTED
-#undef TIME 
-#undef STDC 
-#undef ERRNO 
+#undef TIME
+#undef STDC
+#undef ERRNO
 #undef ASSERT
 
 // Disallowed usages
