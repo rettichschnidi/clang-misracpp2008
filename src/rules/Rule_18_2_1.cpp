@@ -31,7 +31,7 @@ public:
   }
 
 protected:
-  virtual void doWork() {
+  virtual void doWork() override {
     RuleCheckerASTContext::doWork();
     this->TraverseDecl(context->getTranslationUnitDecl());
   }

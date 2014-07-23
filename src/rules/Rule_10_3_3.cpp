@@ -46,7 +46,7 @@ public:
   virtual ~Rule_10_3_3() {}
 
 protected:
-  virtual void doWork() {
+  virtual void doWork() override {
     RuleCheckerASTContext::doWork();
     this->TraverseDecl(context->getTranslationUnitDecl());
   }

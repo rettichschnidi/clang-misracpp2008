@@ -20,10 +20,10 @@ private:
   static const std::set<std::string> illegalFunction;
 
 protected:
-  virtual const std::set<std::string> &getIllegalFunctions() const {
+  virtual const std::set<std::string> &getIllegalFunctions() const override {
     return illegalFunction;
   }
-  virtual void reportRuleViolation(SourceLocation loc) {
+  virtual void reportRuleViolation(SourceLocation loc) override {
     RuleChecker::reportError(RULE_TEXT_17_0_5, loc);
   }
 };

@@ -66,7 +66,7 @@ protected:
     return context->getIntWidth(qualifierType);
   }
 
-  virtual void doWork() {
+  virtual void doWork() override {
     RuleCheckerASTContext::doWork();
     this->TraverseDecl(context->getTranslationUnitDecl());
   }

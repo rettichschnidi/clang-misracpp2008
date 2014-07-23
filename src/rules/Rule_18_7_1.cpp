@@ -28,7 +28,7 @@ public:
                                   bool IsAngled, CharSourceRange FilenameRange,
                                   const FileEntry *File, StringRef SearchPath,
                                   StringRef RelativePath,
-                                  const Module *Imported) {
+                                  const Module *Imported) override {
     if (doIgnore(HashLoc)) {
       return;
     }

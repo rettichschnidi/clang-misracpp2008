@@ -40,13 +40,13 @@ private:
 public:
   // Detect #defines
   virtual void MacroDefined(const Token &MacroNameTok,
-                            const MacroDirective *MD) {
+                            const MacroDirective *MD) override {
     detectViolation(MacroNameTok);
   }
 
   // Detect #undef
   virtual void MacroUndefined(const Token &MacroNameTok,
-                              const MacroDirective *MD) {
+                              const MacroDirective *MD) override {
     detectViolation(MacroNameTok);
   }
 };

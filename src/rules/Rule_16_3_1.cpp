@@ -23,7 +23,7 @@ class Rule_16_3_1 : public RuleCheckerPreprocessor {
 private:
 public:
   virtual void MacroDefined(const Token &MacroNameTok,
-                            const MacroDirective *MD) {
+                            const MacroDirective *MD) override {
     const MacroInfo *macroInfo = MD->getMacroInfo();
     unsigned int counter = 0;
 
