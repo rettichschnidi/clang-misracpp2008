@@ -22,22 +22,25 @@ class Rule_5_8_1 : public RuleCheckerASTContext,
                    public RecursiveASTVisitor<Rule_5_8_1> {
 public:
   Rule_5_8_1() : RuleCheckerASTContext() {}
-  bool VisitBinShl(const BinaryOperator *S) { return isShiftStatementValid(S); }
-  bool VisitBinShr(const BinaryOperator *S) { return isShiftStatementValid(S); }
+  bool VisitBinShl(const BinaryOperator *S) { return isValidIntShiftStmt(S); }
+  bool VisitBinShr(const BinaryOperator *S) { return isValidIntShiftStmt(S); }
   bool VisitBinShrAssign(const CompoundAssignOperator *S) {
-    return isShiftStatementValid(S);
+    return isValidIntShiftStmt(S);
   }
   bool VisitBinShlAssign(const CompoundAssignOperator *S) {
-    return isShiftStatementValid(S);
+    return isValidIntShiftStmt(S);
   }
 
 protected:
-  bool isShiftStatementValid(const BinaryOperator *S) {
-    const Expr *additiveExpr = S->getRHS();
-    if (additiveExpr->isEvaluatable(*context)) {
-      const llvm::APSInt bitsToShift =
-          additiveExpr->EvaluateKnownConstInt(*context);
-      const unsigned integerSize = getBitWidthOfInteger(S->getLHS());
+  bool isValidIntShiftStmt(const BinaryOperator *S) {
+    const Expr *rhsExpr = S->getRHS();
+    const Expr *lhsExpr = S->getLHS();
+    const bool lhsIsInteger = lhsExpr->getType()->isIntegerType();
+    const bool rhsIsEvaluatable = rhsExpr->isEvaluatable(*context);
+
+    if (lhsIsInteger && rhsIsEvaluatable) {
+      const llvm::APSInt bitsToShift = rhsExpr->EvaluateKnownConstInt(*context);
+      const unsigned integerSize = getBitWidthOfInteger(lhsExpr);
 
       // Report an error if we can be sure (statically checked), that the number
       // of bits to shift is either negative or greater-equal than the bit-size

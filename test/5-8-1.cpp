@@ -1,6 +1,7 @@
 // RUN: %clang -fsyntax-only -std=c++11 -ferror-limit=0 -Wno-shift-count-negative -Wno-shift-count-overflow -Xclang -verify -Xclang -load -Xclang %llvmshlibdir/misracpp2008.so -Xclang -plugin -Xclang misra.cpp.2008 -Xclang -plugin-arg-misra.cpp.2008 -Xclang 5-8-1 %s
 
 #include <cstdint>
+#include <iostream>
 
 #define SHIFT_2     2
 #define SHIFT_8     8
@@ -78,4 +79,8 @@ void rightShiftAssignFunction() {
     u8 >>= SHIFT_2; // Compliant - the macro value is 2
     u8 >>= SHIFT_8; // expected-error {{The right hand operand of a shift operator shall lie between zero and one less than the width in bits of the underlying type of the left hand operand.}}
     u8 >>= SHIFT_NEG; // expected-error {{The right hand operand of a shift operator shall lie between zero and one less than the width in bits of the underlying type of the left hand operand.}}
+}
+
+void outputStream() {
+    std::cout << "Hello World!" << std::endl; // This is not integer shifting!
 }
