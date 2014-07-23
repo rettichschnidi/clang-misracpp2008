@@ -20,6 +20,12 @@
 #undef ERRNO
 #undef ASSERT
 
+// The few cases where a macro with two leading underscore can be user specified
+#define __STDC_FORMAT_MACROS
+#include <stdint.h>
+#define __STDC_LIMIT_MACROS
+#include <inttypes.h>
+
 // Disallowed usages
 #define __cplusplus // expected-error {{Reserved identifiers, macros and functions in the standard library shall not be defined, redefined or undefined.}}
 #define __DATE__ // expected-error {{Reserved identifiers, macros and functions in the standard library shall not be defined, redefined or undefined.}}

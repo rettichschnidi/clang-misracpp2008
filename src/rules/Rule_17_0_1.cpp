@@ -20,7 +20,8 @@ const static std::string ruleName = "17-0-1";
 
 class Rule_17_0_1 : public RuleCheckerPreprocessor {
 private:
-  static const std::set<std::string> illegalMacroNames;
+  static const std::set<std::string> explicitlyIllegalMacroNames;
+  static const std::set<std::string> explicitlyLegalMacroNames;
   void detectViolation(const Token &MacroNameTok) {
     const std::string &name = MacroNameTok.getIdentifierInfo()->getName();
 
@@ -28,7 +29,13 @@ private:
       return;
     }
 
-    if (illegalMacroNames.count(name) || (name.find('_') == 0)) {
+    // A few specific macros with two leading underscores are valid
+    if (explicitlyLegalMacroNames.count(name)) {
+      return;
+    }
+    // All other, whether exlicitly banned or starting with a leading underscore
+    // constitute a violation of this rule.
+    if (explicitlyIllegalMacroNames.count(name) || (name.find('_') == 0)) {
       const SourceLocation &loc = MacroNameTok.getLocation();
       if (doIgnore(loc)) {
         return;
@@ -51,7 +58,7 @@ public:
   }
 };
 
-const std::set<std::string> Rule_17_0_1::illegalMacroNames = {
+const std::set<std::string> Rule_17_0_1::explicitlyIllegalMacroNames = {
   "__cplusplus",                      "__DATE__",
   "__FILE__",                         "__LINE__",
   "__STDC_HOSTED__",                  "__TIME__",
@@ -60,6 +67,10 @@ const std::set<std::string> Rule_17_0_1::illegalMacroNames = {
   "__STDCPP_STRICT_POINTER_SAFETY__", "__STDCPP_THREADS__",
   "define",                           "errno",
   "assert"
+};
+
+const std::set<std::string> Rule_17_0_1::explicitlyLegalMacroNames = {
+  "__STDC_FORMAT_MACROS", "__STDC_LIMIT_MACROS"
 };
 
 static RuleCheckerPreprocessorRegistry::Add<Rule_17_0_1>
