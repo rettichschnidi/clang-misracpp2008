@@ -43,8 +43,6 @@ public:
     return true;
   }
 
-  virtual ~Rule_10_3_3() {}
-
 protected:
   virtual void doWork() override {
     RuleCheckerASTContext::doWork();
