@@ -79,8 +79,8 @@ public:
   /**
    * @brief Check if the element at \c loc should be ignored. Compiler-built-in
    * or command-line-specified code most likely should not be checked. Also,
-   * code from the system headers probably not even close to MISRA conformity
-   * and have to be excluded as well.
+   * code from the system headers is probably not even close to MISRA conformity
+   * and has to be excluded as well.
    * @param loc Location to evaluate.
    * @return True if \c loc should be ignored (not checked), false if not.
    */
