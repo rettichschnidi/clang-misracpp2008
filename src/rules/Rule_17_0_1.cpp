@@ -24,8 +24,9 @@ private:
   static const std::set<std::string> explicitlyLegalMacroNames;
   void detectViolation(const Token &MacroNameTok) {
     const std::string &name = MacroNameTok.getIdentifierInfo()->getName();
+    const SourceLocation &loc = MacroNameTok.getLocation();
 
-    if (doIgnore(MacroNameTok.getLocation())) {
+    if (doIgnore(loc)) {
       return;
     }
 
@@ -36,10 +37,6 @@ private:
     // All other, whether exlicitly banned or starting with a leading underscore
     // constitute a violation of this rule.
     if (explicitlyIllegalMacroNames.count(name) || (name.find('_') == 0)) {
-      const SourceLocation &loc = MacroNameTok.getLocation();
-      if (doIgnore(loc)) {
-        return;
-      }
       reportError(RULE_TEXT_17_0_1, loc);
     }
   }
