@@ -103,7 +103,7 @@ public:
 class RuleCheckerASTContext : public virtual RuleChecker {
 protected:
   clang::ASTContext *context; ///< AST context of the translation unit to be
-  /// checked
+                              /// checked.
   RuleCheckerASTContext();
 
 public:
@@ -128,11 +128,6 @@ typedef llvm::Registry<RuleCheckerASTContext> RuleCheckerASTContextRegistry;
  */
 class RuleCheckerPreprocessor : public virtual RuleChecker,
                                 public clang::PPCallbacks {
-protected:
-  RuleCheckerPreprocessor();
-
-public:
-  virtual ~RuleCheckerPreprocessor() {}
 };
 
 /**

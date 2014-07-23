@@ -239,9 +239,6 @@ void RuleCheckerASTContext::doWork() {
   assert(diagEngine);
 }
 
-RuleCheckerPreprocessor::RuleCheckerPreprocessor()
-    : RuleChecker(), PPCallbacks() {}
-
 std::set<std::string> getRegisteredCheckers() {
   std::set<std::string> registeredCheckers;
 
