@@ -35,4 +35,17 @@ Build the target doxygen-misracpp2008: `make doxygen-misracpp2008`
 
 Usage
 =====
-This section will be written when it is actually possible to use the plugin.
+The OffendingProject included in the examples directory can be built this way:
+
+    export LLVM_BUILD_DIR=~/build_llvm # Adjust to your situation
+    cd ~/${LLVM_CHECKOUT_FOLDER}/tools/clang/tools
+    cd clang-misracpp2008/examples/OffendingProject
+    mkdir -p build && cd build
+    cmake -DCMAKE_CXX_FLAGS="-Xclang -load -Xclang \
+             ${LLVM_BUILD_DIR}/lib/misracpp2008.so -Xclang -add-plugin -Xclang \
+             misra.cpp.2008 -Xclang -plugin-arg-misra.cpp.2008 -Xclang all" \
+           -DCMAKE_CXX_COMPILER="${LLVM_BUILD_DIR}/bin/clang++" \
+           -DCMAKE_C_COMPILER="${LLVM_BUILD_DIR}/bin/clang" ../
+    make
+
+You will get some MISRA C++:2008 violations reported.
