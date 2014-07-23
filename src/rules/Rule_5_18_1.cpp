@@ -24,6 +24,10 @@ public:
   Rule_5_18_1() : RuleCheckerASTContext() {}
 
   bool VisitBinComma(const BinaryOperator *S) {
+    if (doIgnore(S->getLocStart())) {
+      return true;
+    }
+
     reportError(RULE_TEXT_5_18_1, S->getLocStart());
     return true;
   }
