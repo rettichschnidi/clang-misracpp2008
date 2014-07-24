@@ -46,6 +46,11 @@ public:
       return true;
     }
 
+    // Definitions outside of the class body do not have the virtual keyword
+    if (decl->isThisDeclarationADefinition()) {
+      return true;
+    }
+
     if (decl->isVirtual() && !decl->isVirtualAsWritten()) {
       reportError(decl->getLocation());
     }

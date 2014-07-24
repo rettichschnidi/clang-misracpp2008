@@ -23,6 +23,8 @@ public:
   ~B2();                     // expected-error {{Each overriding virtual function shall be declared with the virtual keyword.}}
 };
 
+B2::~B2() { } // No virtual specifier required here
+
 class B3 : public A
 {
     // ~B3();               // Compliant - implicit destructor is OK, even when virtual
