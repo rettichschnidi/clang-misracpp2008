@@ -19,6 +19,7 @@
 #include "clang/Frontend/CompilerInstance.h"
 #include "llvm/Support/raw_ostream.h"
 #include "llvm/ADT/StringExtras.h"
+#include "llvm/Support/Regex.h"
 #include "clang/Lex/Preprocessor.h"
 #include <cassert>
 #include <map>
@@ -26,6 +27,7 @@
 #include <sstream>
 #include <utility>
 #include <string>
+#include <list>
 
 using namespace clang;
 using namespace llvm;
@@ -36,6 +38,7 @@ typedef std::map<std::string, clang::DiagnosticsEngine::Level> DiagLevelMap;
 DiagLevelMap &getDiagnosticLevels();
 std::set<std::string> &getEnabledCheckers();
 std::set<std::string> getRegisteredCheckers();
+std::list<llvm::Regex> &getIgnoredPaths();
 bool enableChecker(const std::string &name,
                    clang::DiagnosticsEngine::Level diagLevel);
 void dumpRegisteredCheckers(llvm::raw_ostream &OS);
@@ -80,6 +83,16 @@ bool RuleChecker::doIgnore(clang::SourceLocation loc) {
   if (isInSystemHeader(loc)) {
     return doIgnoreSystemHeaders;
   }
+
+  // Do not check explicitly unchecked files
+  auto fileName = diagEngine->getSourceManager().getFilename(loc);
+  auto &ignoredPaths = getIgnoredPaths();
+  for (Regex &regex : ignoredPaths) {
+    if (regex.match(fileName)) {
+      return true;
+    }
+  }
+
   return false;
 }
 
@@ -91,6 +104,11 @@ std::set<std::string> &getEnabledCheckers() {
 DiagLevelMap &getDiagnosticLevels() {
   static DiagLevelMap diagLevelMap;
   return diagLevelMap;
+}
+
+std::list<llvm::Regex> &getIgnoredPaths() {
+  static std::list<llvm::Regex> ignoredPaths;
+  return ignoredPaths;
 }
 
 bool enableChecker(const std::string &checkerName,
@@ -179,12 +197,23 @@ protected:
   bool ParseArgs(const clang::CompilerInstance &CI,
                  const std::vector<std::string> &args) {
     for (unsigned i = 0, e = args.size(); i != e; ++i) {
+      const auto &currentString = args[i];
       // Handle help request
-      if (args[i] == "help") {
+      if (currentString == "help") {
         PrintHelp(llvm::outs());
         return false;
       }
-      std::istringstream ss(args[i]);
+      // Handle --exclude-path arguments
+      const std::string excludeArgument = "--exclude-path=";
+      if (auto pos = currentString.find(excludeArgument) != std::string::npos) {
+        auto ignorePath = currentString.substr(
+            pos + excludeArgument.length() - 1, std::string::npos);
+        getIgnoredPaths().push_back(llvm::Regex(ignorePath));
+        continue;
+      }
+
+      // Handle the rule en-/disable flags
+      std::istringstream ss(currentString);
       std::string token;
       while (std::getline(ss, token, ',')) {
         DiagnosticsEngine::Level diagLevel;
@@ -214,12 +243,13 @@ protected:
     return true;
   }
   void PrintHelp(llvm::raw_ostream &ros) {
-    ros << "Enable rules: [rule[,rule[,...]]]\n";
-    ros << "Example for enabling the rules 0-1-8 and 0-1-9: 0-1-8,0-1-9\n";
-    ros << "Prefixing a rule number with dashes allows to downgrad a specific"
-           " rule to become a warning (one dash) or a remark (two dashes).\n";
-    ros << "Instead of a specific rule, it is also possible to use \"all\" to "
-           "enable all available checkers at once.\n";
+    ros << "Available plugin parameters:\n";
+    ros << "[help] - show this text\n";
+    ros << "[--exclude-path=PATH] - do not check files matching PATH\n";
+    ros << "[all|-all|--all] - report all rule violations as "
+           "error/warning/remark\n";
+    ros << "[RULE|-RULE|--RULE] - report rule RULE violations as "
+           "error/warning/remark\n";
   }
 };
 
