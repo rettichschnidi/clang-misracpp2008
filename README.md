@@ -2,7 +2,7 @@ About
 =====
 
 clang-misracpp2008 is a project which tries to create an open source checker for
-the MISRA C++ 2008 rules using the LLVM/Clang infrastructure.
+the MISRA C++:2008 rules using the LLVM/Clang infrastructure.
 
 Some rules can easily be checked by enabling compiler-provided warnings. For
 those rules we simply name those switches. Other rules require custom logic and
