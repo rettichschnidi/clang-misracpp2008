@@ -92,7 +92,6 @@ bool RuleChecker::doIgnore(clang::SourceLocation loc) {
       return true;
     }
   }
-
   return false;
 }
 
