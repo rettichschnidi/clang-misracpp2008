@@ -44,7 +44,8 @@ endif()
 #Register the source code files to the LLVM build system
 set(SRC_LIST
   ${SRC_RULE_LIST}
-  ${SRC_MAIN_LIST})
+  ${SRC_MAIN_LIST}
+  )
 add_llvm_loadable_module(misracpp2008 ${SRC_LIST})
 
 #Add our tests directory
