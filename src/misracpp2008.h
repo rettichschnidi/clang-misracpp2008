@@ -13,6 +13,7 @@
 #include "clang/Basic/Diagnostic.h"
 #include "clang/Lex/PPCallbacks.h"
 #include "llvm/Support/Registry.h"
+#include "llvm/ADT/StringRef.h"
 #include "RuleHeadlineTexts.h"
 
 namespace clang {
@@ -35,9 +36,10 @@ protected:
   clang::DiagnosticsEngine *diagEngine; ///< Needed to report errors. Rule
   /// checkers can assume this pointer to
   /// direct the correct instance.
-  clang::DiagnosticsEngine::Level diagLevel; ///< level of the diagnostic in
+  clang::DiagnosticIDs::Level diagLevel; ///< level of the diagnostic in
   /// case of a violation.
   bool doIgnoreSystemHeaders; ///< Should we skip the system headers?
+  std::string name;           ///< Name of rule this checker enforces.
   RuleChecker();
   /**
    * @brief Check whether or not \c loc is within a system header.
@@ -68,7 +70,12 @@ public:
    * reported.
    * @param diagLevel New diagnostic level.
    */
-  void setDiagLevel(clang::DiagnosticsEngine::Level diagLevel);
+  void setDiagLevel(clang::DiagnosticIDs::Level diagLevel);
+  /**
+   * @brief Set the rule name of this checker.
+   * @param name Name of the rule, e.g. "6-2-1".
+   */
+  void setName(const std::string &name);
   /**
    * @brief Set the diagnostic engine to be used when a violation gets reported.
    * @param diagEngine New diagnostics engine to be used.
@@ -83,16 +90,12 @@ public:
    * @return True if \c loc should be ignored (not checked), false if not.
    */
   bool doIgnore(clang::SourceLocation loc);
-  template <unsigned N>
   /**
    * @brief Auxiliary helper function for derived checkers to report an error.
    * @param FormatString The error message to be displayed to the user.
    * @param loc The location to be displayed to the user.
    */
-  void reportError(const char (&FormatString)[N], clang::SourceLocation loc) {
-    unsigned diagID = diagEngine->getCustomDiagID(diagLevel, FormatString);
-    diagEngine->Report(loc, diagID);
-  }
+  void reportError(llvm::StringRef FormatString, clang::SourceLocation loc);
 };
 
 /**

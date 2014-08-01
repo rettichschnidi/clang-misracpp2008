@@ -34,22 +34,27 @@ using namespace llvm;
 
 namespace misracpp2008 {
 
-typedef std::map<std::string, clang::DiagnosticsEngine::Level> DiagLevelMap;
+typedef std::map<std::string, clang::DiagnosticIDs::Level> DiagLevelMap;
 DiagLevelMap &getDiagnosticLevels();
 std::set<std::string> &getEnabledCheckers();
 std::set<std::string> getRegisteredCheckers();
 std::list<llvm::Regex> &getIgnoredPaths();
 bool enableChecker(const std::string &name,
-                   clang::DiagnosticsEngine::Level diagLevel);
+                   clang::DiagnosticIDs::Level diagLevel);
 void dumpRegisteredCheckers(llvm::raw_ostream &OS);
 void dumpActiveCheckers(llvm::raw_ostream &OS);
 
 RuleChecker::RuleChecker()
-    : diagEngine(nullptr), diagLevel(DiagnosticsEngine::Error),
-      doIgnoreSystemHeaders(true) {}
+    : diagEngine(nullptr), diagLevel(DiagnosticIDs::Error),
+      doIgnoreSystemHeaders(true), name("?") {}
 
-void RuleChecker::setDiagLevel(DiagnosticsEngine::Level diagLevel) {
+void RuleChecker::setDiagLevel(DiagnosticIDs::Level diagLevel) {
   this->diagLevel = diagLevel;
+}
+
+void RuleChecker::setName(const std::string &name) {
+  assert(name.size() >= 5 && name.size() <= 6 && "Invalid name for a rule!");
+  this->name = name;
 }
 
 void RuleChecker::setDiagEngine(DiagnosticsEngine &diagEngine) {
@@ -98,6 +103,12 @@ bool RuleChecker::doIgnore(clang::SourceLocation loc) {
   return false;
 }
 
+void RuleChecker::reportError(StringRef FormatString, SourceLocation loc) {
+  unsigned diagID = diagEngine->getDiagnosticIDs()->getCustomDiagID(
+      diagLevel, (FormatString + " (MISRA C++ 2008 rule " + name + ")").str());
+  diagEngine->Report(loc, diagID);
+}
+
 std::set<std::string> &getEnabledCheckers() {
   static std::set<std::string> enabledCheckers;
   return enabledCheckers;
@@ -114,7 +125,7 @@ std::list<llvm::Regex> &getIgnoredPaths() {
 }
 
 bool enableChecker(const std::string &checkerName,
-                   clang::DiagnosticsEngine::Level diagLevel) {
+                   clang::DiagnosticIDs::Level diagLevel) {
   if (getRegisteredCheckers().count(checkerName) == 0) {
     return false;
   }
@@ -152,13 +163,12 @@ public:
          it != ie; ++it) {
       const std::string checkerName =
           RuleCheckerASTContextRegistry::traits::nameof(*it);
-      assert(checkerName.size() >= 5 && checkerName.size() <= 6 &&
-             "Each checkers has to have its rule number as name");
       if (enabledCheckers.count(checkerName) > 0) {
         auto diagLevel = getDiagnosticLevels().at(checkerName);
         auto instance = it->instantiate();
         instance->setContext(ctx);
         instance->setDiagLevel(diagLevel);
+        instance->setName(checkerName);
         instance->doWork();
       }
     }
@@ -181,8 +191,6 @@ protected:
          it != ie; ++it) {
       const std::string checkerName =
           RuleCheckerPreprocessorRegistry::traits::nameof(*it);
-      assert(checkerName.size() >= 5 && checkerName.size() <= 6 &&
-             "Each checkers has to have its rule number as name");
       if (enabledCheckers.count(checkerName) > 0) {
         assert(CI.hasPreprocessor() &&
                "Compiler instance has no preprocessor!");
@@ -190,6 +198,7 @@ protected:
         std::unique_ptr<RuleCheckerPreprocessor> ppCallback = it->instantiate();
         ppCallback->setDiagLevel(diagLevel);
         ppCallback->setDiagEngine(CI.getDiagnostics());
+        ppCallback->setName(checkerName);
         CI.getPreprocessor().addPPCallbacks(ppCallback.release());
       }
     }
@@ -218,15 +227,15 @@ protected:
       std::istringstream ss(currentString);
       std::string token;
       while (std::getline(ss, token, ',')) {
-        DiagnosticsEngine::Level diagLevel;
+        DiagnosticIDs::Level diagLevel;
         if (token.find("--") == 0) {
           token.erase(0, 2);
-          diagLevel = DiagnosticsEngine::Remark;
+          diagLevel = DiagnosticIDs::Remark;
         } else if (token.find('-') == 0) {
           token.erase(0, 1);
-          diagLevel = DiagnosticsEngine::Warning;
+          diagLevel = DiagnosticIDs::Warning;
         } else {
-          diagLevel = DiagnosticsEngine::Error;
+          diagLevel = DiagnosticIDs::Error;
         }
         if (token == "all") {
           for (const auto &checkerName : getRegisteredCheckers()) {
