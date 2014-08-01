@@ -146,7 +146,7 @@ void dumpRegisteredCheckers(raw_ostream &OS) {
 void dumpActiveCheckers(raw_ostream &OS) {
   OS << "Active checks: ";
   for (const auto &checkerName : getEnabledCheckers()) {
-    OS << checkerName << ",";
+    OS << checkerName << ", ";
   }
   OS << "\n";
 }
