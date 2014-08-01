@@ -207,8 +207,7 @@ protected:
 
   bool ParseArgs(const clang::CompilerInstance &CI,
                  const std::vector<std::string> &args) {
-    for (unsigned i = 0, e = args.size(); i != e; ++i) {
-      const auto &currentString = args[i];
+    for (const std::string &currentString : args) {
       // Handle help request
       if (currentString == "help") {
         PrintHelp(llvm::outs());
