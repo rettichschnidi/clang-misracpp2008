@@ -140,7 +140,7 @@ void dumpActiveCheckers(raw_ostream &OS) {
 class Consumer : public clang::ASTConsumer {
 public:
   Consumer() {}
-  virtual void HandleTranslationUnit(clang::ASTContext &ctx) {
+  virtual void HandleTranslationUnit(clang::ASTContext &ctx) override {
     // Iterate over registered ASTContext checkers and execute the ones active
     const auto &enabledCheckers = getEnabledCheckers();
     for (RuleCheckerASTContextRegistry::iterator
