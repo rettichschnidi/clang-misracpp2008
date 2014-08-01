@@ -25,18 +25,21 @@ public:
   Rule_6_2_1() : RuleCheckerASTContext() {}
 
   bool VisitStmt(Stmt *S) {
-    if (isa<Expr>(S) == false)
+    if (isa<Expr>(S) == false) {
       return true;
+    }
+    if (doIgnore(S->getLocStart())) {
+      return true;
+    }
 
-    for (Stmt::child_iterator I = S->child_begin(), E = S->child_end(); I != E;
-         ++I) {
-      if (BinaryOperator *bo = dyn_cast<BinaryOperator>(I->IgnoreImplicit())) {
+    for (const auto I : S->children()) {
+      const Stmt *realStmt = I->IgnoreImplicit();
+      if (const auto *bo = dyn_cast<BinaryOperator>(realStmt)) {
         if (bo->getOpcode() == BO_Assign) {
           reportViolatingStatement(bo);
         }
       }
-      if (CXXOperatorCallExpr *oc =
-              dyn_cast<CXXOperatorCallExpr>(I->IgnoreImplicit())) {
+      if (const auto *oc = dyn_cast<CXXOperatorCallExpr>(realStmt)) {
         if (oc->getOperator() == OO_Equal) {
           reportViolatingStatement(oc);
         }
