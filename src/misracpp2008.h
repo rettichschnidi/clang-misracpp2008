@@ -10,8 +10,6 @@
 #ifndef MISRA_CPP_2008_H
 #define MISRA_CPP_2008_H
 
-#include "clang/AST/ASTConsumer.h"
-#include "clang/Frontend/FrontendAction.h"
 #include "clang/Basic/Diagnostic.h"
 #include "clang/Lex/PPCallbacks.h"
 #include "llvm/Support/Registry.h"
