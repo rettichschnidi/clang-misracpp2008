@@ -24,25 +24,25 @@ public:
   Rule_6_2_2() : RuleCheckerASTContext() {}
 
   bool VisitBinEQ(BinaryOperator *S) {
-    VisitBinEqOrNeHelper(S);
+    FindSimpleViolation(S);
     return true;
   }
   bool VisitBinNE(BinaryOperator *S) {
-    VisitBinEqOrNeHelper(S);
+    FindSimpleViolation(S);
     return true;
   }
 
   bool VisitBinLAnd(BinaryOperator *S) {
-    LAndAndLorHelper(S);
+    FindObfuscatedViolation(S);
     return true;
   }
   bool VisitBinLOr(BinaryOperator *S) {
-    LAndAndLorHelper(S);
+    FindObfuscatedViolation(S);
     return true;
   }
 
 private:
-  void LAndAndLorHelper(BinaryOperator *S) {
+  void FindObfuscatedViolation(BinaryOperator *S) {
     if (doIgnore(S->getLocStart())) {
       return;
     }
@@ -52,7 +52,7 @@ private:
     }
   }
 
-  void VisitBinEqOrNeHelper(BinaryOperator *S) {
+  void FindSimpleViolation(BinaryOperator *S) {
     if (doIgnore(S->getLocStart())) {
       return;
     }
