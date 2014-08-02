@@ -34,21 +34,21 @@ using namespace llvm;
 
 namespace misracpp2008 {
 
-typedef std::map<std::string, clang::DiagnosticIDs::Level> DiagLevelMap;
+typedef std::map<std::string, clang::DiagnosticsEngine::Level> DiagLevelMap;
 DiagLevelMap &getDiagnosticLevels();
 std::set<std::string> &getEnabledCheckers();
 std::set<std::string> getRegisteredCheckers();
 std::list<llvm::Regex> &getIgnoredPaths();
 bool enableChecker(const std::string &name,
-                   clang::DiagnosticIDs::Level diagLevel);
+                   clang::DiagnosticsEngine::Level diagLevel);
 void dumpRegisteredCheckers(llvm::raw_ostream &OS);
 void dumpActiveCheckers(llvm::raw_ostream &OS);
 
 RuleChecker::RuleChecker()
-    : diagEngine(nullptr), diagLevel(DiagnosticIDs::Error),
+    : diagEngine(nullptr), diagLevel(DiagnosticsEngine::Error),
       doIgnoreSystemHeaders(true), name("?") {}
 
-void RuleChecker::setDiagLevel(DiagnosticIDs::Level diagLevel) {
+void RuleChecker::setDiagLevel(DiagnosticsEngine::Level diagLevel) {
   this->diagLevel = diagLevel;
 }
 
@@ -103,10 +103,10 @@ bool RuleChecker::doIgnore(clang::SourceLocation loc) {
   return false;
 }
 
-void RuleChecker::reportError(StringRef FormatString, SourceLocation loc) {
-  unsigned diagID = diagEngine->getDiagnosticIDs()->getCustomDiagID(
-      diagLevel, (FormatString + " (MISRA C++ 2008 rule " + name + ")").str());
-  diagEngine->Report(loc, diagID);
+void RuleChecker::reportError(const std::string &message, SourceLocation loc) {
+  unsigned diagId =
+      diagEngine->getCustomDiagID(diagLevel, "%0 (MISRA C++ 2008 rule %1)");
+  diagEngine->Report(loc, diagId) << message << name;
 }
 
 std::set<std::string> &getEnabledCheckers() {
@@ -125,7 +125,7 @@ std::list<llvm::Regex> &getIgnoredPaths() {
 }
 
 bool enableChecker(const std::string &checkerName,
-                   clang::DiagnosticIDs::Level diagLevel) {
+                   clang::DiagnosticsEngine::Level diagLevel) {
   if (getRegisteredCheckers().count(checkerName) == 0) {
     return false;
   }
@@ -226,15 +226,15 @@ protected:
       std::istringstream ss(currentString);
       std::string token;
       while (std::getline(ss, token, ',')) {
-        DiagnosticIDs::Level diagLevel;
+        DiagnosticsEngine::Level diagLevel;
         if (token.find("--") == 0) {
           token.erase(0, 2);
-          diagLevel = DiagnosticIDs::Remark;
+          diagLevel = DiagnosticsEngine::Remark;
         } else if (token.find('-') == 0) {
           token.erase(0, 1);
-          diagLevel = DiagnosticIDs::Warning;
+          diagLevel = DiagnosticsEngine::Warning;
         } else {
-          diagLevel = DiagnosticIDs::Error;
+          diagLevel = DiagnosticsEngine::Error;
         }
         if (token == "all") {
           for (const auto &checkerName : getRegisteredCheckers()) {

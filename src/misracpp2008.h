@@ -13,7 +13,6 @@
 #include "clang/Basic/Diagnostic.h"
 #include "clang/Lex/PPCallbacks.h"
 #include "llvm/Support/Registry.h"
-#include "llvm/ADT/StringRef.h"
 #include "RuleHeadlineTexts.h"
 
 namespace clang {
@@ -36,7 +35,7 @@ protected:
   clang::DiagnosticsEngine *diagEngine; ///< Needed to report errors. Rule
   /// checkers can assume this pointer to
   /// direct the correct instance.
-  clang::DiagnosticIDs::Level diagLevel; ///< level of the diagnostic in
+  clang::DiagnosticsEngine::Level diagLevel; ///< level of the diagnostic in
   /// case of a violation.
   bool doIgnoreSystemHeaders; ///< Should we skip the system headers?
   std::string name;           ///< Name of rule this checker enforces.
@@ -70,7 +69,7 @@ public:
    * reported.
    * @param diagLevel New diagnostic level.
    */
-  void setDiagLevel(clang::DiagnosticIDs::Level diagLevel);
+  void setDiagLevel(clang::DiagnosticsEngine::Level diagLevel);
   /**
    * @brief Set the rule name of this checker.
    * @param name Name of the rule, e.g. "6-2-1".
@@ -92,10 +91,10 @@ public:
   bool doIgnore(clang::SourceLocation loc);
   /**
    * @brief Auxiliary helper function for derived checkers to report an error.
-   * @param FormatString The error message to be displayed to the user.
+   * @param message The MISRA rule headline text to be displayed to the user.
    * @param loc The location to be displayed to the user.
    */
-  void reportError(llvm::StringRef FormatString, clang::SourceLocation loc);
+  void reportError(const std::string &message, clang::SourceLocation loc);
 };
 
 /**
