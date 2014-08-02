@@ -30,14 +30,11 @@ public:
       return true;
     }
 
-    CXXRecordDecl::method_iterator B = decl->method_begin();
-    CXXRecordDecl::method_iterator E = decl->method_end();
-    while (B != E) {
+    for (const auto B: decl->methods()) {
       if (!B->isImplicit() && B->isVirtual() && !B->isVirtualAsWritten()) {
         reportError(B->getLocation());
         break;
       }
-      B++;
     }
     return true;
   }

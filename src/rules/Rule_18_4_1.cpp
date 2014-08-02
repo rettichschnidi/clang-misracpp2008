@@ -31,9 +31,8 @@ public:
     if (doesNotThrow) {
       // Iterate over children and try to figure out if this new expr
       // looks like a placement new which can be used legally.
-      Stmt::child_range c = decl->children();
-      for (StmtIterator it = c.first, iE = c.second; it != iE; ++it) {
-        if (CastExpr *castExpr = dyn_cast<CastExpr>(*it)) {
+      for (const auto it: decl->children()) {
+        if (CastExpr *castExpr = dyn_cast<CastExpr>(it)) {
           if (castExpr->getCastKind() == CK_BitCast) {
             // Looks legit. Bail out without generating an error.
             return true;
