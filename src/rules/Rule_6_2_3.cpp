@@ -28,6 +28,10 @@ public:
   Rule_6_2_3() : RuleCheckerASTContext() {}
 
   bool VisitStmt(Stmt *S) {
+    if(doIgnore(S->getLocStart())) {
+      return true;
+    }
+
     if (NullStmt *ns = dyn_cast<NullStmt>(S)) {
       if (hasNonWhitespaceBeforeNullStmt(ns) ||
           hasNonWhitespaceAfterNullStmt(ns)) {
