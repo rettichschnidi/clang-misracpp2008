@@ -29,6 +29,6 @@ void compliant(float a, float b, float c) {
     if( std::abs(a - b) <= std::numeric_limits<float>::epsilon()) {
     }
 
-    if( a < b || b < c) {
+    if( a < b || b < c) { // Compliant - not a circumvention of this rule
     }
 }

@@ -11,6 +11,7 @@
 #include "clang/AST/RecursiveASTVisitor.h"
 #include "clang/AST/ASTContext.h"
 #include "clang/Basic/Diagnostic.h"
+#include <algorithm>
 
 using namespace clang;
 
@@ -24,11 +25,11 @@ public:
   Rule_6_2_2() : RuleCheckerASTContext() {}
 
   bool VisitBinEQ(BinaryOperator *S) {
-    FindSimpleViolation(S);
+    reportViolationIfFloatSubexpr(S);
     return true;
   }
   bool VisitBinNE(BinaryOperator *S) {
-    FindSimpleViolation(S);
+    reportViolationIfFloatSubexpr(S);
     return true;
   }
 
@@ -42,22 +43,49 @@ public:
   }
 
 private:
+  typedef std::set<DeclRefExpr *> DeclRefExprPtrSet;
+
   void FindObfuscatedViolation(BinaryOperator *S) {
+    assert((S->getOpcode() == BO_LAnd || S->getOpcode() == BO_LOr) &&
+           "This method only works on logical operators.");
+
     if (doIgnore(S->getLocStart())) {
       return;
     }
-    if (isFloatingComparingExpr(S->getLHS()->IgnoreParenCasts()) &&
-        isFloatingComparingExpr(S->getRHS()->IgnoreParenCasts())) {
-      reportError(S);
+
+    BinaryOperator *lhs =
+        dyn_cast<BinaryOperator>(S->getLHS()->IgnoreParenCasts());
+    BinaryOperator *rhs =
+        dyn_cast<BinaryOperator>(S->getRHS()->IgnoreParenCasts());
+    // There must be binary operators on both sides
+    if (lhs && isFloatingComparingBinOp(lhs) && rhs &&
+        isFloatingComparingBinOp(rhs)) {
+      const DeclRefExprPtrSet lhsChildren = getChildrenExpr(lhs);
+      const DeclRefExprPtrSet rhsChildren = getChildrenExpr(rhs);
+
+      // What did I miss? Is there really no equal operator for DeclRefExpr?
+      auto isDeclRefEqualFunc = [](DeclRefExpr *a, DeclRefExpr *b) {
+        return a->getDecl() == b->getDecl();
+      };
+
+      // Report error only when on the left and on the right side the same two
+      // variables get compared
+      if (std::equal(lhsChildren.begin(), lhsChildren.end(),
+                     rhsChildren.begin(), isDeclRefEqualFunc)) {
+        reportError(S);
+      }
     }
   }
 
-  void FindSimpleViolation(BinaryOperator *S) {
+  void reportViolationIfFloatSubexpr(BinaryOperator *S) {
+    assert((S->getOpcode() == BO_EQ || S->getOpcode() == BO_NE) &&
+           "This method only works on (not) equal operators.");
+
     if (doIgnore(S->getLocStart())) {
       return;
     }
 
-    // Report one side only
+    // Issue at most one report
     if (isFloatingType(S->getLHS())) {
       reportError(S->getLHS());
     } else if (isFloatingType(S->getRHS())) {
@@ -76,13 +104,19 @@ private:
     return false;
   }
 
-  bool isFloatingComparingExpr(Expr *S) {
-    if (BinaryOperator *bo = dyn_cast<BinaryOperator>(S)) {
-      if (isFloatingType(bo->getLHS()) || isFloatingType(bo->getRHS())) {
-        return true;
-      }
+  bool isFloatingComparingBinOp(BinaryOperator *bo) {
+    if (isFloatingType(bo->getLHS()) || isFloatingType(bo->getRHS())) {
+      return true;
     }
     return false;
+  }
+
+  const DeclRefExprPtrSet getChildrenExpr(BinaryOperator *bo) {
+    DeclRefExpr *lhs = dyn_cast<DeclRefExpr>(bo->getLHS()->IgnoreParenCasts());
+    DeclRefExpr *rhs = dyn_cast<DeclRefExpr>(bo->getRHS()->IgnoreParenCasts());
+    assert(lhs && "Left hand side is expected to be a DeclRefExpr!");
+    assert(rhs && "Right hand side is expected to be a DeclRefExpr!");
+    return DeclRefExprPtrSet({lhs, rhs});
   }
 
 protected:
