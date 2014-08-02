@@ -209,9 +209,9 @@ protected:
                  const std::vector<std::string> &args) {
     for (const std::string &currentString : args) {
       // Handle help request
-      if (currentString == "help") {
+      if (currentString == "--help") {
         PrintHelp(llvm::outs());
-        return false;
+        return true;
       }
       // Handle --exclude-path arguments
       const std::string excludeArgument = "--exclude-path=";
@@ -254,7 +254,7 @@ protected:
   }
   void PrintHelp(llvm::raw_ostream &ros) {
     ros << "Available plugin parameters:\n";
-    ros << "[help] - show this text\n";
+    ros << "[--help] - show this text\n";
     ros << "[--exclude-path=PATH] - do not check files matching PATH\n";
     ros << "[all|-all|--all] - report all rule violations as "
            "error/warning/remark\n";
