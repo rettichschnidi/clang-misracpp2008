@@ -17,7 +17,7 @@ namespace misracpp2008 {
 
 const static std::string ruleName = "27-0-1";
 
-class Rule_27_0_1 : public RuleCheckerPreprocessor {
+class Rule_27_0_1 : public RuleCheckerPPCallback {
 private:
   static const std::set<std::string> illegalIncludes;
 

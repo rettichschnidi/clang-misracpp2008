@@ -19,7 +19,7 @@ namespace misracpp2008 {
 
 const static std::string ruleName = "16-3-2";
 
-class Rule_16_3_2 : public RuleCheckerPreprocessor {
+class Rule_16_3_2 : public RuleCheckerPPCallback {
 private:
 public:
   virtual void MacroDefined(const Token &MacroNameTok,

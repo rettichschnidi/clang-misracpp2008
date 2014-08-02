@@ -28,7 +28,7 @@ namespace misracpp2008 {
  */
 class BannedFunctionUsageChecker
     : public RuleCheckerASTContext,
-      public RuleCheckerPreprocessor,
+      public RuleCheckerPPCallback,
       public RecursiveASTVisitor<BannedFunctionUsageChecker> {
 public:
   /**

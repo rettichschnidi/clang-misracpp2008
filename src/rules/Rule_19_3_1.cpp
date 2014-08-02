@@ -18,7 +18,7 @@ namespace misracpp2008 {
 
 const static std::string ruleName = "19-3-1";
 
-class Rule_19_3_1 : public RuleCheckerPreprocessor {
+class Rule_19_3_1 : public RuleCheckerPPCallback {
 private:
   static const std::string illegalMacroName;
 

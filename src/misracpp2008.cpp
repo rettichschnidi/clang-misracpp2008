@@ -195,7 +195,7 @@ protected:
         assert(CI.hasPreprocessor() &&
                "Compiler instance has no preprocessor!");
         auto diagLevel = getDiagnosticLevels().at(checkerName);
-        std::unique_ptr<RuleCheckerPreprocessor> ppCallback = it->instantiate();
+        std::unique_ptr<RuleCheckerPPCallback> ppCallback = it->instantiate();
         ppCallback->setDiagLevel(diagLevel);
         ppCallback->setDiagEngine(CI.getDiagnostics());
         ppCallback->setName(checkerName);
