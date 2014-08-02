@@ -21,7 +21,7 @@ if(CLANG_MISRACPP2008_TEST_USE_VG)
 endif()
 
 list(APPEND CLANG_MISRACPP2008_TEST_DEPS
-  clang clang-headers
+  clang clang-headers FileCheck
   misracpp2008
   )
 set(CLANG_MISRACPP2008_TEST_PARAMS
