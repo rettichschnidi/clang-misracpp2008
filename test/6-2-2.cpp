@@ -23,7 +23,12 @@ void violators(float a, float b) {
     }
     if((a < b) || (a > b)) { // expected-error {{Floating-point expressions shall not be directly or indirectly tested for equality or inequality. (MISRA C++ 2008 rule 6-2-2)}}
     }
+}
 
-    if( std::abs(a - b) <= std::numeric_limits<float>::epsilon()) { // compliant
+void compliant(float a, float b, float c) {
+    if( std::abs(a - b) <= std::numeric_limits<float>::epsilon()) {
+    }
+
+    if( a < b || b < c) {
     }
 }
