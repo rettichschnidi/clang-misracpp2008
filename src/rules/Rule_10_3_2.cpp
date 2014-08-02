@@ -30,7 +30,7 @@ public:
       return true;
     }
 
-    for (const auto B: decl->methods()) {
+    for (const auto B : decl->methods()) {
       if (!B->isImplicit() && B->isVirtual() && !B->isVirtualAsWritten()) {
         reportError(B->getLocation());
         break;

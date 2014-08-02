@@ -127,7 +127,7 @@ typedef llvm::Registry<RuleCheckerASTContext> RuleCheckerASTContextRegistry;
  * @brief Base class for all rule checkers that work on the preprocessing stage.
  */
 class RuleCheckerPPCallback : public virtual RuleChecker,
-                                public clang::PPCallbacks {};
+                              public clang::PPCallbacks {};
 
 /**
  * @brief A global registry to register RuleCheckerPreprocessor-derived

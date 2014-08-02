@@ -93,5 +93,5 @@ protected:
 };
 
 static RuleCheckerASTContextRegistry::Add<Rule_6_2_2>
-    X(ruleName.c_str(), "MISRA C++ 2008 rule checker");
+X(ruleName.c_str(), "MISRA C++ 2008 rule checker");
 }
