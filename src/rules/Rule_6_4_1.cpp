@@ -33,19 +33,19 @@ public:
       const Stmt *elseStmt = is->getElse();
       // Check if then has a body
       if (thenStmt && isa<CompoundStmt>(thenStmt) == false) {
-        ReportError(thenStmt->getLocStart());
+        reportError(thenStmt->getLocStart());
       }
       // Check if else has a body or another if statement
       if (elseStmt &&
           ((isa<CompoundStmt>(elseStmt) || isa<IfStmt>(elseStmt)) == false)) {
-        ReportError(elseStmt->getLocStart());
+        reportError(elseStmt->getLocStart());
       }
     }
     return true;
   }
 
 private:
-  void ReportError(const SourceLocation loc) {
+  void reportError(const SourceLocation loc) {
     RuleCheckerASTContext::reportError(RULE_TEXT_6_4_1, loc);
   }
 
