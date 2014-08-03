@@ -1,4 +1,4 @@
-//===-  Rule_6_2_3.cpp - Checker for MISRA C++ 2008 rule 6-2-3-----------===//
+//===-  Rule_6_2_3.cpp - Checker for MISRA C++ 2008 rule 6-2-3-------------===//
 //
 // This file is distributed under the University of Illinois Open Source
 // License. See LICENSE.TXT for details.
