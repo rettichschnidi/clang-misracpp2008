@@ -5,10 +5,10 @@
 #include <cstring>
 
 int main() {
-    errno = 0; // expected-error {{The error indicator errno shall not be used. (MISRA C++ 2008 rule 19-3-1)}}
-    double not_a_number = std::log(-1.0);
+  errno = 0; // expected-error {{The error indicator errno shall not be used. (MISRA C++ 2008 rule 19-3-1)}}
+  double not_a_number = std::log(-1.0);
 
-    if( errno == EDOM ) { // expected-error {{The error indicator errno shall not be used.}}
-        std::cout << "log(-1) failed: " << std::strerror(errno) << '\n';  // expected-error {{The error indicator errno shall not be used. (MISRA C++ 2008 rule 19-3-1)}}
-    }
+  if (errno == EDOM) {                                               // expected-error {{The error indicator errno shall not be used.}}
+    std::cout << "log(-1) failed: " << std::strerror(errno) << '\n'; // expected-error {{The error indicator errno shall not be used. (MISRA C++ 2008 rule 19-3-1)}}
+  }
 }

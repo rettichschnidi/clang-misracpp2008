@@ -3,20 +3,28 @@
 volatile int cond;
 
 void compliant() {
-    for(int i = 0; i < 100; ++i) {
-    }
+  for (int i = 0; i < 100; ++i) {
+  }
 
-    do {} while(cond);
+  do {
+  } while (cond);
 
-    while(cond) {}
+  while (cond) {
+  }
 }
 
 void violations() {
-    for(int i = 0; i < 100; ++i); // expected-error {{The statement forming the body of a switch, while, do ... while or for statement shall be a compound statement. (MISRA C++ 2008 rule 6-3-1)}}
+  for (int i = 0; i < 100; ++i)
+    ; // expected-error {{The statement forming the body of a switch, while, do ... while or for statement shall be a compound statement. (MISRA C++ 2008 rule 6-3-1)}}
 
-    do; while(cond); // expected-error {{The statement forming the body of a switch, while, do ... while or for statement shall be a compound statement. (MISRA C++ 2008 rule 6-3-1)}}
+  do
+    ; // expected-error {{The statement forming the body of a switch, while, do ... while or for statement shall be a compound statement. (MISRA C++ 2008 rule 6-3-1)}}
+  while (cond);
 
-    while(cond); // expected-error {{The statement forming the body of a switch, while, do ... while or for statement shall be a compound statement. (MISRA C++ 2008 rule 6-3-1)}}
+  while (cond)
+    ; // expected-error {{The statement forming the body of a switch, while, do ... while or for statement shall be a compound statement. (MISRA C++ 2008 rule 6-3-1)}}
 
-    while(cond) { cond++; } // this again is valid
+  while (cond) { // this again is valid
+    cond++;
+  }
 }

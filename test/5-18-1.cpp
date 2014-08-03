@@ -6,23 +6,22 @@ int a, t, c;
 bool retValue = true;
 
 // Auxiliary function
-int f(int x, int y, int z) {
-    return x + y + z;
-}
+int f(int x, int y, int z) { return x + y + z; }
 
 int violatingFunctionCall() {
-    return f(a, (t=3, t+2), c); // expected-error {{The comma operator shall not be used. (MISRA C++ 2008 rule 5-18-1)}}
+  return f(a, (t = 3, t + 2), c); // expected-error {{The comma operator shall not be used. (MISRA C++ 2008 rule 5-18-1)}}
 }
 
 void violatingForLoop() {
-    for(a = 0, c = a + 10; a < c; a++) { // expected-error {{The comma operator shall not be used. (MISRA C++ 2008 rule 5-18-1)}}
-    }
+  for (a = 0, c = a + 10; a < c; a++) { // expected-error {{The comma operator shall not be used. (MISRA C++ 2008 rule 5-18-1)}}
+  }
 }
 
 int violatingReturn() {
-    return (retValue = false, 5); // expected-error {{The comma operator shall not be used. (MISRA C++ 2008 rule 5-18-1)}}
+  return (retValue = false, 5); // expected-error {{The comma operator shall not be used. (MISRA C++ 2008 rule 5-18-1)}}
 }
 
 void violatingAssignement(int i) {
-    if(i == 10) a = 10, c = 10; // expected-error {{The comma operator shall not be used. (MISRA C++ 2008 rule 5-18-1)}}
+  if (i == 10)
+    a = 10, c = 10; // expected-error {{The comma operator shall not be used. (MISRA C++ 2008 rule 5-18-1)}}
 }
