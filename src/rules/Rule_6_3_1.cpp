@@ -34,7 +34,7 @@ public:
     return true;
   }
 
-public:
+private:
   void ReportIfNullStmt(const Stmt *S) {
     if (isa<CompoundStmt>(S) != true) {
       reportError(RULE_TEXT_6_3_1, S->getLocStart());
