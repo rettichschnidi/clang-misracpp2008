@@ -25,17 +25,17 @@ public:
 
   bool VisitStmt(Stmt *S) {
     if (ForStmt *fs = dyn_cast<ForStmt>(S)) {
-      ReportIfNullStmt(fs->getBody());
+      ReportIfNotCompund(fs->getBody());
     } else if (DoStmt *ds = dyn_cast<DoStmt>(S)) {
-      ReportIfNullStmt(ds->getBody());
+      ReportIfNotCompund(ds->getBody());
     } else if (WhileStmt *ws = dyn_cast<WhileStmt>(S)) {
-      ReportIfNullStmt(ws->getBody());
+      ReportIfNotCompund(ws->getBody());
     }
     return true;
   }
 
 private:
-  void ReportIfNullStmt(const Stmt *S) {
+  void ReportIfNotCompund(const Stmt *S) {
     if (isa<CompoundStmt>(S) != true) {
       reportError(RULE_TEXT_6_3_1, S->getLocStart());
     }
