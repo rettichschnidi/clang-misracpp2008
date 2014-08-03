@@ -16,6 +16,6 @@ public:
 class DerivedPureAgain : public DerivedNonPure
 {
 public:
-  virtual void badMethod() =0;  // expected-error {{A virtual function shall only be overridden by a pure virtual function if it is itself declared as pure virtual.}}
+  virtual void badMethod() =0;  // expected-error {{A virtual function shall only be overridden by a pure virtual function if it is itself declared as pure virtual. (MISRA C++ 2008 rule 10-3-3)}}
   virtual void goodMethod() =0; // Compliant - Was also pure in class DerivedNonPure
 };

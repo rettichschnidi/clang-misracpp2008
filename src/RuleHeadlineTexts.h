@@ -359,7 +359,7 @@ extern const char RULE_TEXT_17_0_1[113];
 extern const char RULE_TEXT_17_0_2[70];
 extern const char RULE_TEXT_17_0_3[65];
 extern const char RULE_TEXT_17_0_4[45];
-extern const char RULE_TEXT_17_0_5[63];
+extern const char RULE_TEXT_17_0_5[61];
 
 // Language support library - General
 extern const char RULE_TEXT_18_0_1[33];

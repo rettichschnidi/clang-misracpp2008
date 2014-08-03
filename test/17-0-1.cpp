@@ -27,38 +27,38 @@
 #include <inttypes.h>
 
 // Disallowed usages
-#define __cplusplus // expected-error {{Reserved identifiers, macros and functions in the standard library shall not be defined, redefined or undefined.}}
-#define __DATE__ // expected-error {{Reserved identifiers, macros and functions in the standard library shall not be defined, redefined or undefined.}}
-#define __FILE__ // expected-error {{Reserved identifiers, macros and functions in the standard library shall not be defined, redefined or undefined.}}
-#define __LINE__ // expected-error {{Reserved identifiers, macros and functions in the standard library shall not be defined, redefined or undefined.}}
-#define __STDC_HOSTED__ // expected-error {{Reserved identifiers, macros and functions in the standard library shall not be defined, redefined or undefined.}}
-#define __TIME__ // expected-error {{Reserved identifiers, macros and functions in the standard library shall not be defined, redefined or undefined.}}
-#define __STDC__ // expected-error {{Reserved identifiers, macros and functions in the standard library shall not be defined, redefined or undefined.}}
-#define __STDC_MB_MIGHT_NEQ_WC__ // expected-error {{Reserved identifiers, macros and functions in the standard library shall not be defined, redefined or undefined.}}
-#define __STDC_VERSION__ // expected-error {{Reserved identifiers, macros and functions in the standard library shall not be defined, redefined or undefined.}}
-#define __STDC_ISO_10646__// expected-error {{Reserved identifiers, macros and functions in the standard library shall not be defined, redefined or undefined.}}
-#define __STDCPP_STRICT_POINTER_SAFETY__// expected-error {{Reserved identifiers, macros and functions in the standard library shall not be defined, redefined or undefined.}}
-#define __STDCPP_THREADS__ // expected-error {{Reserved identifiers, macros and functions in the standard library shall not be defined, redefined or undefined.}}
-#define errno // expected-error {{Reserved identifiers, macros and functions in the standard library shall not be defined, redefined or undefined.}}
-#define assert // expected-error {{Reserved identifiers, macros and functions in the standard library shall not be defined, redefined or undefined.}}
-#define _ILLEGAL_NAME_WITH_UNDERSCORE_FIRST // expected-error {{Reserved identifiers, macros and functions in the standard library shall not be defined, redefined or undefined.}}
+#define __cplusplus // expected-error {{Reserved identifiers, macros and functions in the standard library shall not be defined, redefined or undefined. (MISRA C++ 2008 rule 17-0-1)}}
+#define __DATE__ // expected-error {{Reserved identifiers, macros and functions in the standard library shall not be defined, redefined or undefined. (MISRA C++ 2008 rule 17-0-1)}}
+#define __FILE__ // expected-error {{Reserved identifiers, macros and functions in the standard library shall not be defined, redefined or undefined. (MISRA C++ 2008 rule 17-0-1)}}
+#define __LINE__ // expected-error {{Reserved identifiers, macros and functions in the standard library shall not be defined, redefined or undefined. (MISRA C++ 2008 rule 17-0-1)}}
+#define __STDC_HOSTED__ // expected-error {{Reserved identifiers, macros and functions in the standard library shall not be defined, redefined or undefined. (MISRA C++ 2008 rule 17-0-1)}}
+#define __TIME__ // expected-error {{Reserved identifiers, macros and functions in the standard library shall not be defined, redefined or undefined. (MISRA C++ 2008 rule 17-0-1)}}
+#define __STDC__ // expected-error {{Reserved identifiers, macros and functions in the standard library shall not be defined, redefined or undefined. (MISRA C++ 2008 rule 17-0-1)}}
+#define __STDC_MB_MIGHT_NEQ_WC__ // expected-error {{Reserved identifiers, macros and functions in the standard library shall not be defined, redefined or undefined. (MISRA C++ 2008 rule 17-0-1)}}
+#define __STDC_VERSION__ // expected-error {{Reserved identifiers, macros and functions in the standard library shall not be defined, redefined or undefined. (MISRA C++ 2008 rule 17-0-1)}}
+#define __STDC_ISO_10646__// expected-error {{Reserved identifiers, macros and functions in the standard library shall not be defined, redefined or undefined. (MISRA C++ 2008 rule 17-0-1)}}
+#define __STDCPP_STRICT_POINTER_SAFETY__// expected-error {{Reserved identifiers, macros and functions in the standard library shall not be defined, redefined or undefined. (MISRA C++ 2008 rule 17-0-1)}}
+#define __STDCPP_THREADS__ // expected-error {{Reserved identifiers, macros and functions in the standard library shall not be defined, redefined or undefined. (MISRA C++ 2008 rule 17-0-1)}}
+#define errno // expected-error {{Reserved identifiers, macros and functions in the standard library shall not be defined, redefined or undefined. (MISRA C++ 2008 rule 17-0-1)}}
+#define assert // expected-error {{Reserved identifiers, macros and functions in the standard library shall not be defined, redefined or undefined. (MISRA C++ 2008 rule 17-0-1)}}
+#define _ILLEGAL_NAME_WITH_UNDERSCORE_FIRST // expected-error {{Reserved identifiers, macros and functions in the standard library shall not be defined, redefined or undefined. (MISRA C++ 2008 rule 17-0-1)}}
 
-#undef __cplusplus // expected-error {{Reserved identifiers, macros and functions in the standard library shall not be defined, redefined or undefined.}}
-#undef __DATE__ // expected-error {{Reserved identifiers, macros and functions in the standard library shall not be defined, redefined or undefined.}}
-#undef __FILE__ // expected-error {{Reserved identifiers, macros and functions in the standard library shall not be defined, redefined or undefined.}}
-#undef __LINE__ // expected-error {{Reserved identifiers, macros and functions in the standard library shall not be defined, redefined or undefined.}}
-#undef __STDC_HOSTED__ // expected-error {{Reserved identifiers, macros and functions in the standard library shall not be defined, redefined or undefined.}}
-#undef __TIME__ // expected-error {{Reserved identifiers, macros and functions in the standard library shall not be defined, redefined or undefined.}}
-#undef __STDC__ // expected-error {{Reserved identifiers, macros and functions in the standard library shall not be defined, redefined or undefined.}}
-#undef __STDC_MB_MIGHT_NEQ_WC__ // expected-error {{Reserved identifiers, macros and functions in the standard library shall not be defined, redefined or undefined.}}
-#undef __STDC_VERSION__ // expected-error {{Reserved identifiers, macros and functions in the standard library shall not be defined, redefined or undefined.}}
-#undef __STDC_ISO_10646__// expected-error {{Reserved identifiers, macros and functions in the standard library shall not be defined, redefined or undefined.}}
-#undef __STDCPP_STRICT_POINTER_SAFETY__// expected-error {{Reserved identifiers, macros and functions in the standard library shall not be defined, redefined or undefined.}}
-#undef __STDCPP_THREADS__ // expected-error {{Reserved identifiers, macros and functions in the standard library shall not be defined, redefined or undefined.}}
-#undef errno // expected-error {{Reserved identifiers, macros and functions in the standard library shall not be defined, redefined or undefined.}}
-#undef assert // expected-error {{Reserved identifiers, macros and functions in the standard library shall not be defined, redefined or undefined.}}
-#undef _ILLEGAL_NAME_WITH_UNDERSCORE_FIRST // expected-error {{Reserved identifiers, macros and functions in the standard library shall not be defined, redefined or undefined.}}
+#undef __cplusplus // expected-error {{Reserved identifiers, macros and functions in the standard library shall not be defined, redefined or undefined. (MISRA C++ 2008 rule 17-0-1)}}
+#undef __DATE__ // expected-error {{Reserved identifiers, macros and functions in the standard library shall not be defined, redefined or undefined. (MISRA C++ 2008 rule 17-0-1)}}
+#undef __FILE__ // expected-error {{Reserved identifiers, macros and functions in the standard library shall not be defined, redefined or undefined. (MISRA C++ 2008 rule 17-0-1)}}
+#undef __LINE__ // expected-error {{Reserved identifiers, macros and functions in the standard library shall not be defined, redefined or undefined. (MISRA C++ 2008 rule 17-0-1)}}
+#undef __STDC_HOSTED__ // expected-error {{Reserved identifiers, macros and functions in the standard library shall not be defined, redefined or undefined. (MISRA C++ 2008 rule 17-0-1)}}
+#undef __TIME__ // expected-error {{Reserved identifiers, macros and functions in the standard library shall not be defined, redefined or undefined. (MISRA C++ 2008 rule 17-0-1)}}
+#undef __STDC__ // expected-error {{Reserved identifiers, macros and functions in the standard library shall not be defined, redefined or undefined. (MISRA C++ 2008 rule 17-0-1)}}
+#undef __STDC_MB_MIGHT_NEQ_WC__ // expected-error {{Reserved identifiers, macros and functions in the standard library shall not be defined, redefined or undefined. (MISRA C++ 2008 rule 17-0-1)}}
+#undef __STDC_VERSION__ // expected-error {{Reserved identifiers, macros and functions in the standard library shall not be defined, redefined or undefined. (MISRA C++ 2008 rule 17-0-1)}}
+#undef __STDC_ISO_10646__// expected-error {{Reserved identifiers, macros and functions in the standard library shall not be defined, redefined or undefined. (MISRA C++ 2008 rule 17-0-1)}}
+#undef __STDCPP_STRICT_POINTER_SAFETY__// expected-error {{Reserved identifiers, macros and functions in the standard library shall not be defined, redefined or undefined. (MISRA C++ 2008 rule 17-0-1)}}
+#undef __STDCPP_THREADS__ // expected-error {{Reserved identifiers, macros and functions in the standard library shall not be defined, redefined or undefined. (MISRA C++ 2008 rule 17-0-1)}}
+#undef errno // expected-error {{Reserved identifiers, macros and functions in the standard library shall not be defined, redefined or undefined. (MISRA C++ 2008 rule 17-0-1)}}
+#undef assert // expected-error {{Reserved identifiers, macros and functions in the standard library shall not be defined, redefined or undefined. (MISRA C++ 2008 rule 17-0-1)}}
+#undef _ILLEGAL_NAME_WITH_UNDERSCORE_FIRST // expected-error {{Reserved identifiers, macros and functions in the standard library shall not be defined, redefined or undefined. (MISRA C++ 2008 rule 17-0-1)}}
 
-#undef define // expected-error {{Reserved identifiers, macros and functions in the standard library shall not be defined, redefined or undefined.}}
-#define define // expected-error {{Reserved identifiers, macros and functions in the standard library shall not be defined, redefined or undefined.}}
+#undef define // expected-error {{Reserved identifiers, macros and functions in the standard library shall not be defined, redefined or undefined. (MISRA C++ 2008 rule 17-0-1)}}
+#define define // expected-error {{Reserved identifiers, macros and functions in the standard library shall not be defined, redefined or undefined. (MISRA C++ 2008 rule 17-0-1)}}
 

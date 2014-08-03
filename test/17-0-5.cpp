@@ -4,9 +4,9 @@
 jmp_buf buf;
 
 void setup() {
-  setjmp(buf); // expected-error {{The setjmp macro and the longjmp function shall not be used.}}
+  setjmp(buf); // expected-error {{The setjmp macro and the longjmp function shall not be used. (MISRA C++ 2008 rule 17-0-5)}}
 }
 
 void jump() {
-  longjmp(buf, 1); // expected-error {{The setjmp macro and the longjmp function shall not be used.}}
+  longjmp(buf, 1); // expected-error {{The setjmp macro and the longjmp function shall not be used. (MISRA C++ 2008 rule 17-0-5)}}
 }

@@ -8,5 +8,5 @@ struct A
 };
 
 void func() {
-    int i = offsetof(A, one); // expected-error {{The macro offsetof shall not be used.}}
+    int i = offsetof(A, one); // expected-error {{The macro offsetof shall not be used. (MISRA C++ 2008 rule 18-2-1)}}
 }

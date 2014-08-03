@@ -14,18 +14,18 @@ void leftShiftFunction() {
 
     u8 = (uint8_t)(u8 << 0); // Compliant - 0 is the lower bound
     u8 = (uint8_t)(u8 << 7); // Compliant - 7 is the upper bound
-    u8 = (uint8_t)(u8 << 8); // expected-error {{The right hand operand of a shift operator shall lie between zero and one less than the width in bits of the underlying type of the left hand operand.}}
+    u8 = (uint8_t)(u8 << 8); // expected-error {{The right hand operand of a shift operator shall lie between zero and one less than the width in bits of the underlying type of the left hand operand. (MISRA C++ 2008 rule 5-8-1)}}
     u8 = (uint8_t)(u8 << (4 + 3)); // Compliant - 7
-    u8 = (uint8_t)(u8 << (4 + 4)); // expected-error {{The right hand operand of a shift operator shall lie between zero and one less than the width in bits of the underlying type of the left hand operand.}}
-    u8 = (uint8_t)(u8 << -1); // expected-error {{The right hand operand of a shift operator shall lie between zero and one less than the width in bits of the underlying type of the left hand operand.}}
-    u8 = (uint8_t)(u8 << shiftNum); // expected-error {{The right hand operand of a shift operator shall lie between zero and one less than the width in bits of the underlying type of the left hand operand.}}
+    u8 = (uint8_t)(u8 << (4 + 4)); // expected-error {{The right hand operand of a shift operator shall lie between zero and one less than the width in bits of the underlying type of the left hand operand. (MISRA C++ 2008 rule 5-8-1)}}
+    u8 = (uint8_t)(u8 << -1); // expected-error {{The right hand operand of a shift operator shall lie between zero and one less than the width in bits of the underlying type of the left hand operand. (MISRA C++ 2008 rule 5-8-1)}}
+    u8 = (uint8_t)(u8 << shiftNum); // expected-error {{The right hand operand of a shift operator shall lie between zero and one less than the width in bits of the underlying type of the left hand operand. (MISRA C++ 2008 rule 5-8-1)}}
     u16 = (uint16_t)((uint16_t)u8 << 15); // Compliant - 15 is the upper bound for a 16 bit value
-    u16 = (uint16_t)((uint16_t)u8 << 16); // expected-error {{The right hand operand of a shift operator shall lie between zero and one less than the width in bits of the underlying type of the left hand operand.}}
+    u16 = (uint16_t)((uint16_t)u8 << 16); // expected-error {{The right hand operand of a shift operator shall lie between zero and one less than the width in bits of the underlying type of the left hand operand. (MISRA C++ 2008 rule 5-8-1)}}
 
     // Using macros
     u8 = (uint8_t)(u8 << SHIFT_2); // Compliant - the macro value is 2
-    u8 = (uint8_t)(u8 << SHIFT_8); // expected-error {{The right hand operand of a shift operator shall lie between zero and one less than the width in bits of the underlying type of the left hand operand.}}
-    u8 = (uint8_t)(u8 << SHIFT_NEG); // expected-error {{The right hand operand of a shift operator shall lie between zero and one less than the width in bits of the underlying type of the left hand operand.}}
+    u8 = (uint8_t)(u8 << SHIFT_8); // expected-error {{The right hand operand of a shift operator shall lie between zero and one less than the width in bits of the underlying type of the left hand operand. (MISRA C++ 2008 rule 5-8-1)}}
+    u8 = (uint8_t)(u8 << SHIFT_NEG); // expected-error {{The right hand operand of a shift operator shall lie between zero and one less than the width in bits of the underlying type of the left hand operand. (MISRA C++ 2008 rule 5-8-1)}}
 }
 
 void rightShiftFunction() {
@@ -35,18 +35,18 @@ void rightShiftFunction() {
 
     u8 = (uint8_t)(u8 >> 0); // Compliant - 0 is the lower bound
     u8 = (uint8_t)(u8 >> 7); // Compliant - 7 is the upper bound
-    u8 = (uint8_t)(u8 >> 8); // expected-error {{The right hand operand of a shift operator shall lie between zero and one less than the width in bits of the underlying type of the left hand operand.}}
+    u8 = (uint8_t)(u8 >> 8); // expected-error {{The right hand operand of a shift operator shall lie between zero and one less than the width in bits of the underlying type of the left hand operand. (MISRA C++ 2008 rule 5-8-1)}}
     u8 = (uint8_t)(u8 >> (4 + 3)); // Compliant - 7
-    u8 = (uint8_t)(u8 >> (4 + 4)); // expected-error {{The right hand operand of a shift operator shall lie between zero and one less than the width in bits of the underlying type of the left hand operand.}}
-    u8 = (uint8_t)(u8 >> -1); // expected-error {{The right hand operand of a shift operator shall lie between zero and one less than the width in bits of the underlying type of the left hand operand.}}
-    u8 = (uint8_t)(u8 >> shiftNum); // expected-error {{The right hand operand of a shift operator shall lie between zero and one less than the width in bits of the underlying type of the left hand operand.}}
+    u8 = (uint8_t)(u8 >> (4 + 4)); // expected-error {{The right hand operand of a shift operator shall lie between zero and one less than the width in bits of the underlying type of the left hand operand. (MISRA C++ 2008 rule 5-8-1)}}
+    u8 = (uint8_t)(u8 >> -1); // expected-error {{The right hand operand of a shift operator shall lie between zero and one less than the width in bits of the underlying type of the left hand operand. (MISRA C++ 2008 rule 5-8-1)}}
+    u8 = (uint8_t)(u8 >> shiftNum); // expected-error {{The right hand operand of a shift operator shall lie between zero and one less than the width in bits of the underlying type of the left hand operand. (MISRA C++ 2008 rule 5-8-1)}}
     u16 = (uint16_t)((uint16_t)u8 >> 15); // Compliant - 15 is the upper bound for a 16 bit value
-    u16 = (uint16_t)((uint16_t)u8 >> 16); // expected-error {{The right hand operand of a shift operator shall lie between zero and one less than the width in bits of the underlying type of the left hand operand.}}
+    u16 = (uint16_t)((uint16_t)u8 >> 16); // expected-error {{The right hand operand of a shift operator shall lie between zero and one less than the width in bits of the underlying type of the left hand operand. (MISRA C++ 2008 rule 5-8-1)}}
 
     // Using macros
     u8 = (uint8_t)(u8 >> SHIFT_2); // Compliant - the macro value is 2
-    u8 = (uint8_t)(u8 >> SHIFT_8); // expected-error {{The right hand operand of a shift operator shall lie between zero and one less than the width in bits of the underlying type of the left hand operand.}}
-    u8 = (uint8_t)(u8 >> SHIFT_NEG); // expected-error {{The right hand operand of a shift operator shall lie between zero and one less than the width in bits of the underlying type of the left hand operand.}}
+    u8 = (uint8_t)(u8 >> SHIFT_8); // expected-error {{The right hand operand of a shift operator shall lie between zero and one less than the width in bits of the underlying type of the left hand operand. (MISRA C++ 2008 rule 5-8-1)}}
+    u8 = (uint8_t)(u8 >> SHIFT_NEG); // expected-error {{The right hand operand of a shift operator shall lie between zero and one less than the width in bits of the underlying type of the left hand operand. (MISRA C++ 2008 rule 5-8-1)}}
 }
 
 void leftShiftAssignFunction() {
@@ -55,14 +55,14 @@ void leftShiftAssignFunction() {
 
     u8 <<= 0; // Compliant - 0 is the lower bound$
     u8 <<= 7; // Compliant - 7 is the upper bound
-    u8 <<= 8; // expected-error {{The right hand operand of a shift operator shall lie between zero and one less than the width in bits of the underlying type of the left hand operand.}}
-    u8 <<= shiftNum; // expected-error {{The right hand operand of a shift operator shall lie between zero and one less than the width in bits of the underlying type of the left hand operand.}}
-    u8 <<= -1; // expected-error {{The right hand operand of a shift operator shall lie between zero and one less than the width in bits of the underlying type of the left hand operand.}}
+    u8 <<= 8; // expected-error {{The right hand operand of a shift operator shall lie between zero and one less than the width in bits of the underlying type of the left hand operand. (MISRA C++ 2008 rule 5-8-1)}}
+    u8 <<= shiftNum; // expected-error {{The right hand operand of a shift operator shall lie between zero and one less than the width in bits of the underlying type of the left hand operand. (MISRA C++ 2008 rule 5-8-1)}}
+    u8 <<= -1; // expected-error {{The right hand operand of a shift operator shall lie between zero and one less than the width in bits of the underlying type of the left hand operand. (MISRA C++ 2008 rule 5-8-1)}}
 
     // Using macros
     u8 <<= SHIFT_2; // Compliant - the macro value is 2
-    u8 <<= SHIFT_8; // expected-error {{The right hand operand of a shift operator shall lie between zero and one less than the width in bits of the underlying type of the left hand operand.}}
-    u8 <<= SHIFT_NEG; // expected-error {{The right hand operand of a shift operator shall lie between zero and one less than the width in bits of the underlying type of the left hand operand.}}
+    u8 <<= SHIFT_8; // expected-error {{The right hand operand of a shift operator shall lie between zero and one less than the width in bits of the underlying type of the left hand operand. (MISRA C++ 2008 rule 5-8-1)}}
+    u8 <<= SHIFT_NEG; // expected-error {{The right hand operand of a shift operator shall lie between zero and one less than the width in bits of the underlying type of the left hand operand. (MISRA C++ 2008 rule 5-8-1)}}
 }
 
 void rightShiftAssignFunction() {
@@ -71,14 +71,14 @@ void rightShiftAssignFunction() {
 
     u8 >>= 0; // Compliant - 0 is the lower bound
     u8 >>= 7; // Compliant - 7 is the upper bound
-    u8 >>= 8; // expected-error {{The right hand operand of a shift operator shall lie between zero and one less than the width in bits of the underlying type of the left hand operand.}}
-    u8 >>= shiftNum; // expected-error {{The right hand operand of a shift operator shall lie between zero and one less than the width in bits of the underlying type of the left hand operand.}}
-    u8 >>= -1; // expected-error {{The right hand operand of a shift operator shall lie between zero and one less than the width in bits of the underlying type of the left hand operand.}}
+    u8 >>= 8; // expected-error {{The right hand operand of a shift operator shall lie between zero and one less than the width in bits of the underlying type of the left hand operand. (MISRA C++ 2008 rule 5-8-1)}}
+    u8 >>= shiftNum; // expected-error {{The right hand operand of a shift operator shall lie between zero and one less than the width in bits of the underlying type of the left hand operand. (MISRA C++ 2008 rule 5-8-1)}}
+    u8 >>= -1; // expected-error {{The right hand operand of a shift operator shall lie between zero and one less than the width in bits of the underlying type of the left hand operand. (MISRA C++ 2008 rule 5-8-1)}}
 
     // Using macros
     u8 >>= SHIFT_2; // Compliant - the macro value is 2
-    u8 >>= SHIFT_8; // expected-error {{The right hand operand of a shift operator shall lie between zero and one less than the width in bits of the underlying type of the left hand operand.}}
-    u8 >>= SHIFT_NEG; // expected-error {{The right hand operand of a shift operator shall lie between zero and one less than the width in bits of the underlying type of the left hand operand.}}
+    u8 >>= SHIFT_8; // expected-error {{The right hand operand of a shift operator shall lie between zero and one less than the width in bits of the underlying type of the left hand operand. (MISRA C++ 2008 rule 5-8-1)}}
+    u8 >>= SHIFT_NEG; // expected-error {{The right hand operand of a shift operator shall lie between zero and one less than the width in bits of the underlying type of the left hand operand. (MISRA C++ 2008 rule 5-8-1)}}
 }
 
 void outputStream() {

@@ -4,18 +4,18 @@ int f1();
 
 void f(int a, int b) {
     int z = 1;
-    int zz = a = 2; // expected-error {{Assignment operators shall not be used in sub-expressions.}}
+    int zz = a = 2; // expected-error {{Assignment operators shall not be used in sub-expressions. (MISRA C++ 2008 rule 6-2-1)}}
     int t = a != b;
 
     b = b; // Compliant
 
-    a = b = zz; // expected-error {{Assignment operators shall not be used in sub-expressions.}}
+    a = b = zz; // expected-error {{Assignment operators shall not be used in sub-expressions. (MISRA C++ 2008 rule 6-2-1)}}
 
     if( a ) { // Compliant
     }
-    if( a = b ) { // expected-error {{Assignment operators shall not be used in sub-expressions.}}
+    if( a = b ) { // expected-error {{Assignment operators shall not be used in sub-expressions. (MISRA C++ 2008 rule 6-2-1)}}
     }
-    if( ( a = b ) ) { // expected-error {{Assignment operators shall not be used in sub-expressions.}}
+    if( ( a = b ) ) { // expected-error {{Assignment operators shall not be used in sub-expressions. (MISRA C++ 2008 rule 6-2-1)}}
     }
 
     if( int v = a ) { // Compliant
@@ -25,7 +25,7 @@ void f(int a, int b) {
 
     while( int v = f1()) { // Compliant
     }
-    while( z = f1()) { // expected-error {{Assignment operators shall not be used in sub-expressions.}}
+    while( z = f1()) { // expected-error {{Assignment operators shall not be used in sub-expressions. (MISRA C++ 2008 rule 6-2-1)}}
     }
 }
 
@@ -39,6 +39,6 @@ void complicatedCases(S s) {
     }
 
     S s2;
-    if( s2 = s) { // expected-error {{Assignment operators shall not be used in sub-expressions.}}
+    if( s2 = s) { // expected-error {{Assignment operators shall not be used in sub-expressions. (MISRA C++ 2008 rule 6-2-1)}}
     }
 }

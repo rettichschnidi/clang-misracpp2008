@@ -361,7 +361,7 @@ extern const char RULE_TEXT_17_0_1[] = R"ruletext(Reserved identifiers, macros a
 extern const char RULE_TEXT_17_0_2[] = R"ruletext(The names of standard library macros and objects shall not be reused.)ruletext";
 extern const char RULE_TEXT_17_0_3[] = R"ruletext(The names of standard library functions shall not be overridden.)ruletext";
 extern const char RULE_TEXT_17_0_4[] = R"ruletext(All library code shall conform to MISRA C++.)ruletext";
-extern const char RULE_TEXT_17_0_5[] = R"ruletext(The setjmp macro and the longjmp function shall not be used.61)ruletext";
+extern const char RULE_TEXT_17_0_5[] = R"ruletext(The setjmp macro and the longjmp function shall not be used.)ruletext";
 
 // Language support library - General
 extern const char RULE_TEXT_18_0_1[] = R"ruletext(The C library shall not be used.)ruletext";

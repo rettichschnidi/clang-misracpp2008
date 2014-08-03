@@ -10,7 +10,7 @@ public:
 class B1 : public A
 {
 public:
-  void badMethod();          // expected-error {{Each overriding virtual function shall be declared with the virtual keyword.}}
+  void badMethod();          // expected-error {{Each overriding virtual function shall be declared with the virtual keyword. (MISRA C++ 2008 rule 10-3-2)}}
   virtual void goodMethod(); // Compliant - Explicitly declared virtual
   virtual ~B1();
 };
@@ -18,9 +18,9 @@ public:
 class B2 : public A
 {
 public:
-  void badMethod();          // expected-error {{Each overriding virtual function shall be declared with the virtual keyword.}}
+  void badMethod();          // expected-error {{Each overriding virtual function shall be declared with the virtual keyword. (MISRA C++ 2008 rule 10-3-2)}}
   virtual void goodMethod(); // Compliant - Explicitly declared virtual
-  ~B2();                     // expected-error {{Each overriding virtual function shall be declared with the virtual keyword.}}
+  ~B2();                     // expected-error {{Each overriding virtual function shall be declared with the virtual keyword. (MISRA C++ 2008 rule 10-3-2)}}
 };
 
 B2::~B2() { } // No virtual specifier required here
