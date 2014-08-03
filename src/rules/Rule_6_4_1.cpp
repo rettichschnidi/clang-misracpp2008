@@ -24,6 +24,10 @@ public:
   Rule_6_4_1() : RuleCheckerASTContext() {}
 
   bool VisitStmt(Stmt *S) {
+    if (doIgnore(S->getLocStart())) {
+      return true;
+    }
+
     if (const IfStmt *is = dyn_cast<IfStmt>(S)) {
       const Stmt *thenStmt = is->getThen();
       const Stmt *elseStmt = is->getElse();

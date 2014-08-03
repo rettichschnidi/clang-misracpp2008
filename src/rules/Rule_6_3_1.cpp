@@ -24,6 +24,10 @@ public:
   Rule_6_3_1() : RuleCheckerASTContext() {}
 
   bool VisitStmt(Stmt *S) {
+    if (doIgnore(S->getLocStart())) {
+      return true;
+    }
+
     if (ForStmt *fs = dyn_cast<ForStmt>(S)) {
       ReportIfNotCompund(fs->getBody());
     } else if (DoStmt *ds = dyn_cast<DoStmt>(S)) {
