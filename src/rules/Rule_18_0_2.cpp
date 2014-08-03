@@ -18,8 +18,6 @@ using namespace clang;
 
 namespace misracpp2008 {
 
-const static std::string ruleName = "18-0-2";
-
 class Rule_18_0_2 : public RuleCheckerASTContext,
                     public RecursiveASTVisitor<Rule_18_0_2> {
 private:
@@ -48,6 +46,6 @@ protected:
 const std::set<std::string> Rule_18_0_2::illegalFunctions = { "atof", "atoi",
                                                               "atol" };
 
-static RuleCheckerASTContextRegistry::Add<Rule_18_0_2> X(ruleName.c_str(),
+static RuleCheckerASTContextRegistry::Add<Rule_18_0_2> X("18-0-2",
                                                          RULE_TEXT_18_0_2);
 }

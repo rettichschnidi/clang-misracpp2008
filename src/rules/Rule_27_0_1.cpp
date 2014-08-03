@@ -15,8 +15,6 @@ using namespace clang;
 
 namespace misracpp2008 {
 
-const static std::string ruleName = "27-0-1";
-
 class Rule_27_0_1 : public RuleCheckerPPCallback {
 private:
   static const std::set<std::string> illegalIncludes;
@@ -40,6 +38,6 @@ public:
 
 const std::set<std::string> Rule_27_0_1::illegalIncludes = { "cstdio" };
 
-static RuleCheckerPreprocessorRegistry::Add<Rule_27_0_1> X(ruleName.c_str(),
+static RuleCheckerPreprocessorRegistry::Add<Rule_27_0_1> X("27-0-1",
                                                            RULE_TEXT_27_0_1);
 }

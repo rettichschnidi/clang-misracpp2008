@@ -16,8 +16,6 @@ using namespace clang;
 
 namespace misracpp2008 {
 
-const static std::string ruleName = "19-3-1";
-
 class Rule_19_3_1 : public RuleCheckerPPCallback {
 private:
   static const std::string illegalMacroName;
@@ -39,6 +37,6 @@ public:
 
 const std::string Rule_19_3_1::illegalMacroName = "errno";
 
-static RuleCheckerPreprocessorRegistry::Add<Rule_19_3_1> X(ruleName.c_str(),
+static RuleCheckerPreprocessorRegistry::Add<Rule_19_3_1> X("19-3-1",
                                                            RULE_TEXT_19_3_1);
 }

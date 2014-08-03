@@ -17,8 +17,6 @@ using namespace clang;
 
 namespace misracpp2008 {
 
-const static std::string ruleName = "6-2-1";
-
 class Rule_6_2_1 : public RuleCheckerASTContext,
                    public RecursiveASTVisitor<Rule_6_2_1> {
 public:
@@ -64,6 +62,6 @@ protected:
   }
 };
 
-static RuleCheckerASTContextRegistry::Add<Rule_6_2_1> X(ruleName.c_str(),
+static RuleCheckerASTContextRegistry::Add<Rule_6_2_1> X("6-2-1",
                                                         RULE_TEXT_6_2_1);
 }

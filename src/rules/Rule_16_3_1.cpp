@@ -17,8 +17,6 @@ using namespace clang;
 
 namespace misracpp2008 {
 
-const static std::string ruleName = "16-3-1";
-
 class Rule_16_3_1 : public RuleCheckerPPCallback {
 private:
 public:
@@ -48,6 +46,6 @@ public:
   }
 };
 
-static RuleCheckerPreprocessorRegistry::Add<Rule_16_3_1> X(ruleName.c_str(),
+static RuleCheckerPreprocessorRegistry::Add<Rule_16_3_1> X("16-3-1",
                                                            RULE_TEXT_16_3_1);
 }
