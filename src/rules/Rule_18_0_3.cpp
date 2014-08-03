@@ -33,7 +33,7 @@ public:
 
     std::string funName = expr->getNameInfo().getAsString();
     if (illegalFunctions.count(funName)) {
-      reportError(RULE_TEXT_18_0_3, expr->getLocStart());
+      reportError(expr->getLocStart());
     }
     return true;
   }
@@ -49,6 +49,6 @@ const std::set<std::string> Rule_18_0_3::illegalFunctions = {
   "abort", "exit", "getenv", "system"
 };
 
-static RuleCheckerASTContextRegistry::Add<Rule_18_0_3>
-X(ruleName.c_str(), "MISRA C++ 2008 rule checker");
+static RuleCheckerASTContextRegistry::Add<Rule_18_0_3> X(ruleName.c_str(),
+                                                         RULE_TEXT_18_0_3);
 }

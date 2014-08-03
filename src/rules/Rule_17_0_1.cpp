@@ -37,7 +37,7 @@ private:
     // All other, whether exlicitly banned or starting with a leading underscore
     // constitute a violation of this rule.
     if (explicitlyIllegalMacroNames.count(name) || (name.find('_') == 0)) {
-      reportError(RULE_TEXT_17_0_1, loc);
+      reportError(loc);
     }
   }
 
@@ -70,6 +70,6 @@ const std::set<std::string> Rule_17_0_1::explicitlyLegalMacroNames = {
   "__STDC_FORMAT_MACROS", "__STDC_LIMIT_MACROS"
 };
 
-static RuleCheckerPreprocessorRegistry::Add<Rule_17_0_1>
-X(ruleName.c_str(), "MISRA C++ 2008 rule checker");
+static RuleCheckerPreprocessorRegistry::Add<Rule_17_0_1> X(ruleName.c_str(),
+                                                           RULE_TEXT_17_0_1);
 }

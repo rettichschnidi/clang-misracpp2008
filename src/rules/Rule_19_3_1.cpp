@@ -32,13 +32,13 @@ public:
         return;
       }
 
-      reportError(RULE_TEXT_19_3_1, Range.getBegin());
+      reportError(Range.getBegin());
     }
   }
 };
 
 const std::string Rule_19_3_1::illegalMacroName = "errno";
 
-static RuleCheckerPreprocessorRegistry::Add<Rule_19_3_1>
-X(ruleName.c_str(), "MISRA C++ 2008 rule checker");
+static RuleCheckerPreprocessorRegistry::Add<Rule_19_3_1> X(ruleName.c_str(),
+                                                           RULE_TEXT_19_3_1);
 }

@@ -34,7 +34,7 @@ public:
           const Stmt *finalElseStmt = ifElseStmt->getElse();
           if (finalElseStmt == nullptr ||
               isa<CompoundStmt>(finalElseStmt) == false) {
-            reportError(RULE_TEXT_6_4_2, ifStmt->getLocStart());
+            reportError(ifStmt->getLocStart());
           }
         }
       }
@@ -49,6 +49,6 @@ protected:
   }
 };
 
-static RuleCheckerASTContextRegistry::Add<Rule_6_4_2>
-    X(ruleName.c_str(), "MISRA C++ 2008 rule checker");
+static RuleCheckerASTContextRegistry::Add<Rule_6_4_2> X(ruleName.c_str(),
+                                                        RULE_TEXT_6_4_2);
 }

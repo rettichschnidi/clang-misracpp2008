@@ -24,15 +24,15 @@ protected:
     return illegalFunction;
   }
   virtual void reportRuleViolation(SourceLocation loc) override {
-    RuleChecker::reportError(RULE_TEXT_17_0_5, loc);
+    RuleChecker::reportError(loc);
   }
 };
 
 const std::set<std::string> Rule_17_0_5::illegalFunction = { "longjmp",
                                                              "setjmp" };
 
-static RuleCheckerASTContextRegistry::Add<Rule_17_0_5>
-X(ruleName.c_str(), "MISRA C++ 2008 rule checker");
-static RuleCheckerPreprocessorRegistry::Add<Rule_17_0_5>
-Y(ruleName.c_str(), "MISRA C++ 2008 rule checker");
+static RuleCheckerASTContextRegistry::Add<Rule_17_0_5> X(ruleName.c_str(),
+                                                         RULE_TEXT_17_0_5);
+static RuleCheckerPreprocessorRegistry::Add<Rule_17_0_5> Y(ruleName.c_str(),
+                                                           RULE_TEXT_17_0_5);
 }

@@ -50,7 +50,7 @@ protected:
       // of bits to shift is either negative or greater-equal than the bit-size
       // of the integer we are operating on.
       if (bitsToShift.isNegative() || bitsToShift.uge(integerSize)) {
-        reportError(RULE_TEXT_5_8_1, S->getLocStart());
+        reportError(S->getLocStart());
       }
     } else {
       // Shifting can not statically be verified - review or runtime test
@@ -72,6 +72,6 @@ protected:
   }
 };
 
-static RuleCheckerASTContextRegistry::Add<Rule_5_8_1>
-X(ruleName.c_str(), "MISRA C++ 2008 rule checker");
+static RuleCheckerASTContextRegistry::Add<Rule_5_8_1> X(ruleName.c_str(),
+                                                        RULE_TEXT_5_8_1);
 }

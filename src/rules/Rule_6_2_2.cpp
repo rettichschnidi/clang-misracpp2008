@@ -72,7 +72,7 @@ private:
       // variables get compared
       if (std::equal(lhsChildren.begin(), lhsChildren.end(),
                      rhsChildren.begin(), isDeclRefEqualFunc)) {
-        reportError(S);
+        reportError(S->getLocStart());
       }
     }
   }
@@ -87,14 +87,10 @@ private:
 
     // Issue at most one report
     if (isFloatingType(S->getLHS())) {
-      reportError(S->getLHS());
+      reportError(S->getLHS()->getLocStart());
     } else if (isFloatingType(S->getRHS())) {
-      reportError(S->getRHS());
+      reportError(S->getRHS()->getLocStart());
     }
-  }
-
-  void reportError(const Expr *expr) {
-    RuleCheckerASTContext::reportError(RULE_TEXT_6_2_2, expr->getLocStart());
   }
 
   bool isFloatingType(const Expr *expr) {
@@ -126,6 +122,6 @@ protected:
   }
 };
 
-static RuleCheckerASTContextRegistry::Add<Rule_6_2_2>
-X(ruleName.c_str(), "MISRA C++ 2008 rule checker");
+static RuleCheckerASTContextRegistry::Add<Rule_6_2_2> X(ruleName.c_str(),
+                                                        RULE_TEXT_6_2_2);
 }

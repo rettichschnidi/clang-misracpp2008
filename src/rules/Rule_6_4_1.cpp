@@ -44,11 +44,6 @@ public:
     return true;
   }
 
-private:
-  void reportError(const SourceLocation loc) {
-    RuleCheckerASTContext::reportError(RULE_TEXT_6_4_1, loc);
-  }
-
 protected:
   virtual void doWork() override {
     RuleCheckerASTContext::doWork();
@@ -56,6 +51,6 @@ protected:
   }
 };
 
-static RuleCheckerASTContextRegistry::Add<Rule_6_4_1>
-    X(ruleName.c_str(), "MISRA C++ 2008 rule checker");
+static RuleCheckerASTContextRegistry::Add<Rule_6_4_1> X(ruleName.c_str(),
+                                                        RULE_TEXT_6_4_1);
 }

@@ -53,7 +53,7 @@ private:
   void reportViolatingStatement(const Stmt *stmt) {
     if (reportedStatements.find(stmt) == reportedStatements.end()) {
       reportedStatements.insert(stmt);
-      reportError(RULE_TEXT_6_2_1, stmt->getLocStart());
+      reportError(stmt->getLocStart());
     }
   }
 
@@ -64,6 +64,6 @@ protected:
   }
 };
 
-static RuleCheckerASTContextRegistry::Add<Rule_6_2_1>
-X(ruleName.c_str(), "MISRA C++ 2008 rule checker");
+static RuleCheckerASTContextRegistry::Add<Rule_6_2_1> X(ruleName.c_str(),
+                                                        RULE_TEXT_6_2_1);
 }

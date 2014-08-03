@@ -35,7 +35,7 @@ public:
     if (NullStmt *ns = dyn_cast<NullStmt>(S)) {
       if (hasNonWhitespaceBeforeNullStmt(ns) ||
           hasNonWhitespaceAfterNullStmt(ns)) {
-        reportError(RULE_TEXT_6_2_3, ns->getLocStart());
+        reportError(ns->getLocStart());
       }
     }
     return true;
@@ -72,6 +72,6 @@ protected:
   }
 };
 
-static RuleCheckerASTContextRegistry::Add<Rule_6_2_3>
-    X(ruleName.c_str(), "MISRA C++ 2008 rule checker");
+static RuleCheckerASTContextRegistry::Add<Rule_6_2_3> X(ruleName.c_str(),
+                                                        RULE_TEXT_6_2_3);
 }

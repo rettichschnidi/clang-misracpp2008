@@ -33,9 +33,7 @@ public:
 
     std::string funName = expr->getNameInfo().getAsString();
     if (illegalFunctions.count(funName)) {
-      reportError("The library functions atof, atoi and atol from library "
-                  "<cstdlib> shall not be used.",
-                  expr->getLocStart());
+      reportError(expr->getLocStart());
     }
     return true;
   }
@@ -50,6 +48,6 @@ protected:
 const std::set<std::string> Rule_18_0_2::illegalFunctions = { "atof", "atoi",
                                                               "atol" };
 
-static RuleCheckerASTContextRegistry::Add<Rule_18_0_2>
-X(ruleName.c_str(), "MISRA C++ 2008 rule checker");
+static RuleCheckerASTContextRegistry::Add<Rule_18_0_2> X(ruleName.c_str(),
+                                                         RULE_TEXT_18_0_2);
 }

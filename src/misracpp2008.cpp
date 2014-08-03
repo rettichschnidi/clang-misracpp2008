@@ -46,7 +46,7 @@ void dumpActiveCheckers(llvm::raw_ostream &OS);
 
 RuleChecker::RuleChecker()
     : diagEngine(nullptr), diagLevel(DiagnosticsEngine::Error),
-      doIgnoreSystemHeaders(true), name("?") {}
+      doIgnoreSystemHeaders(true), name("?"), text("?") {}
 
 void RuleChecker::setDiagLevel(DiagnosticsEngine::Level diagLevel) {
   this->diagLevel = diagLevel;
@@ -56,6 +56,8 @@ void RuleChecker::setName(const std::string &name) {
   assert(name.size() >= 5 && name.size() <= 6 && "Invalid name for a rule!");
   this->name = name;
 }
+
+void RuleChecker::setText(const std::string &text) { this->text = text; }
 
 void RuleChecker::setDiagEngine(DiagnosticsEngine &diagEngine) {
   this->diagEngine = &diagEngine;
@@ -103,10 +105,10 @@ bool RuleChecker::doIgnore(clang::SourceLocation loc) {
   return false;
 }
 
-void RuleChecker::reportError(const std::string &message, SourceLocation loc) {
+void RuleChecker::reportError(SourceLocation loc) {
   unsigned diagId =
       diagEngine->getCustomDiagID(diagLevel, "%0 (MISRA C++ 2008 rule %1)");
-  diagEngine->Report(loc, diagId) << message << name;
+  diagEngine->Report(loc, diagId) << text << name;
 }
 
 std::set<std::string> &getEnabledCheckers() {
@@ -163,12 +165,15 @@ public:
          it != ie; ++it) {
       const std::string checkerName =
           RuleCheckerASTContextRegistry::traits::nameof(*it);
+      const std::string checkerText =
+          RuleCheckerASTContextRegistry::traits::descof(*it);
       if (enabledCheckers.count(checkerName) > 0) {
         auto diagLevel = getDiagnosticLevels().at(checkerName);
         auto instance = it->instantiate();
         instance->setContext(ctx);
         instance->setDiagLevel(diagLevel);
         instance->setName(checkerName);
+        instance->setText(checkerText);
         instance->doWork();
       }
     }
@@ -191,6 +196,8 @@ protected:
          it != ie; ++it) {
       const std::string checkerName =
           RuleCheckerPreprocessorRegistry::traits::nameof(*it);
+      const std::string checkerText =
+          RuleCheckerPreprocessorRegistry::traits::descof(*it);
       if (enabledCheckers.count(checkerName) > 0) {
         assert(CI.hasPreprocessor() &&
                "Compiler instance has no preprocessor!");
@@ -199,6 +206,7 @@ protected:
         ppCallback->setDiagLevel(diagLevel);
         ppCallback->setDiagEngine(CI.getDiagnostics());
         ppCallback->setName(checkerName);
+        ppCallback->setText(checkerText);
         CI.getPreprocessor().addPPCallbacks(ppCallback.release());
       }
     }

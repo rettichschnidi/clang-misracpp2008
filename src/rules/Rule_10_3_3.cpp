@@ -34,7 +34,7 @@ public:
       while (B != E) {
         const CXXMethodDecl &m = **B;
         if (m.isPure() == false) {
-          reportError(RULE_TEXT_10_3_3, decl->getLocation());
+          reportError(decl->getLocation());
           break;
         }
         B++;
@@ -50,6 +50,6 @@ protected:
   }
 };
 
-static RuleCheckerASTContextRegistry::Add<Rule_10_3_3>
-X(ruleName.c_str(), "MISRA C++ 2008 rule checker");
+static RuleCheckerASTContextRegistry::Add<Rule_10_3_3> X(ruleName.c_str(),
+                                                         RULE_TEXT_10_3_3);
 }

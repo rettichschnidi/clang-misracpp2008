@@ -28,7 +28,7 @@ public:
       return true;
     }
 
-    reportError(RULE_TEXT_5_18_1, S->getLocStart());
+    reportError(S->getLocStart());
     return true;
   }
 
@@ -39,6 +39,6 @@ protected:
   }
 };
 
-static RuleCheckerASTContextRegistry::Add<Rule_5_18_1>
-X(ruleName.c_str(), "MISRA C++ 2008 rule checker");
+static RuleCheckerASTContextRegistry::Add<Rule_5_18_1> X(ruleName.c_str(),
+                                                         RULE_TEXT_5_18_1);
 }

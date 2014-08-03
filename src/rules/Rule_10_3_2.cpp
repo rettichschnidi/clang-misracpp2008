@@ -22,9 +22,6 @@ class Rule_10_3_2 : public RuleCheckerASTContext,
                     public clang::RecursiveASTVisitor<Rule_10_3_2> {
 public:
   Rule_10_3_2() : RuleCheckerASTContext() {}
-  void reportError(SourceLocation loc) {
-    RuleChecker::reportError(RULE_TEXT_10_3_2, loc);
-  }
   bool VisitCXXRecordDecl(CXXRecordDecl *decl) {
     if (doIgnore(decl->getLocStart())) {
       return true;
@@ -61,6 +58,6 @@ protected:
   }
 };
 
-static RuleCheckerASTContextRegistry::Add<Rule_10_3_2>
-X(ruleName.c_str(), "MISRA C++ 2008 rule checker");
+static RuleCheckerASTContextRegistry::Add<Rule_10_3_2> X(ruleName.c_str(),
+                                                         RULE_TEXT_10_3_2);
 }

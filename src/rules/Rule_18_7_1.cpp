@@ -34,13 +34,13 @@ public:
     }
 
     if (illegalIncludes.count(FileName)) {
-      reportError(RULE_TEXT_18_7_1, HashLoc);
+      reportError(HashLoc);
     }
   }
 };
 
 const std::set<std::string> Rule_18_7_1::illegalIncludes = { "csignal" };
 
-static RuleCheckerPreprocessorRegistry::Add<Rule_18_7_1>
-X(ruleName.c_str(), "MISRA C++ 2008 rule checker");
+static RuleCheckerPreprocessorRegistry::Add<Rule_18_7_1> X(ruleName.c_str(),
+                                                           RULE_TEXT_18_7_1);
 }

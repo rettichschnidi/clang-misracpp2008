@@ -38,7 +38,7 @@ protected:
 
     Expr *rightHandExpr = S->getRHS();
     if (rightHandExpr->HasSideEffects(*context)) {
-      reportError(RULE_TEXT_5_14_1, rightHandExpr->getLocStart());
+      reportError(rightHandExpr->getLocStart());
     }
     return true;
   }
@@ -49,6 +49,6 @@ protected:
   }
 };
 
-static RuleCheckerASTContextRegistry::Add<Rule_5_14_1>
-X(ruleName.c_str(), "MISRA C++ 2008 rule checker");
+static RuleCheckerASTContextRegistry::Add<Rule_5_14_1> X(ruleName.c_str(),
+                                                         RULE_TEXT_5_14_1);
 }

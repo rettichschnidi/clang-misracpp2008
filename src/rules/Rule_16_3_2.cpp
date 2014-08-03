@@ -36,13 +36,13 @@ public:
       const std::string tokenType = I->getName();
       // Count occurrences of "hash" and "hashhash"
       if (tokenType.find("hash") == 0) {
-        reportError(RULE_TEXT_16_3_2, I->getLocation());
+        reportError(I->getLocation());
         break;
       }
     }
   }
 };
 
-static RuleCheckerPreprocessorRegistry::Add<Rule_16_3_2>
-X(ruleName.c_str(), "MISRA C++ 2008 rule checker");
+static RuleCheckerPreprocessorRegistry::Add<Rule_16_3_2> X(ruleName.c_str(),
+                                                           RULE_TEXT_16_3_2);
 }
