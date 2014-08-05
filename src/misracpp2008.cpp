@@ -44,10 +44,6 @@ bool enableChecker(const std::string &name,
 void dumpRegisteredCheckers(llvm::raw_ostream &OS);
 void dumpActiveCheckers(llvm::raw_ostream &OS);
 
-RuleChecker::RuleChecker()
-    : diagEngine(nullptr), diagLevel(DiagnosticsEngine::Error),
-      doIgnoreSystemHeaders(true), name("?"), text("?") {}
-
 void RuleChecker::setDiagLevel(DiagnosticsEngine::Level diagLevel) {
   this->diagLevel = diagLevel;
 }

@@ -32,20 +32,20 @@ namespace misracpp2008 {
  */
 class RuleChecker {
 protected:
-  clang::DiagnosticsEngine *diagEngine; ///< Needed to report errors. Rule
-  /// checkers can assume this pointer to
-  /// direct the correct instance.
-  clang::DiagnosticsEngine::Level diagLevel; ///< level of the diagnostic in
-  /// case of a violation.
-  bool doIgnoreSystemHeaders; ///< Should we skip the system headers?
-  std::string name;           ///< Name of rule this checker enforces.
-  std::string text;           ///< Headline text of the checked rule.
-  RuleChecker();
+  clang::DiagnosticsEngine *diagEngine =
+      nullptr; ///< Needed to report errors. Rule checkers can assume this
+               ///  pointer to direct the correct instance.
+  clang::DiagnosticsEngine::Level diagLevel =
+      clang::DiagnosticsEngine::Error; ///< Level of the diagnostic in case of a
+                                       ///  violation.
+  bool doIgnoreSystemHeaders = true;   ///< Should we skip the system headers?
+  std::string name = "?";              ///< Name of rule this checker enforces.
+  std::string text = "?";              ///< Headline text of the checked rule.
   /**
-   * @brief Check whether or not \c loc is within a system header.
-   * @param loc Location within the translation unit to be tested.
-   * @return True if \c loc is within a system header, false if not.
-   */
+  * @brief Check whether or not \c loc is within a system header.
+  * @param loc Location within the translation unit to be tested.
+  * @return True if \c loc is within a system header, false if not.
+  */
   bool isInSystemHeader(clang::SourceLocation loc);
   /**
    * @brief Check whether or not \c loc is a built in, e.g. defined by the
