@@ -11,12 +11,18 @@
 #include "clang/AST/RecursiveASTVisitor.h"
 #include "clang/AST/ASTContext.h"
 #include "clang/Basic/Diagnostic.h"
+#include "llvm/ADT/APFloat.h"
 #include <algorithm>
 
 using namespace clang;
 
 namespace misracpp2008 {
 
+///
+/// \brief The Rule_6_2_2 class
+/// \note My guts say that this implementation is more complicated than it needs
+/// to be. My brain however can not think of a simple version. If you read this,
+/// feel free prove your superiority and improve this.
 class Rule_6_2_2 : public RuleCheckerASTContext,
                    public RecursiveASTVisitor<Rule_6_2_2> {
 public:
@@ -41,76 +47,238 @@ public:
   }
 
 private:
-  typedef std::set<DeclRefExpr *> DeclRefExprPtrSet;
+  /// \brief Helper class to describe the source of a floating value.
+  struct FloatEmiter {
+  private:
+    union {
+      double constDblVal;
+      const Decl *decl;
+      size_t arrayIndex;
+    } data;
+    const enum Type {
+      TYPE_DOUBLE,    ///< Compile time double value is provided.
+      TYPE_DECL,      ///< Pointer to a declaration is provided.
+      TYPE_ARRAY_SUB, ///< Pointer to an array declaration and the index into is
+                      ///  provided.
+      TYPE_RUNTIME,   ///< Value can not be compile-time-determined at all.
+    } type;
 
-  void FindObfuscatedViolation(BinaryOperator *S) {
-    assert((S->getOpcode() == BO_LAnd || S->getOpcode() == BO_LOr) &&
-           "This method only works on logical operators.");
+    FloatEmiter(Type type) : type(type) {}
 
-    if (doIgnore(S->getLocStart())) {
-      return;
+  public:
+    FloatEmiter() : type(TYPE_RUNTIME) {}
+    FloatEmiter(const double &dblValue) : FloatEmiter(TYPE_DOUBLE) {
+      data.constDblVal = dblValue;
     }
-
-    BinaryOperator *lhs =
-        dyn_cast<BinaryOperator>(S->getLHS()->IgnoreParenCasts());
-    BinaryOperator *rhs =
-        dyn_cast<BinaryOperator>(S->getRHS()->IgnoreParenCasts());
-    // There must be binary operators on both sides
-    if (lhs && isFloatingComparingBinOp(lhs) && rhs &&
-        isFloatingComparingBinOp(rhs)) {
-      const DeclRefExprPtrSet lhsChildren = getChildrenExpr(lhs);
-      const DeclRefExprPtrSet rhsChildren = getChildrenExpr(rhs);
-
-      // What did I miss? Is there really no equal operator for DeclRefExpr?
-      auto isDeclRefEqualFunc = [](DeclRefExpr *a, DeclRefExpr *b) {
-        return a->getDecl() == b->getDecl();
-      };
-
-      // Report error only when on the left and on the right side the same two
-      // variables get compared
-      if (std::equal(lhsChildren.begin(), lhsChildren.end(),
-                     rhsChildren.begin(), isDeclRefEqualFunc)) {
-        reportError(S->getLocStart());
+    FloatEmiter(const Decl *decl) : FloatEmiter(TYPE_DECL) {
+      this->data.decl = decl;
+    }
+    FloatEmiter(const Decl *decl, size_t arrayIndex)
+        : FloatEmiter(TYPE_ARRAY_SUB) {
+      this->data.decl = decl;
+      this->data.arrayIndex = arrayIndex;
+    }
+    bool operator==(const FloatEmiter &other) const {
+      if (type != other.type) {
+        return false;
+      }
+      switch (type) {
+      case TYPE_DOUBLE:
+        return data.constDblVal == other.data.constDblVal;
+        break;
+      case TYPE_DECL:
+        return data.decl == other.data.decl;
+        break;
+      case TYPE_ARRAY_SUB:
+        return data.decl == other.data.decl &&
+               data.arrayIndex == other.data.arrayIndex;
+        break;
+      case TYPE_RUNTIME:
+        return this == &other;
+        break;
       }
     }
+    /// Implemented to make \ref FloatingEmiter usable in a set.
+    bool operator<(const FloatEmiter &other) const {
+      if (type != other.type) {
+        return type < other.type;
+      }
+      switch (type) {
+      case TYPE_DOUBLE:
+        return data.constDblVal < other.data.constDblVal;
+        break;
+      case TYPE_DECL:
+        return data.decl < other.data.decl;
+        break;
+      case TYPE_ARRAY_SUB:
+        if (data.decl < other.data.decl) {
+          return true;
+        }
+        return data.arrayIndex < other.data.arrayIndex;
+        break;
+      case TYPE_RUNTIME:
+        return this < &other;
+        break;
+      }
+    }
+  };
+  typedef std::set<FloatEmiter> FloatingEmiterSet;
+
+  bool extractAPInt(const Expr *expr, llvm::APInt &aPInt) const {
+    Expr::EvalResult evalResult;
+    if (expr->EvaluateAsRValue(evalResult, *this->context)) {
+      if (evalResult.Val.isInt()) {
+        aPInt = evalResult.Val.getInt();
+        return true;
+      }
+    }
+    return false;
   }
 
-  void reportViolationIfFloatSubexpr(BinaryOperator *S) {
-    assert((S->getOpcode() == BO_EQ || S->getOpcode() == BO_NE) &&
-           "This method only works on (not) equal operators.");
+  bool extractConstInt(const Expr *expr, int64_t &sizeValue) const {
+    llvm::APInt i;
+    if (extractAPInt(expr, i)) {
+      sizeValue = i.getSExtValue();
+      return true;
+    }
+    return false;
+  }
 
-    if (doIgnore(S->getLocStart())) {
+  bool extractConstUnsignedInt(const Expr *expr, uint64_t &sizeValue) const {
+    llvm::APInt i;
+    if (extractAPInt(expr, i) && i.isNonNegative()) {
+      sizeValue = i.getLimitedValue();
+      return true;
+    }
+    return false;
+  }
+
+  static bool isFloatingTypeExpr(const Expr *expr) {
+    return expr->IgnoreParenCasts()->getType()->isFloatingType();
+  }
+
+  /// Figure out if the left or the right type looks like a floating type.
+  /// \note If one of them is of floating type, the other one must be so too, or
+  /// gets casted to.
+  static bool isBinOpComparingFloatings(const BinaryOperator *bo) {
+    return isFloatingTypeExpr(bo->getLHS()) || isFloatingTypeExpr(bo->getRHS());
+  }
+
+  /// Report not-so-obvious cases like "if (a <= b && a >= b) {}"
+  void FindObfuscatedViolation(BinaryOperator *binOp) {
+    assert((binOp->getOpcode() == BO_LAnd || binOp->getOpcode() == BO_LOr) &&
+           "This method only works on logical operators.");
+
+    if (doIgnore(binOp->getLocStart())) {
       return;
     }
 
-    // Issue at most one report
-    if (isFloatingType(S->getLHS())) {
-      reportError(S->getLHS()->getLocStart());
-    } else if (isFloatingType(S->getRHS())) {
-      reportError(S->getRHS()->getLocStart());
+    // There must be binary operators on both sides. Bail out otherwise.
+    const BinaryOperator *lhsBinOp =
+        dyn_cast<BinaryOperator>(binOp->getLHS()->IgnoreParenCasts());
+    const BinaryOperator *rhsBinOp =
+        dyn_cast<BinaryOperator>(binOp->getRHS()->IgnoreParenCasts());
+    if (!(lhsBinOp && rhsBinOp && isBinOpComparingFloatings(lhsBinOp) &&
+          isBinOpComparingFloatings(rhsBinOp))) {
+      return;
+    }
+
+    const FloatingEmiterSet lhsChildren = getChildrenFloatingEmiters(lhsBinOp);
+    const FloatingEmiterSet rhsChildren = getChildrenFloatingEmiters(rhsBinOp);
+
+    // Report error only when on the left and on the right side the same two
+    // values (constants, method calls, etc.) have been found.
+    if (std::equal(lhsChildren.begin(), lhsChildren.end(),
+                   rhsChildren.begin())) {
+      reportError(binOp->getLocStart());
     }
   }
 
-  bool isFloatingType(const Expr *expr) {
-    if (expr->IgnoreParenCasts()->getType()->isFloatingType()) {
+  /// \brief Report if the binary operator \c binOp compares floatings.
+  /// \param binOp BinaryOperator, either BinaryOperatorKind::BO_EQ or
+  /// BinaryOperatorKind::BO_NE
+  /// \return True if a violation has been found, false otherwise.
+  bool reportViolationIfFloatSubexpr(BinaryOperator *binOp) {
+    assert((binOp->getOpcode() == BO_EQ || binOp->getOpcode() == BO_NE) &&
+           "This method only works on (not) equal operators.");
+
+    if (doIgnore(binOp->getLocStart())) {
+      return false;
+    }
+
+    // Return when an issue has been found. Report no more than one issue.
+    if (isFloatingTypeExpr(binOp->getLHS())) {
+      reportError(binOp->getLHS()->getLocStart());
       return true;
+    } else if (isFloatingTypeExpr(binOp->getRHS())) {
+      reportError(binOp->getRHS()->getLocStart());
+      return true;
+    }
+
+    // No violation found
+    return false;
+  }
+
+  const FloatingEmiterSet getChildrenFloatingEmiters(const BinaryOperator *bo) {
+    return FloatingEmiterSet({extractFloatingEmiter(bo->getRHS()),
+                              extractFloatingEmiter(bo->getLHS())});
+  }
+
+  bool extractConstDouble(const Expr *expr, double &dblValue) const {
+    Expr::EvalResult evalResult;
+    if (expr->EvaluateAsRValue(evalResult, *this->context)) {
+      if (evalResult.Val.isFloat()) {
+        using namespace llvm;
+        APFloat APF = evalResult.Val.getFloat();
+        bool unused;
+        APF.convert(APFloat::IEEEdouble, APFloat::rmNearestTiesToEven, &unused);
+        dblValue = APF.convertToDouble();
+        return true;
+      }
     }
     return false;
   }
 
-  bool isFloatingComparingBinOp(BinaryOperator *bo) {
-    if (isFloatingType(bo->getLHS()) || isFloatingType(bo->getRHS())) {
-      return true;
-    }
-    return false;
-  }
+  /// Trying to describe/classify an expression which emits a float value.
+  FloatEmiter extractFloatingEmiter(const Expr *expr) const {
+    const Expr *coreExpr = expr->IgnoreParenImpCasts();
 
-  const DeclRefExprPtrSet getChildrenExpr(BinaryOperator *bo) {
-    DeclRefExpr *lhs = dyn_cast<DeclRefExpr>(bo->getLHS()->IgnoreParenCasts());
-    DeclRefExpr *rhs = dyn_cast<DeclRefExpr>(bo->getRHS()->IgnoreParenCasts());
-    assert(lhs && "Left hand side is expected to be a DeclRefExpr!");
-    assert(rhs && "Right hand side is expected to be a DeclRefExpr!");
-    return DeclRefExprPtrSet({lhs, rhs});
+    // Check if this value can be evaluated at compile time.
+    double dblValue;
+    int64_t intValue;
+    if (extractConstDouble(coreExpr, dblValue)) {
+      return FloatEmiter(dblValue);
+    } else if (extractConstInt(coreExpr, intValue)) {
+      return FloatEmiter(intValue);
+    }
+
+    // It is not a constant value. Lets try to figure out the declaration which
+    // refers to the value.
+    if (const DeclRefExpr *declRef = dyn_cast<DeclRefExpr>(coreExpr)) {
+      return FloatEmiter(declRef->getDecl());
+    } else if (const ArraySubscriptExpr *arraySub =
+                   dyn_cast<ArraySubscriptExpr>(coreExpr)) {
+      const DeclRefExpr *decl =
+          dyn_cast<DeclRefExpr>(arraySub->getBase()->IgnoreParenImpCasts());
+      if (decl == nullptr) {
+        arraySub->dump();
+      }
+      assert(decl &&
+             "Base of an ArraySubscriptExpr is expected to be a DeclRefExpr.");
+
+      uint64_t arrayIndex;
+      if (extractConstUnsignedInt(arraySub->getIdx(), arrayIndex)) {
+        return FloatEmiter(decl->getDecl(), static_cast<size_t>(arrayIndex));
+      } else {
+        // Without knowing the index we can not be sure if the same index gets
+        // referenced. :(
+        return FloatEmiter();
+      }
+    }
+
+    expr->dumpColor();
+    assert(false && "Unsupported kind of floating value source!");
+    return FloatEmiter(0.0);
   }
 
 protected:
