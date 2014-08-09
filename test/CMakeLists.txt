@@ -35,3 +35,7 @@ add_lit_testsuite(check-misracpp2008 "Running the clang-misracpp2008 tests"
   ARGS ${CLANG_MISRACPP2008_TEST_EXTRA_ARGS}
   )
 set_target_properties(check-misracpp2008 PROPERTIES FOLDER "Clang MISRA C++ 2008 tests")
+
+#Add dummy library to get Qt Creator to show the tests.
+file(GLOB_RECURSE SRC_TEST_LIST "*.cpp")
+add_library(clangtest STATIC ${SRC_TEST_LIST})
