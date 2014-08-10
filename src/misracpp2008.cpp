@@ -283,6 +283,16 @@ void RuleCheckerASTContext::setContext(ASTContext &context) {
 RuleCheckerASTContext::RuleCheckerASTContext()
     : RuleChecker(), context(nullptr) {}
 
+std::string RuleCheckerASTContext::srcLocToString(SourceLocation start,
+                                                  SourceLocation end) {
+  const clang::SourceManager &sm = context->getSourceManager();
+  const clang::LangOptions lopt = context->getLangOpts();
+
+  clang::SourceLocation e(clang::Lexer::getLocForEndOfToken(end, 0, sm, lopt));
+  return std::string(sm.getCharacterData(start),
+                     sm.getCharacterData(e) - sm.getCharacterData(start));
+}
+
 void RuleCheckerASTContext::doWork() {
   assert(context && "The context has to be set before calling this function.");
   assert(diagEngine);

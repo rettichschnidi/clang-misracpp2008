@@ -124,6 +124,18 @@ protected:
   clang::ASTContext *context; ///< AST context of the translation unit to be
                               /// checked.
   RuleCheckerASTContext();
+  /**
+   * @brief Extract the AST representation of the code between two source
+   * locations.
+   * @note The returned string is probably not exactly what was written in the
+   * source code file, as some basic transformations (e.g. 0xFF -> 255) get
+   * applied early on.
+   * @param start Start of the location to extract.
+   * @param end   End of the location to extract.
+   * @return String with the source code for the requested range.
+   */
+  std::string srcLocToString(clang::SourceLocation start,
+                             clang::SourceLocation end);
 
 public:
   /**
