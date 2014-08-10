@@ -62,6 +62,20 @@ protected:
    * @return True if \c loc was defined at the command line, false if not.
    */
   bool isCommandLine(clang::SourceLocation loc);
+  /**
+   * @brief Check if the element at \c loc should be ignored. Compiler-built-in
+   * or command-line-specified code most likely should not be checked. Also,
+   * code from the system headers is probably not even close to MISRA conformity
+   * and has to be excluded as well.
+   * @param loc Location to evaluate.
+   * @return True if \c loc should be ignored (not checked), false if not.
+   */
+  bool doIgnore(clang::SourceLocation loc);
+  /**
+   * @brief Auxiliary helper function for derived checkers to report an error.
+   * @param loc The location to be displayed to the user.
+   */
+  void reportError(clang::SourceLocation loc);
 
 public:
   virtual ~RuleChecker() {}
@@ -86,20 +100,6 @@ public:
    * @param diagEngine New diagnostics engine to be used.
    */
   void setDiagEngine(clang::DiagnosticsEngine &diagEngine);
-  /**
-   * @brief Check if the element at \c loc should be ignored. Compiler-built-in
-   * or command-line-specified code most likely should not be checked. Also,
-   * code from the system headers is probably not even close to MISRA conformity
-   * and has to be excluded as well.
-   * @param loc Location to evaluate.
-   * @return True if \c loc should be ignored (not checked), false if not.
-   */
-  bool doIgnore(clang::SourceLocation loc);
-  /**
-   * @brief Auxiliary helper function for derived checkers to report an error.
-   * @param loc The location to be displayed to the user.
-   */
-  void reportError(clang::SourceLocation loc);
 };
 
 /**
