@@ -28,6 +28,7 @@
 #include <utility>
 #include <string>
 #include <list>
+#include <memory>
 
 using namespace clang;
 using namespace llvm;
@@ -178,8 +179,8 @@ public:
 
 class Action : public clang::PluginASTAction {
 protected:
-  clang::ASTConsumer *CreateASTConsumer(clang::CompilerInstance &CI,
-                                        llvm::StringRef) {
+  std::unique_ptr<ASTConsumer> CreateASTConsumer(clang::CompilerInstance &CI,
+                                                 llvm::StringRef) override {
     // Dump the available and activated checkers
     dumpRegisteredCheckers(llvm::outs());
     dumpActiveCheckers(llvm::outs());
@@ -206,7 +207,7 @@ protected:
         CI.getPreprocessor().addPPCallbacks(ppCallback.release());
       }
     }
-    return new Consumer();
+    return std::unique_ptr<ASTConsumer>(new Consumer());
   }
 
   bool ParseArgs(const clang::CompilerInstance &CI,
