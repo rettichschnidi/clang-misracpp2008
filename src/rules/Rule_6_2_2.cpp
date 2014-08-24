@@ -120,6 +120,9 @@ private:
         return this < &other;
         break;
       }
+      assert(false && "The switch above should handle all cases.");
+      // Fallback
+      return this < &other;
     }
   };
   typedef std::set<FloatEmiter> FloatingEmiterSet;
