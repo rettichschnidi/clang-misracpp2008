@@ -98,7 +98,7 @@ private:
         break;
       }
     }
-    /// Implemented to make \ref FloatingEmiter usable in a set.
+    /// Implemented to make \ref FloatEmiter usable in a set.
     bool operator<(const FloatEmiter &other) const {
       if (type != other.type) {
         return type < other.type;
@@ -125,7 +125,7 @@ private:
       return this < &other;
     }
   };
-  typedef std::set<FloatEmiter> FloatingEmiterSet;
+  typedef std::set<FloatEmiter> FloatEmiterSet;
 
   bool extractAPInt(const Expr *expr, llvm::APInt &aPInt) const {
     Expr::EvalResult evalResult;
@@ -186,8 +186,8 @@ private:
       return;
     }
 
-    const FloatingEmiterSet lhsChildren = getChildrenFloatingEmiters(lhsBinOp);
-    const FloatingEmiterSet rhsChildren = getChildrenFloatingEmiters(rhsBinOp);
+    const FloatEmiterSet lhsChildren = getChildrenFloatEmiters(lhsBinOp);
+    const FloatEmiterSet rhsChildren = getChildrenFloatEmiters(rhsBinOp);
 
     // Report error only when on the left and on the right side the same two
     // values (constants, method calls, etc.) have been found.
@@ -222,9 +222,9 @@ private:
     return false;
   }
 
-  const FloatingEmiterSet getChildrenFloatingEmiters(const BinaryOperator *bo) {
-    return FloatingEmiterSet({extractFloatingEmiter(bo->getRHS()),
-                              extractFloatingEmiter(bo->getLHS())});
+  const FloatEmiterSet getChildrenFloatEmiters(const BinaryOperator *bo) {
+    return FloatEmiterSet(
+        {extractFloatEmiter(bo->getRHS()), extractFloatEmiter(bo->getLHS())});
   }
 
   bool extractConstDouble(const Expr *expr, double &dblValue) const {
@@ -243,7 +243,7 @@ private:
   }
 
   /// Trying to describe/classify an expression which emits a float value.
-  FloatEmiter extractFloatingEmiter(const Expr *expr) const {
+  FloatEmiter extractFloatEmiter(const Expr *expr) const {
     const Expr *coreExpr = expr->IgnoreParenImpCasts();
 
     // Check if this value can be evaluated at compile time.
