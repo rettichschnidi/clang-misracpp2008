@@ -93,7 +93,7 @@ bool RuleChecker::doIgnore(clang::SourceLocation loc) {
 
   // Do not check source code locations which are originating from a file.
   auto spellingLocation = diagEngine->getSourceManager().getSpellingLoc(loc);
-  auto fileName = diagEngine->getSourceManager().getFilename(spellingLocation);
+  auto fileName = diagEngine->getSourceManager().getFilename(spellingLocation );
   if (fileName.empty()) {
     return true;
   }

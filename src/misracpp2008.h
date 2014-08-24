@@ -77,6 +77,20 @@ protected:
    */
   void reportError(clang::SourceLocation loc);
 
+  /**
+   * @brief Function for derived checkers to report an arbitrary error.
+   * @param loc The location to be displayed to the user.
+   * @param FormatString Error string. May contain place holders %0, %1, etc.
+   * @return clang::DiagnosticBuilder, to be fed with values for the place
+   * holders.
+   */
+  template <unsigned N>
+  clang::DiagnosticBuilder reportError(clang::SourceLocation loc,
+                                       const char (&FormatString)[N]) {
+    unsigned diagId = diagEngine->getCustomDiagID(diagLevel, FormatString);
+    return diagEngine->Report(loc, diagId);
+  }
+
 public:
   virtual ~RuleChecker() {}
   /**
