@@ -125,17 +125,11 @@ protected:
                               /// checked.
   RuleCheckerASTContext();
   /**
-   * @brief Extract the AST representation of the code between two source
-   * locations.
-   * @note The returned string is probably not exactly what was written in the
-   * source code file, as some basic transformations (e.g. 0xFF -> 255) get
-   * applied early on.
-   * @param start Start of the location to extract.
-   * @param end   End of the location to extract.
-   * @return String with the source code for the requested range.
+   * @brief Extract the source code of the token pointet at by \c start.
+   * @param start Starting location of the token to extract.
+   * @return String with the source code for token starting at \c start.
    */
-  std::string srcLocToString(clang::SourceLocation start,
-                             clang::SourceLocation end);
+  std::string srcLocToString(clang::SourceLocation start);
 
 public:
   /**

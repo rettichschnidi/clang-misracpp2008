@@ -283,14 +283,13 @@ void RuleCheckerASTContext::setContext(ASTContext &context) {
 RuleCheckerASTContext::RuleCheckerASTContext()
     : RuleChecker(), context(nullptr) {}
 
-std::string RuleCheckerASTContext::srcLocToString(SourceLocation start,
-                                                  SourceLocation end) {
+std::string RuleCheckerASTContext::srcLocToString(SourceLocation start) {
   const clang::SourceManager &sm = context->getSourceManager();
   const clang::LangOptions lopt = context->getLangOpts();
 
-  clang::SourceLocation e(clang::Lexer::getLocForEndOfToken(end, 0, sm, lopt));
+  unsigned tokenLength = clang::Lexer::MeasureTokenLength(start, sm, lopt);
   return std::string(sm.getCharacterData(start),
-                     sm.getCharacterData(e) - sm.getCharacterData(start));
+                     sm.getCharacterData(start) + tokenLength);
 }
 
 void RuleCheckerASTContext::doWork() {

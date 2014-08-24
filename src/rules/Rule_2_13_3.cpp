@@ -106,10 +106,8 @@ private:
    */
   void dealWithUnsignedInteger(const IntegerLiteral *il) {
     // See if one char after the integer literal is a "U"
-    std::stringstream is(srcLocToString(il->getLocStart(), il->getLocEnd()));
-    unsigned int integer;
-    is >> integer;
-    if (is.peek() != 'U') {
+    std::string lexem = srcLocToString(il->getLocStart());
+    if (lexem.rfind("U") == std::string::npos) {
       reportError(il->getLocation());
     }
   }
