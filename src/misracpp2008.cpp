@@ -78,7 +78,7 @@ bool RuleChecker::isCommandLine(clang::SourceLocation loc) {
 }
 
 bool RuleChecker::doIgnore(clang::SourceLocation loc) {
-  if(loc.isInvalid()) {
+  if (loc.isInvalid()) {
     return true;
   }
   if (isBuiltIn(loc)) {
