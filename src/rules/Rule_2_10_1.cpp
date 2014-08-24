@@ -31,10 +31,19 @@ public:
       return true;
     }
     if (const NamedDecl *nd = dyn_cast<NamedDecl>(D)) {
-      const std::string ident = nd->getNameAsString();
+      // If the decl has no name, no collision can happen. Bail out.
+      if(nd->getNameAsString().empty()) {
+        return true;
+      }
+      const std::string ident = nd->getQualifiedNameAsString();
       const std::string typoUniqIdent = makeTypoUnique(ident);
       if (uniqueIdents.count(typoUniqIdent) != 0) {
         reportError(nd->getLocation());
+        auto lookalikeDecl = uniqueIdents.equal_range(typoUniqIdent);
+        for( str2DeclMultiMap::const_iterator I = lookalikeDecl.first; I != lookalikeDecl.second; ++I ) {
+          const NamedDecl *previousNamedDecl = I->second;
+          reportError(previousNamedDecl->getLocation(), "Typographically ambiguous identifier '%0'") << previousNamedDecl->getNameAsString();
+        }
       }
       uniqueIdents.insert(std::make_pair(typoUniqIdent, nd));
     }
@@ -53,7 +62,8 @@ private:
     { "B", "8" },  // B (letter) to 8 (number)
     { "_", "" }    // remove the underscore
   };
-  std::multimap<std::string, const Decl *> uniqueIdents;
+  typedef std::multimap<std::string, const NamedDecl *> str2DeclMultiMap;
+  str2DeclMultiMap uniqueIdents;
 
   static void replaceSubStr(std::string &str, const std::string &from,
                             const std::string &to) {
