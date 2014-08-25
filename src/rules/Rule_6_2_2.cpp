@@ -97,6 +97,9 @@ private:
         return this == &other;
         break;
       }
+      assert(false && "The switch above should handle all cases.");
+      // Fallback
+      return this == &other;
     }
     /// Implemented to make \ref FloatEmiter usable in a set.
     bool operator<(const FloatEmiter &other) const {
