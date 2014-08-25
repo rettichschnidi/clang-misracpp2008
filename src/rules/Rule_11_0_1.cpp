@@ -26,26 +26,29 @@ public:
       return true;
     }
 
-    if (const CXXRecordDecl *cxxRecDecl = dyn_cast<CXXRecordDecl>(D)) {
-      // Sort out any non-class or struct declarations
-      if ((cxxRecDecl->isClass() || cxxRecDecl->isStruct()) == false) {
-        return true;
-      }
-      // We can only judge classes with a visible definition
-      if (cxxRecDecl->hasDefinition() == false) {
-        return true;
-      }
-      // Rule applies to non-POD classes only
-      // Note: POD definition from C++11, not 03. Problem?
-      if (cxxRecDecl->isPOD()) {
-        return true;
-      }
+    const auto *cxxRecDecl = dyn_cast<CXXRecordDecl>(D);
+    if (!cxxRecDecl) {
+      return true;
+    }
 
-      // Report all non-private members
-      for (const FieldDecl *fieldDecl : cxxRecDecl->fields()) {
-        if (fieldDecl->getAccess() != AS_private) {
-          reportError(fieldDecl->getLocStart());
-        }
+    // Sort out any non-class or struct declarations
+    if ((cxxRecDecl->isClass() || cxxRecDecl->isStruct()) == false) {
+      return true;
+    }
+    // We can only judge classes with a visible definition
+    if (cxxRecDecl->hasDefinition() == false) {
+      return true;
+    }
+    // Rule applies to non-POD classes only
+    // Note: POD definition from C++11, not 03. Problem?
+    if (cxxRecDecl->isPOD()) {
+      return true;
+    }
+
+    // Report all non-private members
+    for (const FieldDecl *fieldDecl : cxxRecDecl->fields()) {
+      if (fieldDecl->getAccess() != AS_private) {
+        reportError(fieldDecl->getLocStart());
       }
     }
     return true;

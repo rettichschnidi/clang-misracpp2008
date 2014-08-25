@@ -36,7 +36,7 @@ public:
       return true;
     }
 
-    const NamedDecl *namedDecl = cast<NamedDecl>(decl);
+    const auto *namedDecl = cast<NamedDecl>(decl);
     const DeclarationName &declN = namedDecl->getDeclName();
     // Bail out if it is an operator
     if (declN.getCXXOverloadedOperator() != OO_None) {

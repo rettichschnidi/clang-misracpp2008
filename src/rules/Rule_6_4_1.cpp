@@ -26,7 +26,7 @@ public:
       return true;
     }
 
-    if (const IfStmt *is = dyn_cast<IfStmt>(S)) {
+    if (const auto *is = dyn_cast<IfStmt>(S)) {
       const Stmt *thenStmt = is->getThen();
       const Stmt *elseStmt = is->getElse();
       // Check if then has a body

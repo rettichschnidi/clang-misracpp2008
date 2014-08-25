@@ -31,16 +31,20 @@ public:
       return true;
     }
     // Make sure we have a integer literal to work on
-    if (const IntegerLiteral *il = dyn_cast<IntegerLiteral>(S)) {
-      llvm::APSInt result;
-      il->EvaluateAsInt(result, *context, Expr::SE_NoSideEffects);
-      // Decide which logic has to be used
-      if (result.isSigned()) {
-        dealWithSignedInteger(il);
-      } else {
-        dealWithUnsignedInteger(il);
-      }
+    const auto *il = dyn_cast<IntegerLiteral>(S);
+    if (!il) {
+      return true;
     }
+
+    llvm::APSInt result;
+    il->EvaluateAsInt(result, *context, Expr::SE_NoSideEffects);
+    // Decide which logic has to be used
+    if (result.isSigned()) {
+      dealWithSignedInteger(il);
+    } else {
+      dealWithUnsignedInteger(il);
+    }
+
     return true;
   }
 
@@ -75,26 +79,32 @@ private:
     if (outerScopes.size() == 1) {
       return;
     }
-    bool isError = false;
     // Check if this integer gets implicitly casted right away. Any other,
-    // explicit cast is is ok
+    // explicit cast is is ok.
+    bool isError = false;
     for (auto RI = outerScopes.rbegin(); RI != outerScopes.rend(); ++RI) {
-      if (const ImplicitCastExpr *ice = dyn_cast<ImplicitCastExpr>(*RI)) {
-        if (isUnsignedType(ice)) {
-          isError = true;
-          RI++;
-          // There is probably an exlicit cast waiting for us which would
-          // legalize the last one
-          if (RI != outerScopes.rend()) {
-            if (const CastExpr *outerCe = dyn_cast<CastExpr>(*RI)) {
-              if (isUnsignedType(outerCe)) {
-                isError = false;
-              }
-            }
+      // Check if we have a implicit cast.
+      const auto *ice = dyn_cast<ImplicitCastExpr>(*RI);
+      if (!ice) {
+        continue;
+      }
+
+      if (isUnsignedType(ice)) {
+        isError = true;
+        // There is probably an exlicit cast waiting for us which would
+        // legalize the last one.
+        RI++;
+        if (RI == outerScopes.rend()) {
+          break;
+        }
+
+        if (const auto *outerCe = dyn_cast<CastExpr>(*RI)) {
+          if (isUnsignedType(outerCe)) {
+            isError = false;
           }
         }
-        break;
       }
+      break;
     }
     if (isError) {
       reportError(il->getLocation());

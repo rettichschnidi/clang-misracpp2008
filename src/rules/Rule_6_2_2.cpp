@@ -180,9 +180,9 @@ private:
     }
 
     // There must be binary operators on both sides. Bail out otherwise.
-    const BinaryOperator *lhsBinOp =
+    const auto *lhsBinOp =
         dyn_cast<BinaryOperator>(binOp->getLHS()->IgnoreParenCasts());
-    const BinaryOperator *rhsBinOp =
+    const auto *rhsBinOp =
         dyn_cast<BinaryOperator>(binOp->getRHS()->IgnoreParenCasts());
     if (!(lhsBinOp && rhsBinOp && isBinOpComparingFloatings(lhsBinOp) &&
           isBinOpComparingFloatings(rhsBinOp))) {
@@ -254,17 +254,18 @@ private:
     int64_t intValue;
     if (extractConstDouble(coreExpr, dblValue)) {
       return FloatEmiter(dblValue);
-    } else if (extractConstInt(coreExpr, intValue)) {
+    }
+    if (extractConstInt(coreExpr, intValue)) {
       return FloatEmiter(intValue);
     }
 
     // It is not a constant value. Lets try to figure out the declaration which
     // refers to the value.
-    if (const DeclRefExpr *declRef = dyn_cast<DeclRefExpr>(coreExpr)) {
+    if (const auto *declRef = dyn_cast<DeclRefExpr>(coreExpr)) {
       return FloatEmiter(declRef->getDecl());
-    } else if (const ArraySubscriptExpr *arraySub =
-                   dyn_cast<ArraySubscriptExpr>(coreExpr)) {
-      const DeclRefExpr *decl =
+    }
+    if (const auto *arraySub = dyn_cast<ArraySubscriptExpr>(coreExpr)) {
+      const auto *decl =
           dyn_cast<DeclRefExpr>(arraySub->getBase()->IgnoreParenImpCasts());
       if (decl == nullptr) {
         arraySub->dump();
@@ -275,11 +276,10 @@ private:
       uint64_t arrayIndex;
       if (extractConstUnsignedInt(arraySub->getIdx(), arrayIndex)) {
         return FloatEmiter(decl->getDecl(), static_cast<size_t>(arrayIndex));
-      } else {
-        // Without knowing the index we can not be sure if the same index gets
-        // referenced. :(
-        return FloatEmiter();
       }
+      // Without knowing the index we can not be sure if the same index gets
+      // referenced. :(
+      return FloatEmiter();
     }
 
     expr->dumpColor();

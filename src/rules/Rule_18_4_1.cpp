@@ -30,7 +30,7 @@ public:
       // Iterate over children and try to figure out if this new expr
       // looks like a placement new which can be used legally.
       for (const auto it : decl->children()) {
-        if (CastExpr *castExpr = dyn_cast<CastExpr>(it)) {
+        if (const auto *castExpr = dyn_cast<CastExpr>(it)) {
           if (castExpr->getCastKind() == CK_BitCast) {
             // Looks legit. Bail out without generating an error.
             return true;

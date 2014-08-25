@@ -30,7 +30,7 @@ public:
       return true;
     }
 
-    if (NullStmt *ns = dyn_cast<NullStmt>(S)) {
+    if (const auto *ns = dyn_cast<NullStmt>(S)) {
       if (hasNonWhitespaceBeforeNullStmt(ns) ||
           hasNonWhitespaceAfterNullStmt(ns)) {
         reportError(ns->getLocStart());
@@ -39,18 +39,18 @@ public:
     return true;
   }
 
-  bool hasNonWhitespaceAfterNullStmt(NullStmt *ns) {
+  bool hasNonWhitespaceAfterNullStmt(const NullStmt *ns) {
     return hasNonWhitespace(ns, 1, 1);
   }
 
-  bool hasNonWhitespaceBeforeNullStmt(NullStmt *ns) {
+  bool hasNonWhitespaceBeforeNullStmt(const NullStmt *ns) {
     unsigned nullStmtColumnNumber =
         context->getFullLoc(ns->getLocStart()).getSpellingColumnNumber();
     return hasNonWhitespace(ns, nullStmtColumnNumber,
                             -1 * nullStmtColumnNumber);
   }
 
-  bool hasNonWhitespace(NullStmt *ns, size_t commentLength, int offset) {
+  bool hasNonWhitespace(const NullStmt *ns, size_t commentLength, int offset) {
     clang::SourceManager &sm = context->getSourceManager();
 
     SourceLocation offsetToStmtLocation =

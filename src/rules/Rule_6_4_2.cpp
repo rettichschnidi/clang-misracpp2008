@@ -26,9 +26,9 @@ public:
       return true;
     }
 
-    if (const IfStmt *ifStmt = dyn_cast<IfStmt>(S)) {
+    if (const auto *ifStmt = dyn_cast<IfStmt>(S)) {
       if (const Stmt *elseStmt = ifStmt->getElse()) {
-        if (const IfStmt *ifElseStmt = dyn_cast<IfStmt>(elseStmt)) {
+        if (const auto *ifElseStmt = dyn_cast<IfStmt>(elseStmt)) {
           const Stmt *finalElseStmt = ifElseStmt->getElse();
           if (finalElseStmt == nullptr ||
               isa<CompoundStmt>(finalElseStmt) == false) {
