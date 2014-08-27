@@ -37,21 +37,29 @@ public:
     }
 
     // If the decl has no name, no collision can happen. Bail out.
-    if (nd->getNameAsString().empty()) {
+    const std::string ident = nd->getNameAsString();
+    if (ident.empty()) {
       return true;
     }
 
-    const std::string ident = nd->getQualifiedNameAsString();
-    const std::string typoUniqIdent = makeTypoUnique(ident);
+    const std::string fullQualIdent = nd->getQualifiedNameAsString();
+    const std::string typoUniqIdent = makeTypoUnique(fullQualIdent);
     if (uniqueIdents.count(typoUniqIdent) != 0) {
-      reportError(nd->getLocation());
       auto lookalikeDecl = uniqueIdents.equal_range(typoUniqIdent);
+      bool hasError = false;
       for (str2DeclMultiMap::const_iterator I = lookalikeDecl.first;
            I != lookalikeDecl.second; ++I) {
         const NamedDecl *previousNamedDecl = I->second;
+        if (previousNamedDecl->getNameAsString() == nd->getNameAsString()) {
+          continue;
+        }
+        hasError = true;
         reportError(previousNamedDecl->getLocation(),
                     "Typographically ambiguous identifier '%0'")
             << previousNamedDecl->getNameAsString();
+      }
+      if (hasError) {
+        reportError(nd->getLocation());
       }
     }
     uniqueIdents.insert(std::make_pair(typoUniqIdent, nd));
