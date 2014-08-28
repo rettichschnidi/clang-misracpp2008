@@ -42,7 +42,7 @@ typedef enum {
   ENUM2_ENTRY_ONE
 } myEnum2;
 
-void func(int aVariable, int _anotherVariable ) { // expected-error {{Typographically ambiguous identifier 'aVariable'}}  { // expected-error {{Typographically ambiguous identifier '_anotherVariable'}}
+void func (int aVariable, int _anotherVariable) { // expected-error {{Typographically ambiguous identifier 'aVariable'}}  { // expected-error {{Typographically ambiguous identifier '_anotherVariable'}}
   int a_Variable; // expected-error {{Different identifiers shall be typographically unambiguous. (MISRA C++ 2008 rule 2-10-1)}}
   int anotherVariable; // expected-error {{Different identifiers shall be typographically unambiguous. (MISRA C++ 2008 rule 2-10-1)}}
 }
