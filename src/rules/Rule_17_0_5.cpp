@@ -31,8 +31,7 @@ protected:
 const std::set<std::string> Rule_17_0_5::illegalFunction = { "longjmp",
                                                              "setjmp" };
 
-static RuleCheckerASTContextRegistry::Add<Rule_17_0_5> X(ruleName.c_str(),
-                                                         RULE_TEXT_17_0_5);
+static RuleCheckerASTContextRegistry::Add<Rule_17_0_5> X(ruleName.c_str(), "");
 static RuleCheckerPreprocessorRegistry::Add<Rule_17_0_5> Y(ruleName.c_str(),
-                                                           RULE_TEXT_17_0_5);
+                                                           "");
 }

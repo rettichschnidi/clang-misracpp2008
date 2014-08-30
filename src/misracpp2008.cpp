@@ -50,11 +50,9 @@ void RuleChecker::setDiagLevel(DiagnosticsEngine::Level diagLevel) {
 }
 
 void RuleChecker::setName(const std::string &name) {
-  assert(name.size() >= 5 && name.size() <= 6 && "Invalid name for a rule!");
+  assert(ruleHeadlines.count(name) > 0 && "Invalid name for a rule!");
   this->name = name;
 }
-
-void RuleChecker::setText(const std::string &text) { this->text = text; }
 
 void RuleChecker::setDiagEngine(DiagnosticsEngine &diagEngine) {
   this->diagEngine = &diagEngine;
@@ -109,7 +107,9 @@ bool RuleChecker::doIgnore(clang::SourceLocation loc) {
 }
 
 void RuleChecker::reportError(SourceLocation loc) {
-  reportError(loc, "%0 (MISRA C++ 2008 rule %1)") << text << name;
+  assert(ruleHeadlines.count(name) > 0 && "Invalid name for a rule!");
+  reportError(loc, "%0 (MISRA C++ 2008 rule %1)") << ruleHeadlines.at(name)
+                                                  << name;
 }
 
 std::set<std::string> &getEnabledCheckers() {
@@ -166,15 +166,12 @@ public:
          it != ie; ++it) {
       const std::string checkerName =
           RuleCheckerASTContextRegistry::traits::nameof(*it);
-      const std::string checkerText =
-          RuleCheckerASTContextRegistry::traits::descof(*it);
       if (enabledCheckers.count(checkerName) > 0) {
         auto diagLevel = getDiagnosticLevels().at(checkerName);
         auto instance = it->instantiate();
         instance->setContext(ctx);
         instance->setDiagLevel(diagLevel);
         instance->setName(checkerName);
-        instance->setText(checkerText);
         instance->doWork();
       }
     }
@@ -197,8 +194,6 @@ protected:
          it != ie; ++it) {
       const std::string checkerName =
           RuleCheckerPreprocessorRegistry::traits::nameof(*it);
-      const std::string checkerText =
-          RuleCheckerPreprocessorRegistry::traits::descof(*it);
       if (enabledCheckers.count(checkerName) > 0) {
         assert(CI.hasPreprocessor() &&
                "Compiler instance has no preprocessor!");
@@ -207,7 +202,6 @@ protected:
         ppCallback->setDiagLevel(diagLevel);
         ppCallback->setDiagEngine(CI.getDiagnostics());
         ppCallback->setName(checkerName);
-        ppCallback->setText(checkerText);
         CI.getPreprocessor().addPPCallbacks(ppCallback.release());
       }
     }

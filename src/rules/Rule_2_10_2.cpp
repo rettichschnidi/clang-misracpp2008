@@ -78,6 +78,5 @@ protected:
   }
 };
 
-static RuleCheckerASTContextRegistry::Add<Rule_2_10_2> X("2-10-2",
-                                                         RULE_TEXT_2_10_2);
+static RuleCheckerASTContextRegistry::Add<Rule_2_10_2> X("2-10-2", "");
 }

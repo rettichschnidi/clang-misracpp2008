@@ -43,6 +43,5 @@ const std::set<std::string> Rule_18_0_1::illegalIncludes = {
   "tgmath.h", "time.h",    "uchar.h",  "wchar.h",  "wctype.h"
 };
 
-static RuleCheckerPreprocessorRegistry::Add<Rule_18_0_1> X("18-0-1",
-                                                           RULE_TEXT_18_0_1);
+static RuleCheckerPreprocessorRegistry::Add<Rule_18_0_1> X("18-0-1", "");
 }

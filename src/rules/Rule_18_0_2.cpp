@@ -46,6 +46,5 @@ protected:
 const std::set<std::string> Rule_18_0_2::illegalFunctions = { "atof", "atoi",
                                                               "atol" };
 
-static RuleCheckerASTContextRegistry::Add<Rule_18_0_2> X("18-0-2",
-                                                         RULE_TEXT_18_0_2);
+static RuleCheckerASTContextRegistry::Add<Rule_18_0_2> X("18-0-2", "");
 }

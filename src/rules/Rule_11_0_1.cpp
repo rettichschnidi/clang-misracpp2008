@@ -61,6 +61,5 @@ protected:
   }
 };
 
-static RuleCheckerASTContextRegistry::Add<Rule_11_0_1> X("11-0-1",
-                                                         RULE_TEXT_11_0_1);
+static RuleCheckerASTContextRegistry::Add<Rule_11_0_1> X("11-0-1", "");
 }

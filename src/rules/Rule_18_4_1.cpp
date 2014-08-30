@@ -51,6 +51,5 @@ protected:
   }
 };
 
-static RuleCheckerASTContextRegistry::Add<Rule_18_4_1> X("18-4-1",
-                                                         RULE_TEXT_18_4_1);
+static RuleCheckerASTContextRegistry::Add<Rule_18_4_1> X("18-4-1", "");
 }

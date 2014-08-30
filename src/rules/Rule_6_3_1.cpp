@@ -51,6 +51,5 @@ protected:
   }
 };
 
-static RuleCheckerASTContextRegistry::Add<Rule_6_3_1> X("6-3-1",
-                                                        RULE_TEXT_6_3_1);
+static RuleCheckerASTContextRegistry::Add<Rule_6_3_1> X("6-3-1", "");
 }

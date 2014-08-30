@@ -49,6 +49,5 @@ const std::set<std::string> Rule_18_0_5::illegalFunctions = {
   "strpbrk", "strrchr", "strstr", "strtok", "strlen"
 };
 
-static RuleCheckerASTContextRegistry::Add<Rule_18_0_5> X("18-0-5",
-                                                         RULE_TEXT_18_0_5);
+static RuleCheckerASTContextRegistry::Add<Rule_18_0_5> X("18-0-5", "");
 }

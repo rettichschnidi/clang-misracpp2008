@@ -47,6 +47,5 @@ protected:
   }
 };
 
-static RuleCheckerASTContextRegistry::Add<Rule_5_14_1> X("5-14-1",
-                                                         RULE_TEXT_5_14_1);
+static RuleCheckerASTContextRegistry::Add<Rule_5_14_1> X("5-14-1", "");
 }

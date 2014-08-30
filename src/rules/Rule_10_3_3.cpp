@@ -48,6 +48,5 @@ protected:
   }
 };
 
-static RuleCheckerASTContextRegistry::Add<Rule_10_3_3> X("10-3-3",
-                                                         RULE_TEXT_10_3_3);
+static RuleCheckerASTContextRegistry::Add<Rule_10_3_3> X("10-3-3", "");
 }

@@ -39,6 +39,5 @@ public:
 
 const std::set<std::string> Rule_18_0_4::illegalIncludes = { "ctime" };
 
-static RuleCheckerPreprocessorRegistry::Add<Rule_18_0_4> X("18-0-4",
-                                                           RULE_TEXT_18_0_4);
+static RuleCheckerPreprocessorRegistry::Add<Rule_18_0_4> X("18-0-4", "");
 }

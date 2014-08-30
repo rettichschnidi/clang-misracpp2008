@@ -47,6 +47,5 @@ protected:
   }
 };
 
-static RuleCheckerASTContextRegistry::Add<Rule_6_4_2> X("6-4-2",
-                                                        RULE_TEXT_6_4_2);
+static RuleCheckerASTContextRegistry::Add<Rule_6_4_2> X("6-4-2", "");
 }

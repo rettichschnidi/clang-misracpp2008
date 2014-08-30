@@ -70,6 +70,5 @@ protected:
   }
 };
 
-static RuleCheckerASTContextRegistry::Add<Rule_5_8_1> X("5-8-1",
-                                                        RULE_TEXT_5_8_1);
+static RuleCheckerASTContextRegistry::Add<Rule_5_8_1> X("5-8-1", "");
 }

@@ -38,6 +38,5 @@ public:
 
 const std::set<std::string> Rule_27_0_1::illegalIncludes = { "cstdio" };
 
-static RuleCheckerPreprocessorRegistry::Add<Rule_27_0_1> X("27-0-1",
-                                                           RULE_TEXT_27_0_1);
+static RuleCheckerPreprocessorRegistry::Add<Rule_27_0_1> X("27-0-1", "");
 }

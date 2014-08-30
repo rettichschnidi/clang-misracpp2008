@@ -40,7 +40,6 @@ protected:
                                        ///  violation.
   bool doIgnoreSystemHeaders = true;   ///< Should we skip the system headers?
   std::string name = "?";              ///< Name of rule this checker enforces.
-  std::string text = "?";              ///< Headline text of the checked rule.
   /**
   * @brief Check whether or not \c loc is within a system header.
   * @param loc Location within the translation unit to be tested.
@@ -104,11 +103,6 @@ public:
    * @param name Name of the rule, e.g. "6-2-1".
    */
   void setName(const std::string &name);
-  /**
-   * @brief Text to be printed in case of a violation.
-   * @param text Headline text of the rule, e.g. "Unions shall not be used."
-   */
-  void setText(const std::string &text);
   /**
    * @brief Set the diagnostic engine to be used when a violation gets reported.
    * @param diagEngine New diagnostics engine to be used.

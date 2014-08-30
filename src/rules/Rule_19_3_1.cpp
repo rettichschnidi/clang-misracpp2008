@@ -37,6 +37,5 @@ public:
 
 const std::string Rule_19_3_1::illegalMacroName = "errno";
 
-static RuleCheckerPreprocessorRegistry::Add<Rule_19_3_1> X("19-3-1",
-                                                           RULE_TEXT_19_3_1);
+static RuleCheckerPreprocessorRegistry::Add<Rule_19_3_1> X("19-3-1", "");
 }

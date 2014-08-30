@@ -39,6 +39,5 @@ public:
 
 const std::set<std::string> Rule_18_7_1::illegalIncludes = { "csignal" };
 
-static RuleCheckerPreprocessorRegistry::Add<Rule_18_7_1> X("18-7-1",
-                                                           RULE_TEXT_18_7_1);
+static RuleCheckerPreprocessorRegistry::Add<Rule_18_7_1> X("18-7-1", "");
 }

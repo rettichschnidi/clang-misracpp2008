@@ -129,6 +129,5 @@ protected:
   }
 };
 
-static RuleCheckerASTContextRegistry::Add<Rule_2_13_3> X("2-13-3",
-                                                         RULE_TEXT_2_13_3);
+static RuleCheckerASTContextRegistry::Add<Rule_2_13_3> X("2-13-3", "");
 }

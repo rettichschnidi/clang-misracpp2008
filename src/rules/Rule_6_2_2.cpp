@@ -294,6 +294,5 @@ protected:
   }
 };
 
-static RuleCheckerASTContextRegistry::Add<Rule_6_2_2> X("6-2-2",
-                                                        RULE_TEXT_6_2_2);
+static RuleCheckerASTContextRegistry::Add<Rule_6_2_2> X("6-2-2", "");
 }

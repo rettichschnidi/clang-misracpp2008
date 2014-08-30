@@ -70,6 +70,5 @@ protected:
   }
 };
 
-static RuleCheckerASTContextRegistry::Add<Rule_6_2_3> X("6-2-3",
-                                                        RULE_TEXT_6_2_3);
+static RuleCheckerASTContextRegistry::Add<Rule_6_2_3> X("6-2-3", "");
 }

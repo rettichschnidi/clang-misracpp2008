@@ -41,6 +41,5 @@ public:
   }
 };
 
-static RuleCheckerPreprocessorRegistry::Add<Rule_16_3_2> X("16-3-2",
-                                                           RULE_TEXT_16_3_2);
+static RuleCheckerPreprocessorRegistry::Add<Rule_16_3_2> X("16-3-2", "");
 }

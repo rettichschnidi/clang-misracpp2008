@@ -37,6 +37,5 @@ protected:
   }
 };
 
-static RuleCheckerASTContextRegistry::Add<Rule_5_18_1> X("5-18-1",
-                                                         RULE_TEXT_5_18_1);
+static RuleCheckerASTContextRegistry::Add<Rule_5_18_1> X("5-18-1", "");
 }

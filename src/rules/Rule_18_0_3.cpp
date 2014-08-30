@@ -47,6 +47,5 @@ const std::set<std::string> Rule_18_0_3::illegalFunctions = {
   "abort", "exit", "getenv", "system"
 };
 
-static RuleCheckerASTContextRegistry::Add<Rule_18_0_3> X("18-0-3",
-                                                         RULE_TEXT_18_0_3);
+static RuleCheckerASTContextRegistry::Add<Rule_18_0_3> X("18-0-3", "");
 }

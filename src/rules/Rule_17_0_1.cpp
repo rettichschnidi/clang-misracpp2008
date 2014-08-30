@@ -68,6 +68,5 @@ const std::set<std::string> Rule_17_0_1::explicitlyLegalMacroNames = {
   "__STDC_FORMAT_MACROS", "__STDC_LIMIT_MACROS"
 };
 
-static RuleCheckerPreprocessorRegistry::Add<Rule_17_0_1> X("17-0-1",
-                                                           RULE_TEXT_17_0_1);
+static RuleCheckerPreprocessorRegistry::Add<Rule_17_0_1> X("17-0-1", "");
 }
