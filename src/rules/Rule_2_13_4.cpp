@@ -32,7 +32,7 @@ public:
       return true;
     }
 
-    std::string lexem = srcLocToString(S->getLocStart());
+    const std::string lexem = srcLocToString(S->getLocStart());
     if (lexem.find_first_of("ulf") != std::string::npos) {
       reportError(S->getLocStart());
     }
