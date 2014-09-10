@@ -119,7 +119,7 @@ protected:
                               /// checked.
   RuleCheckerASTContext();
   /**
-   * @brief Extract the source code of the token pointet at by \c start.
+   * @brief Extract the source code of the token pointed at by \c start.
    * @param start Starting location of the token to extract.
    * @return String with the source code for token starting at \c start.
    */
