@@ -256,6 +256,7 @@ protected:
     }
     return true;
   }
+
   void PrintHelp(llvm::raw_ostream &ros) {
     ros << "Available plugin parameters:\n";
     ros << "[--help] - show this text\n";
@@ -278,13 +279,14 @@ void RuleCheckerASTContext::setContext(ASTContext &context) {
 RuleCheckerASTContext::RuleCheckerASTContext()
     : RuleChecker(), context(nullptr) {}
 
-std::string RuleCheckerASTContext::srcLocToString(SourceLocation start) {
+std::string RuleCheckerASTContext::srcLocToString(const SourceLocation start) {
   const clang::SourceManager &sm = context->getSourceManager();
   const clang::LangOptions lopt = context->getLangOpts();
-
-  unsigned tokenLength = clang::Lexer::MeasureTokenLength(start, sm, lopt);
-  return std::string(sm.getCharacterData(start),
-                     sm.getCharacterData(start) + tokenLength);
+  const SourceLocation spellingLoc = sm.getSpellingLoc(start);
+  unsigned tokenLength =
+      clang::Lexer::MeasureTokenLength(spellingLoc, sm, lopt);
+  return std::string(sm.getCharacterData(spellingLoc),
+                     sm.getCharacterData(spellingLoc) + tokenLength);
 }
 
 void RuleCheckerASTContext::doWork() {

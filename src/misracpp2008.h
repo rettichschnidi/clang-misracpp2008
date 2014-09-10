@@ -123,7 +123,7 @@ protected:
    * @param start Starting location of the token to extract.
    * @return String with the source code for token starting at \c start.
    */
-  std::string srcLocToString(clang::SourceLocation start);
+  std::string srcLocToString(const clang::SourceLocation start);
 
 public:
   /**
