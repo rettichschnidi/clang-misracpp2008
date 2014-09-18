@@ -202,7 +202,8 @@ protected:
         ppCallback->setDiagLevel(diagLevel);
         ppCallback->setDiagEngine(CI.getDiagnostics());
         ppCallback->setName(checkerName);
-        CI.getPreprocessor().addPPCallbacks(ppCallback.release());
+        CI.getPreprocessor().addPPCallbacks(
+            std::unique_ptr<PPCallbacks>(ppCallback.release()));
       }
     }
     return std::unique_ptr<ASTConsumer>(new Consumer());
