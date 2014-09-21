@@ -1,4 +1,4 @@
-About
+About [![Build Status](https://travis-ci.org/rettichschnidi/clang-misracpp2008.svg?branch=master)](https://travis-ci.org/rettichschnidi/clang-misracpp2008)
 =====
 
 clang-misracpp2008 is a project which tries to create an open source checker for
