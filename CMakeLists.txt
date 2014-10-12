@@ -14,7 +14,7 @@ if(DOXYGEN_FOUND)
     WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
     COMMENT "Generating clang-misracpp2008 doxygen documentation." VERBATIM)
 
-  if(LLVM_BUILD_DOCS)
+  if(LLVM_ENABLE_DOXYGEN)
     add_dependencies(doxygen doxygen-misracpp2008)
   endif()
 endif()
