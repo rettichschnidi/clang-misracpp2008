@@ -38,7 +38,7 @@ namespace misracpp2008 {
 typedef std::map<std::string, clang::DiagnosticsEngine::Level> DiagLevelMap;
 DiagLevelMap &getDiagnosticLevels();
 std::set<std::string> &getEnabledCheckers();
-std::set<std::string> getRegisteredCheckers();
+std::set<std::string> &getRegisteredCheckerNames();
 std::list<llvm::Regex> &getIgnoredPaths();
 bool enableChecker(const std::string &name,
                    clang::DiagnosticsEngine::Level diagLevel);
@@ -127,7 +127,7 @@ std::list<llvm::Regex> &getIgnoredPaths() {
 
 bool enableChecker(const std::string &checkerName,
                    clang::DiagnosticsEngine::Level diagLevel) {
-  if (getRegisteredCheckers().count(checkerName) == 0) {
+  if (getRegisteredCheckerNames().count(checkerName) == 0) {
     return false;
   }
   auto &checkerDiagLevelMap = getDiagnosticLevels();
@@ -138,7 +138,7 @@ bool enableChecker(const std::string &checkerName,
 
 void dumpRegisteredCheckers(raw_ostream &OS) {
   OS << "Registered checks: ";
-  for (const auto &checkerName : getRegisteredCheckers()) {
+  for (const auto &checkerName : getRegisteredCheckerNames()) {
     OS << checkerName << ", ";
   }
   OS << "\n";
@@ -242,7 +242,7 @@ protected:
           diagLevel = DiagnosticsEngine::Error;
         }
         if (token == "all") {
-          for (const auto &checkerName : getRegisteredCheckers()) {
+          for (const auto &checkerName : getRegisteredCheckerNames()) {
             if (enableChecker(checkerName, diagLevel) == false) {
               assert(false &&
                      "Registered checkers have to be enabled successfully.");
@@ -294,26 +294,27 @@ void RuleCheckerASTContext::doWork() {
   assert(CI);
 }
 
-std::set<std::string> getRegisteredCheckers() {
-  std::set<std::string> registeredCheckers;
+std::set<std::string> &getRegisteredCheckerNames() {
+  static std::set<std::string> registeredCheckerNames;
 
-  for (RuleCheckerASTContextRegistry::iterator
-           it = RuleCheckerASTContextRegistry::begin(),
-           ie = RuleCheckerASTContextRegistry::end();
-       it != ie; ++it) {
-    const std::string checkerName =
-        RuleCheckerASTContextRegistry::traits::nameof(*it);
-    registeredCheckers.insert(checkerName);
-  }
-  for (RuleCheckerPreprocessorRegistry::iterator
-           it = RuleCheckerPreprocessorRegistry::begin(),
-           ie = RuleCheckerPreprocessorRegistry::end();
-       it != ie; ++it) {
-    const std::string checkerName =
-        RuleCheckerPreprocessorRegistry::traits::nameof(*it);
-    registeredCheckers.insert(checkerName);
-  }
-
-  return registeredCheckers;
+  return registeredCheckerNames;
 }
+
+template <typename Registry>
+/// \brief Pick up all registered checker names and put them into a set for
+/// easier access later on.
+class RCR : public Registry::listener {
+private:
+  virtual void registered(const typename Registry::entry &e) override {
+    auto &registeredCheckerNames = getRegisteredCheckerNames();
+    std::string n = Registry::traits::nameof(e);
+    registeredCheckerNames.insert(n);
+  }
+
+public:
+  RCR() { Registry::listener::init(); }
+};
+
+RCR<RuleCheckerASTContextRegistry> astRuleCheckerListener;
+RCR<RuleCheckerPreprocessorRegistry> ppRuleCheckerListener;
 }
