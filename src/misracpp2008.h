@@ -12,6 +12,7 @@
 
 #include "clang/Basic/Diagnostic.h"
 #include "clang/Lex/PPCallbacks.h"
+#include "clang/Frontend/CompilerInstance.h"
 #include "llvm/Support/Registry.h"
 #include "RuleHeadlineTexts.h"
 
@@ -32,11 +33,12 @@ namespace misracpp2008 {
  */
 class RuleChecker {
 protected:
-  clang::DiagnosticsEngine *diagEngine =
-      nullptr; ///< Needed to report errors. Rule checkers can assume this
-               ///  pointer to direct the correct instance.
+  clang::CompilerInstance *CI =
+      nullptr; ///< Access to the current compiler instance. Rule checkers can
+               ///assume this pointer to direct the correct instance.
   clang::DiagnosticsEngine::Level diagLevel =
-      clang::DiagnosticsEngine::Error; ///< Level of the diagnostic in case of a
+      clang::DiagnosticsEngine::Error; ///< Level of the emited diagnostic in
+                                       ///case of a
                                        ///  violation.
   bool doIgnoreSystemHeaders = true;   ///< Should we skip the system headers?
   std::string name = "?";              ///< Name of rule this checker enforces.
@@ -86,8 +88,9 @@ protected:
   template <unsigned N>
   clang::DiagnosticBuilder reportError(clang::SourceLocation loc,
                                        const char (&FormatString)[N]) {
-    unsigned diagId = diagEngine->getCustomDiagID(diagLevel, FormatString);
-    return diagEngine->Report(loc, diagId);
+    clang::DiagnosticsEngine &diagEngine = CI->getDiagnostics();
+    unsigned diagId = diagEngine.getCustomDiagID(diagLevel, FormatString);
+    return diagEngine.Report(loc, diagId);
   }
 
 public:
@@ -104,10 +107,11 @@ public:
    */
   void setName(const std::string &name);
   /**
-   * @brief Set the diagnostic engine to be used when a violation gets reported.
-   * @param diagEngine New diagnostics engine to be used.
+   * @brief Set the compiler instsance to be used when a violation gets
+   * reported.
+   * @param CI Compiler instance to be used by the checker.
    */
-  void setDiagEngine(clang::DiagnosticsEngine &diagEngine);
+  void setCompilerInstance(clang::CompilerInstance &CI);
 };
 
 /**

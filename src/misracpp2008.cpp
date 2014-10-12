@@ -54,23 +54,21 @@ void RuleChecker::setName(const std::string &name) {
   this->name = name;
 }
 
-void RuleChecker::setDiagEngine(DiagnosticsEngine &diagEngine) {
-  this->diagEngine = &diagEngine;
-}
+void RuleChecker::setCompilerInstance(CompilerInstance &ci) { this->CI = &ci; }
 
 bool RuleChecker::isInSystemHeader(clang::SourceLocation loc) {
-  const SourceManager &sourceManager = diagEngine->getSourceManager();
+  const SourceManager &sourceManager = CI->getSourceManager();
   return sourceManager.isInSystemHeader(loc);
 }
 
 bool RuleChecker::isBuiltIn(clang::SourceLocation loc) {
-  const SourceManager &sourceManager = diagEngine->getSourceManager();
+  const SourceManager &sourceManager = CI->getSourceManager();
   const char *const filename = sourceManager.getPresumedLoc(loc).getFilename();
   return (strcmp(filename, "<built-in>") == 0);
 }
 
 bool RuleChecker::isCommandLine(clang::SourceLocation loc) {
-  const SourceManager &sourceManager = diagEngine->getSourceManager();
+  const SourceManager &sourceManager = CI->getSourceManager();
   const char *const filename = sourceManager.getPresumedLoc(loc).getFilename();
   return (strcmp(filename, "<command line>") == 0);
 }
@@ -90,8 +88,8 @@ bool RuleChecker::doIgnore(clang::SourceLocation loc) {
   }
 
   // Do not check source code locations which are originating from a file.
-  auto spellingLocation = diagEngine->getSourceManager().getSpellingLoc(loc);
-  auto fileName = diagEngine->getSourceManager().getFilename(spellingLocation);
+  auto spellingLocation = CI->getSourceManager().getSpellingLoc(loc);
+  auto fileName = CI->getSourceManager().getFilename(spellingLocation);
   if (fileName.empty()) {
     return true;
   }
@@ -155,8 +153,10 @@ void dumpActiveCheckers(raw_ostream &OS) {
 }
 
 class Consumer : public clang::ASTConsumer {
+private:
+  clang::CompilerInstance &CI;
 public:
-  Consumer() {}
+  Consumer(clang::CompilerInstance &CI) : CI(CI) {}
   virtual void HandleTranslationUnit(clang::ASTContext &ctx) override {
     // Iterate over registered ASTContext checkers and execute the ones active
     const auto &enabledCheckers = getEnabledCheckers();
@@ -169,6 +169,7 @@ public:
       if (enabledCheckers.count(checkerName) > 0) {
         auto diagLevel = getDiagnosticLevels().at(checkerName);
         auto instance = it->instantiate();
+        instance->setCompilerInstance(CI);
         instance->setContext(ctx);
         instance->setDiagLevel(diagLevel);
         instance->setName(checkerName);
@@ -200,13 +201,13 @@ protected:
         auto diagLevel = getDiagnosticLevels().at(checkerName);
         std::unique_ptr<RuleCheckerPPCallback> ppCallback = it->instantiate();
         ppCallback->setDiagLevel(diagLevel);
-        ppCallback->setDiagEngine(CI.getDiagnostics());
+        ppCallback->setCompilerInstance(CI);
         ppCallback->setName(checkerName);
         CI.getPreprocessor().addPPCallbacks(
             std::unique_ptr<PPCallbacks>(ppCallback.release()));
       }
     }
-    return std::unique_ptr<ASTConsumer>(new Consumer());
+    return std::unique_ptr<ASTConsumer>(new Consumer(CI));
   }
 
   bool ParseArgs(const clang::CompilerInstance &CI,
@@ -273,7 +274,6 @@ static FrontendPluginRegistry::Add<Action> X("misra.cpp.2008",
 
 void RuleCheckerASTContext::setContext(ASTContext &context) {
   this->context = &context;
-  this->diagEngine = &context.getDiagnostics();
 }
 
 RuleCheckerASTContext::RuleCheckerASTContext()
@@ -291,7 +291,7 @@ std::string RuleCheckerASTContext::srcLocToString(const SourceLocation start) {
 
 void RuleCheckerASTContext::doWork() {
   assert(context && "The context has to be set before calling this function.");
-  assert(diagEngine);
+  assert(CI);
 }
 
 std::set<std::string> getRegisteredCheckers() {
