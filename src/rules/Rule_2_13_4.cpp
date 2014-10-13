@@ -11,6 +11,9 @@
 #include "clang/AST/RecursiveASTVisitor.h"
 #include "clang/AST/ASTContext.h"
 #include <string>
+#include "clang/Basic/SourceLocation.h"
+#include "clang/Basic/SourceManager.h"
+#include "clang/Lex/LiteralSupport.h"
 
 using namespace clang;
 
@@ -32,9 +35,16 @@ public:
       return true;
     }
 
-    const std::string lexem = srcLocToString(S->getLocStart());
-    if (lexem.find_first_of("ulf") != std::string::npos) {
-      reportError(S->getLocStart());
+    using std::string;
+    const SourceManager &sm = context->getSourceManager();
+    const SourceLocation spellingLoc = sm.getSpellingLoc(S->getLocStart());
+    const string lexem = srcLocToString(spellingLoc);
+    const NumericLiteralParser nlp(lexem, spellingLoc, CI->getPreprocessor());
+
+    if ((nlp.isUnsigned && lexem.find("u") != string::npos) ||
+        (nlp.isFloat && lexem.find("f") != string::npos) ||
+        ((nlp.isLong || nlp.isLongLong) && lexem.find("l") != string::npos)) {
+      reportError(S->getLocEnd());
     }
 
     return true;

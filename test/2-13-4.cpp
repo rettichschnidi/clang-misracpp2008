@@ -22,5 +22,7 @@ void func(float &f) {
 }
 
 // Regression test - macros got misinterpreted
-#define STX_ETX_BUFFER_SIZE   180 ///< ulf
-unsigned char buffer[STX_ETX_BUFFER_SIZE]; // Compliant
+#define STX_ETX_BUFFER_SIZE_GOOD   180 ///< "u", "l", "f" in a comment, all lowercase
+unsigned char buffer1[STX_ETX_BUFFER_SIZE_GOOD]; // Compliant
+#define STX_ETX_BUFFER_SIZE_FAIL   180u
+unsigned char buffer2[STX_ETX_BUFFER_SIZE_FAIL];  // expected-error {{Literal suffixes shall be upper case. (MISRA C++ 2008 rule 2-13-4)}}
