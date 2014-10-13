@@ -27,11 +27,11 @@ Please note that currently only the CMake build system is supported.
 
 Running tests
 =============
-Build the target check-misracpp2008: `make check-misracpp2008`
+`make check-misracpp2008`
 
 Building documentation
 ======================
-Build the target doxygen-misracpp2008: `make doxygen-misracpp2008`
+`make doxygen-misracpp2008`
 
 Usage
 =====
