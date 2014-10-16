@@ -2,4 +2,4 @@
 
 char    narrowChars[]   = "Hello" " narrow chars."; // Compliant
 wchar_t wideChars[]     = L"Hello" L" wide chars."; // Compliant
-wchar_t mixedChars[]    = "Hello" L" narrow and mixed chars.";  // expected-error {{Literal suffixes shall be upper case. (MISRA C++ 2008 rule 2-13-4)}}
+wchar_t mixedChars[]    = "Hello" L" narrow and mixed chars.";  // expected-error {{Narrow and wide string literals shall not be concatenated. (MISRA C++ 2008 rule 2-13-5)}}
