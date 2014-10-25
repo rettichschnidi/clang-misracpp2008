@@ -12,7 +12,7 @@ unsigned int fn1(unsigned int u) {
   return u + 0xFF; // expected-error {{A "U " suffix shall be applied to all octal or hexadecimal integer literals of unsigned type. (MISRA C++ 2008 rule 2-13-3)}}
 }
 unsigned int fn2(unsigned int u) {
-  return u + 0xFFU; // compliant
+  return u + 0xFFU; // Compliant
 }
 unsigned int fn3(unsigned int u) {
   return u + 255U; // Compliant
