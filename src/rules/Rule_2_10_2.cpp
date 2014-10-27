@@ -36,9 +36,10 @@ public:
       return true;
     }
 
-    const auto *namedDecl = cast<NamedDecl>(decl);
-    const DeclarationName &declN = namedDecl->getDeclName();
-    // Bail out if it is an operator
+    const auto *declUnderTest = cast<NamedDecl>(decl);
+    const DeclarationName &declN = declUnderTest->getDeclName();
+    // Bail out if the declaration is an operator (while all having the name
+    // "operator", none of them constitute a violation)
     if (declN.getCXXOverloadedOperator() != OO_None) {
       return true;
     }
@@ -46,18 +47,31 @@ public:
     // Walk up till we reach the outermost scope, check each one for a
     // declaration with the same name.
     for (const DeclContext *outerScope =
-             namedDecl->getDeclContext()->getParent();
+             declUnderTest->getDeclContext()->getParent();
          outerScope != nullptr; outerScope = outerScope->getParent()) {
+      // If e.g. extern "C" gets found, simply continue with the surrounding
+      // scope.
       if (isa<LinkageSpecDecl>(outerScope)) {
         continue;
       }
 
+      // If we can not find a declaration with the same name as we have,
+      // move one scope up.
       DeclContext::lookup_const_result result = outerScope->lookup(declN);
       if (result.empty()) {
         continue;
       }
-      // Bail out if we find ourself
-      if (std::find(result.begin(), result.end(), namedDecl) != result.end()) {
+
+      // Move one scope up if we find ourselves.
+      if (std::find(result.begin(), result.end(), declUnderTest) !=
+          result.end()) {
+        continue;
+      }
+
+      // Deal with linkage declarations e.g. 'extern "C"'
+      if (isRedeclaration<FunctionDecl>(declUnderTest, result) ||
+          isRedeclaration<VarDecl>(declUnderTest, result) ||
+          isRedeclaration<TagDecl>(declUnderTest, result)) {
         continue;
       }
 
@@ -69,6 +83,22 @@ public:
           << declN.getAsString();
     }
     return true;
+  }
+
+private:
+  template <typename TDeclType>
+  bool isRedeclaration(const NamedDecl *declUnderTest,
+                       DeclContext::lookup_const_result results) {
+    using T = Redeclarable<TDeclType>;
+    for (const NamedDecl *d : results) {
+      if (auto i = dyn_cast<TDeclType>(d)) {
+        typename T::redecl_range r = i->redecls();
+        if (std::find(r.begin(), r.end(), declUnderTest) != r.end()) {
+          return true;
+        }
+      }
+    }
+    return false;
   }
 
 protected:

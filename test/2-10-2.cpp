@@ -29,3 +29,10 @@ class MyClass {
     void operator++() {}
   };
 };
+
+extern "C" {
+  void functionDeclarationInBlock( void );
+  extern int variableDeclarationInBlock;
+}
+void functionDeclarationInBlock( void );
+int variableDeclarationInBlock = 10;
