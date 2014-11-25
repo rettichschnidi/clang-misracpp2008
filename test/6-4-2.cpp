@@ -8,6 +8,13 @@ void compliant(int x, int y) {
   } else if (y) {
   } else {
   }
+
+  // Regression test for bug #5
+  if (x) {
+  } else if (y) {
+  } else if (y) {
+  } else {
+  }
 }
 
 void violations(int x, int y) {
