@@ -1,18 +1,18 @@
 // RUN: %clang -fsyntax-only -std=c++11 -Wno-empty-body -ferror-limit=0 -Xclang -verify -Xclang -load -Xclang %llvmshlibdir/misracpp2008.so -Xclang -plugin -Xclang misra.cpp.2008 -Xclang -plugin-arg-misra.cpp.2008 -Xclang 6-4-2 %s
 
-void compliant(int x, int y) {
-  if (x) {
+void compliant(int a, int b, int c, int d, int e, int f) {
+  if (a) {
   }
 
-  if (x) {
-  } else if (y) {
+  if (b) {
+  } else if (c) {
   } else {
   }
 
   // Regression test for bug #5
-  if (x) {
-  } else if (y) {
-  } else if (y) {
+  if (d) {
+  } else if (e) {
+  } else if (f) {
   } else {
   }
 }
