@@ -26,17 +26,36 @@ public:
       return true;
     }
 
-    if (const auto *ifStmt = dyn_cast<IfStmt>(S)) {
-      if (const Stmt *elseStmt = ifStmt->getElse()) {
-        if (const auto *ifElseStmt = dyn_cast<IfStmt>(elseStmt)) {
-          const Stmt *finalElseStmt = ifElseStmt->getElse();
-          if (finalElseStmt == nullptr ||
-              isa<CompoundStmt>(finalElseStmt) == false) {
-            reportError(ifStmt->getLocStart());
-          }
-        }
-      }
+    const IfStmt *ifStmt = dyn_cast<IfStmt>(S);
+    if (!ifStmt) {
+      return true;
     }
+
+    const auto &parents = context->getParents(*ifStmt);
+    assert(parents.size() == 1 && "Expect exactly one parent node.");
+
+    // Bail out if this is not the first if in a if...else-if clause
+    if (parents[0].get<IfStmt>() != nullptr) {
+      return true;
+    }
+
+    // Walk down all the else branches, see if they are in fact another ifStmt
+    // (true for else-if constructs) and report an error if the very last else-
+    // if construct does not have an else branch.
+    for (unsigned int elseIfCount = 0; ifStmt != nullptr; ++elseIfCount) {
+      const Stmt *elseStmt = ifStmt->getElse();
+      if (elseStmt != nullptr) {
+        ifStmt = dyn_cast<IfStmt>(elseStmt);
+        continue;
+      }
+
+      if (elseIfCount > 0) {
+        reportError(S->getLocStart());
+      }
+
+      break;
+    }
+
     return true;
   }
 
