@@ -26,18 +26,13 @@ class Rule_2_10_2 : public RuleCheckerASTContext,
 public:
   Rule_2_10_2() : RuleCheckerASTContext() {}
 
-  bool VisitDecl(Decl *decl) {
+  bool VisitNamedDecl(const NamedDecl *decl) {
     // Bail out early if this location should not be checked.
     if (doIgnore(decl->getLocation())) {
       return true;
     }
-    // Bail out if this is not a named declaration.
-    if (!isa<NamedDecl>(decl)) {
-      return true;
-    }
 
-    const auto *declUnderTest = cast<NamedDecl>(decl);
-    const DeclarationName &declN = declUnderTest->getDeclName();
+    const DeclarationName &declN = decl->getDeclName();
     // Bail out if the declaration is an operator (while all having the name
     // "operator", none of them constitute a violation)
     if (declN.getCXXOverloadedOperator() != OO_None) {
@@ -46,8 +41,7 @@ public:
 
     // Walk up till we reach the outermost scope, check each one for a
     // declaration with the same name.
-    for (const DeclContext *outerScope =
-             declUnderTest->getDeclContext()->getParent();
+    for (const DeclContext *outerScope = decl->getDeclContext()->getParent();
          outerScope != nullptr; outerScope = outerScope->getParent()) {
       // If e.g. extern "C" gets found, simply continue with the surrounding
       // scope.
@@ -63,15 +57,14 @@ public:
       }
 
       // Move one scope up if we find ourselves.
-      if (std::find(result.begin(), result.end(), declUnderTest) !=
-          result.end()) {
+      if (std::find(result.begin(), result.end(), decl) != result.end()) {
         continue;
       }
 
       // Deal with linkage declarations e.g. 'extern "C"'
-      if (isRedeclaration<FunctionDecl>(declUnderTest, result) ||
-          isRedeclaration<VarDecl>(declUnderTest, result) ||
-          isRedeclaration<TagDecl>(declUnderTest, result)) {
+      if (isRedeclaration<FunctionDecl>(decl, result) ||
+          isRedeclaration<VarDecl>(decl, result) ||
+          isRedeclaration<TagDecl>(decl, result)) {
         continue;
       }
 

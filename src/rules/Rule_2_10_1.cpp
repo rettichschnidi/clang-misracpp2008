@@ -26,23 +26,18 @@ class Rule_2_10_1 : public RuleCheckerASTContext,
 public:
   Rule_2_10_1() : RuleCheckerASTContext() {}
 
-  bool VisitDecl(const Decl *D) {
-    if (doIgnore(D->getLocation())) {
-      return true;
-    }
-
-    const auto *nd = dyn_cast<NamedDecl>(D);
-    if (!nd) {
+  bool VisitNamedDecl(const NamedDecl *decl) {
+    if (doIgnore(decl->getLocation())) {
       return true;
     }
 
     // If the decl has no name, no collision can happen. Bail out.
-    const std::string ident = nd->getNameAsString();
+    const std::string ident = decl->getNameAsString();
     if (ident.empty()) {
       return true;
     }
 
-    const std::string fullQualIdent = nd->getQualifiedNameAsString();
+    const std::string fullQualIdent = decl->getQualifiedNameAsString();
     const std::string typoUniqIdent = makeTypoUnique(fullQualIdent);
     if (uniqueIdents.count(typoUniqIdent) != 0) {
       auto lookalikeDecl = uniqueIdents.equal_range(typoUniqIdent);
@@ -50,7 +45,7 @@ public:
       for (str2DeclMultiMap::const_iterator I = lookalikeDecl.first;
            I != lookalikeDecl.second; ++I) {
         const NamedDecl *previousNamedDecl = I->second;
-        if (previousNamedDecl->getNameAsString() == nd->getNameAsString()) {
+        if (previousNamedDecl->getNameAsString() == decl->getNameAsString()) {
           continue;
         }
         hasError = true;
@@ -59,10 +54,10 @@ public:
             << previousNamedDecl->getNameAsString();
       }
       if (hasError) {
-        reportError(nd->getLocation());
+        reportError(decl->getLocation());
       }
     }
-    uniqueIdents.insert(std::make_pair(typoUniqIdent, nd));
+    uniqueIdents.insert(std::make_pair(typoUniqIdent, decl));
 
     return true;
   }

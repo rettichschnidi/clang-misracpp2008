@@ -21,23 +21,21 @@ class Rule_6_4_1 : public RuleCheckerASTContext,
 public:
   Rule_6_4_1() : RuleCheckerASTContext() {}
 
-  bool VisitStmt(Stmt *S) {
-    if (doIgnore(S->getLocStart())) {
+  bool VisitIfStmt(const IfStmt *stmt) {
+    if (doIgnore(stmt->getLocStart())) {
       return true;
     }
 
-    if (const auto *is = dyn_cast<IfStmt>(S)) {
-      const Stmt *thenStmt = is->getThen();
-      const Stmt *elseStmt = is->getElse();
-      // Check if then has a body
-      if (thenStmt && isa<CompoundStmt>(thenStmt) == false) {
-        reportError(thenStmt->getLocStart());
-      }
-      // Check if else has a body or another if statement
-      if (elseStmt &&
-          ((isa<CompoundStmt>(elseStmt) || isa<IfStmt>(elseStmt)) == false)) {
-        reportError(elseStmt->getLocStart());
-      }
+    const Stmt *thenStmt = stmt->getThen();
+    const Stmt *elseStmt = stmt->getElse();
+    // Check if then has a body
+    if (thenStmt && isa<CompoundStmt>(thenStmt) == false) {
+      reportError(thenStmt->getLocStart());
+    }
+    // Check if else has a body or another if statement
+    if (elseStmt &&
+        ((isa<CompoundStmt>(elseStmt) || isa<IfStmt>(elseStmt)) == false)) {
+      reportError(elseStmt->getLocStart());
     }
     return true;
   }

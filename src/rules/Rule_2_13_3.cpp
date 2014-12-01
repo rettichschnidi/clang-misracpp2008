@@ -25,14 +25,9 @@ class Rule_2_13_3 : public RuleCheckerASTContext,
 public:
   Rule_2_13_3() : RuleCheckerASTContext() {}
 
-  bool VisitStmt(Stmt *S) {
+  bool VisitIntegerLiteral(const IntegerLiteral *il) {
     // Bail out early if this location should not be checked
-    if (doIgnore(S->getLocStart())) {
-      return true;
-    }
-    // Make sure we have a integer literal to work on
-    const auto *il = dyn_cast<IntegerLiteral>(S);
-    if (!il) {
+    if (doIgnore(il->getLocStart())) {
       return true;
     }
 

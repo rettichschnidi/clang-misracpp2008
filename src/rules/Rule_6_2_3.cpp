@@ -25,16 +25,14 @@ private:
 public:
   Rule_6_2_3() : RuleCheckerASTContext() {}
 
-  bool VisitStmt(Stmt *S) {
-    if(doIgnore(S->getLocStart())) {
+  bool VisitNullStmt(NullStmt *stmt) {
+    if (doIgnore(stmt->getLocStart())) {
       return true;
     }
 
-    if (const auto *ns = dyn_cast<NullStmt>(S)) {
-      if (hasNonWhitespaceBeforeNullStmt(ns) ||
-          hasNonWhitespaceAfterNullStmt(ns)) {
-        reportError(ns->getLocStart());
-      }
+    if (hasNonWhitespaceBeforeNullStmt(stmt) ||
+        hasNonWhitespaceAfterNullStmt(stmt)) {
+      reportError(stmt->getLocStart());
     }
     return true;
   }

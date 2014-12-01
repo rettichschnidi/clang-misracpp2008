@@ -20,6 +20,7 @@ class Rule_17_0_1 : public RuleCheckerPPCallback {
 private:
   static const std::set<std::string> explicitlyIllegalMacroNames;
   static const std::set<std::string> explicitlyLegalMacroNames;
+
   void detectViolation(const Token &MacroNameTok) {
     const std::string &name = MacroNameTok.getIdentifierInfo()->getName();
     const SourceLocation &loc = MacroNameTok.getLocation();

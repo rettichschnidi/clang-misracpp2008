@@ -21,17 +21,12 @@ class Rule_6_4_2 : public RuleCheckerASTContext,
 public:
   Rule_6_4_2() : RuleCheckerASTContext() {}
 
-  bool VisitStmt(Stmt *S) {
-    if (doIgnore(S->getLocStart())) {
+  bool VisitIfStmt(const IfStmt *stmt) {
+    if (doIgnore(stmt->getLocStart())) {
       return true;
     }
 
-    const IfStmt *ifStmt = dyn_cast<IfStmt>(S);
-    if (!ifStmt) {
-      return true;
-    }
-
-    const auto &parents = context->getParents(*ifStmt);
+    const auto &parents = context->getParents(*stmt);
     assert(parents.size() == 1 && "Expect exactly one parent node.");
 
     // Bail out if this is not the first if in a if...else-if clause
@@ -42,15 +37,16 @@ public:
     // Walk down all the else branches, see if they are in fact another ifStmt
     // (true for else-if constructs) and report an error if the very last else-
     // if construct does not have an else branch.
-    for (unsigned int elseIfCount = 0; ifStmt != nullptr; ++elseIfCount) {
-      const Stmt *elseStmt = ifStmt->getElse();
+    const IfStmt *curIfStmt = stmt;
+    for (unsigned int elseIfCount = 0; curIfStmt != nullptr; ++elseIfCount) {
+      const Stmt *elseStmt = curIfStmt->getElse();
       if (elseStmt != nullptr) {
-        ifStmt = dyn_cast<IfStmt>(elseStmt);
+        curIfStmt = dyn_cast<IfStmt>(elseStmt);
         continue;
       }
 
       if (elseIfCount > 0) {
-        reportError(S->getLocStart());
+        reportError(stmt->getLocStart());
       }
 
       break;

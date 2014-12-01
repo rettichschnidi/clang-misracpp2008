@@ -22,15 +22,12 @@ class Rule_6_2_1 : public RuleCheckerASTContext,
 public:
   Rule_6_2_1() : RuleCheckerASTContext() {}
 
-  bool VisitStmt(Stmt *S) {
-    if (isa<Expr>(S) == false) {
-      return true;
-    }
-    if (doIgnore(S->getLocStart())) {
+  bool VisitExpr(Expr *E) {
+    if (doIgnore(E->getLocStart())) {
       return true;
     }
 
-    for (const auto I : S->children()) {
+    for (const auto I : E->children()) {
       const Stmt *realStmt = I->IgnoreImplicit();
       if (const auto *bo = dyn_cast<BinaryOperator>(realStmt)) {
         if (bo->getOpcode() == BO_Assign) {

@@ -24,27 +24,27 @@ class Rule_2_13_4 : public RuleCheckerASTContext,
 public:
   Rule_2_13_4() : RuleCheckerASTContext() {}
 
-  bool VisitStmt(Stmt *S) {
+  bool VisitExpr(Expr *expr) {
     // Bail out early if this location should not be checked
-    if (doIgnore(S->getLocStart())) {
+    if (doIgnore(expr->getLocStart())) {
       return true;
     }
 
     // This rule applies to float and integer literals only.
-    if (!(isa<FloatingLiteral>(S) || isa<IntegerLiteral>(S))) {
+    if (!(isa<FloatingLiteral>(expr) || isa<IntegerLiteral>(expr))) {
       return true;
     }
 
     using std::string;
     const SourceManager &sm = context->getSourceManager();
-    const SourceLocation spellingLoc = sm.getSpellingLoc(S->getLocStart());
+    const SourceLocation spellingLoc = sm.getSpellingLoc(expr->getLocStart());
     const string lexem = srcLocToString(spellingLoc);
     const NumericLiteralParser nlp(lexem, spellingLoc, CI->getPreprocessor());
 
     if ((nlp.isUnsigned && lexem.find("u") != string::npos) ||
         (nlp.isFloat && lexem.find("f") != string::npos) ||
         ((nlp.isLong || nlp.isLongLong) && lexem.find("l") != string::npos)) {
-      reportError(S->getLocEnd());
+      reportError(expr->getLocEnd());
     }
 
     return true;

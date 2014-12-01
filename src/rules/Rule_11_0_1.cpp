@@ -21,32 +21,27 @@ class Rule_11_0_1 : public RuleCheckerASTContext,
 public:
   Rule_11_0_1() : RuleCheckerASTContext() {}
 
-  bool VisitDecl(Decl *D) {
-    if (doIgnore(D->getLocStart())) {
-      return true;
-    }
-
-    const auto *cxxRecDecl = dyn_cast<CXXRecordDecl>(D);
-    if (!cxxRecDecl) {
+  bool VisitCXXRecordDecl(const CXXRecordDecl *decl) {
+    if (doIgnore(decl->getLocStart())) {
       return true;
     }
 
     // Sort out any non-class or struct declarations
-    if ((cxxRecDecl->isClass() || cxxRecDecl->isStruct()) == false) {
+    if ((decl->isClass() || decl->isStruct()) == false) {
       return true;
     }
     // We can only judge classes with a visible definition
-    if (cxxRecDecl->hasDefinition() == false) {
+    if (decl->hasDefinition() == false) {
       return true;
     }
     // Rule applies to non-POD classes only
     // Note: POD definition from C++11, not 03. Problem?
-    if (cxxRecDecl->isPOD()) {
+    if (decl->isPOD()) {
       return true;
     }
 
     // Report all non-private members
-    for (const FieldDecl *fieldDecl : cxxRecDecl->fields()) {
+    for (const FieldDecl *fieldDecl : decl->fields()) {
       if (fieldDecl->getAccess() != AS_private) {
         reportError(fieldDecl->getLocStart());
       }
