@@ -25,22 +25,12 @@ public:
       return true;
     }
 
-    bool doesNotThrow = decl->shouldNullCheckAllocation(*context);
-    if (doesNotThrow) {
-      // Iterate over children and try to figure out if this new expr
-      // looks like a placement new which can be used legally.
-      for (const auto it : decl->children()) {
-        if (const auto *castExpr = dyn_cast<CastExpr>(it)) {
-          if (castExpr->getCastKind() == CK_BitCast) {
-            // Looks legit. Bail out without generating an error.
-            return true;
-          }
-        }
-      }
+    // Print error on all new usages except for the placement news
+    if (decl->getNumPlacementArgs() == 0 ||
+        decl->shouldNullCheckAllocation(*context)) {
+      reportError(decl->getLocStart());
     }
 
-    // This new expr does not look like a placement new. Generate an error.
-    reportError(decl->getLocStart());
     return true;
   }
 

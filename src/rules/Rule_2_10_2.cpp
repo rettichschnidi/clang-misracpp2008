@@ -51,7 +51,7 @@ public:
 
       // If we can not find a declaration with the same name as we have,
       // move one scope up.
-      DeclContext::lookup_const_result result = outerScope->lookup(declN);
+      DeclContext::lookup_result result = outerScope->lookup(declN);
       if (result.empty()) {
         continue;
       }
@@ -81,7 +81,7 @@ public:
 private:
   template <typename TDeclType>
   bool isRedeclaration(const NamedDecl *declUnderTest,
-                       DeclContext::lookup_const_result results) {
+                       DeclContext::lookup_result results) {
     using T = Redeclarable<TDeclType>;
     for (const NamedDecl *d : results) {
       if (auto i = dyn_cast<TDeclType>(d)) {
