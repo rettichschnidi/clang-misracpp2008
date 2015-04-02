@@ -20,21 +20,17 @@ using namespace clang;
 
 namespace misracpp2008 {
 
-/**
- * @brief Auxiliary for easier implementation of a checker which simply
- * checks for calls to illegal macros/functions.
- */
+/// \brief Auxiliary for easier implementation of a checker which simply checks
+/// for calls to illegal macros/functions.
 class BannedFunctionUsageChecker
     : public RuleCheckerASTContext,
       public RuleCheckerPPCallback,
       public RecursiveASTVisitor<BannedFunctionUsageChecker> {
 public:
-  /**
-   * @brief Check if a referenced/used function is illegal and report an error
-   * if a violation has been found.
-   * @param expr Expression to be analyzed.
-   * @return true
-   */
+  /// \brief Check if a referenced/used function is illegal and report an error
+  /// if a violation has been found.
+  /// \param expr Expression to be analyzed.
+  /// \return true
   bool VisitDeclRefExpr(DeclRefExpr *expr) {
     if (doIgnore(expr->getLocation())) {
       return true;
@@ -46,11 +42,11 @@ public:
     }
     return true;
   }
-  /**
-   * @brief Check if a macro involves a call to a banned macro/function.
-   * @param MacroNameTok Token to be analyzed.
-   * @param Range Start and end location of the handled source code snipped.
-   */
+
+  /// \brief MacroExpands Check if a macro involves a call to a banned
+  /// macro/function.
+  /// \param MacroNameTok Token to be analyzed.
+  /// \param Range Start and end location of the handled source code snipped.
   virtual void MacroExpands(const Token &MacroNameTok, const MacroDirective *,
                             SourceRange Range, const MacroArgs *) {
     if (doIgnore(MacroNameTok.getLocation())) {
@@ -72,16 +68,14 @@ protected:
     RuleCheckerASTContext::doWork();
     this->TraverseDecl(context->getTranslationUnitDecl());
   }
-  /**
-   * @brief To be implemented by the subclass: Return a set of illegal
-   * function/macro names.
-   * @return A set of illegal function/macro names.
-   */
+
+  /// \brief To be implemented by the subclass: Return a set of illegal
+  /// function/macro names.
+  /// \return A set of illegal function/macro names.
   virtual const std::set<std::string> &getIllegalFunctions() const = 0;
-  /**
-   * @brief To be implemented by the subclass: Reporing an error at \c loc.
-   * @param loc Location of the illegal function/macro call.
-   */
+
+  /// \brief To be implemented by the subclass: Reporing an error at \c loc.
+  /// \param loc Location of the illegal function/macro call.
   virtual void reportRuleViolation(clang::SourceLocation loc) = 0;
 };
 }

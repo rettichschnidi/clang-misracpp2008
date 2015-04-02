@@ -59,12 +59,10 @@ private:
     return true;
   }
 
-  /**
-   * @brief Make sure the signed integer literal does not get casted to
-   * unsigned.
-   * @param il Signed integer literal.
-   * @todo Simplify this horribly 3:30AM code!
-   */
+  /// \brief Make sure the signed integer literal does not get casted to
+  /// unsigned.
+  /// \param il Signed integer literal.
+  /// \todo Simplify this horribly 3:30AM code!
   void dealWithSignedInteger(const IntegerLiteral *il) {
     assert(outerScopes.size() > 0 &&
            "At least the integer literal itself must be on the stack.");
@@ -103,10 +101,9 @@ private:
       reportError(il->getLocation());
     }
   }
-  /**
-   * @brief Make sure the suffix 'U' exists.
-   * @param il Unsigned integer literal.
-   */
+
+  /// \brief Make sure the suffix 'U' exists.
+  /// \param il Unsigned integer literal.
   void dealWithUnsignedInteger(const IntegerLiteral *il) {
     // See if one char after the integer literal is a "U"
     std::string lexem = srcLocToString(il->getLocStart());
