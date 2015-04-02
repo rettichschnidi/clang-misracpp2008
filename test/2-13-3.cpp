@@ -17,6 +17,13 @@ unsigned int fn2(unsigned int u) {
 unsigned int fn3(unsigned int u) {
   return u + 255U; // Compliant
 }
+unsigned int trickyFunction(int) {
+  return 1; // expected-error {{A "U " suffix shall be applied to all octal or hexadecimal integer literals of unsigned type. (MISRA C++ 2008 rule 2-13-3)}}
+}
+int trickyFunction(unsigned int) {
+  return 2;
+}
+int trickyFunctionResult = trickyFunction(0x80000000); // expected-error {{A "U " suffix shall be applied to all octal or hexadecimal integer literals of unsigned type. (MISRA C++ 2008 rule 2-13-3)}}
 
 unsigned int g = (unsigned int)1;
 unsigned int h = static_cast<unsigned int>(1);
