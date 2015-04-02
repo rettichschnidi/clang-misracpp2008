@@ -36,7 +36,7 @@ unsigned long l = 1; // expected-error {{A "U " suffix shall be applied to all o
 enum UnsignedEnum {
     ENUM_UNSIGNED_ENTRY_ONE = 10, // expected-error {{A "U " suffix shall be applied to all octal or hexadecimal integer literals of unsigned type. (MISRA C++ 2008 rule 2-13-3)}}
     ENUM_UNSIGNED_ENTRY_TWO = 20  // expected-error {{A "U " suffix shall be applied to all octal or hexadecimal integer literals of unsigned type. (MISRA C++ 2008 rule 2-13-3)}}
-} ;
+};
 
 enum SignedEnum {
     ENUM_SIGNED_ENTRY_ONE =  10, // Compliant
