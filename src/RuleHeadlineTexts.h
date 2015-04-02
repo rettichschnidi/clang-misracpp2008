@@ -6,8 +6,6 @@
 // This file is distributed under the University of Illinois Open Source
 // License. See LICENSE.TXT for details.
 //
-// Copyright (C) 2014 Reto Schneider <code@reto-schneider.ch>
-//
 //===----------------------------------------------------------------------===//
 
 #include <map>

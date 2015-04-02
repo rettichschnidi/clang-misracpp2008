@@ -3,8 +3,6 @@
 // This file is distributed under the University of Illinois Open Source
 // License. See LICENSE.TXT for details.
 //
-// Copyright (C) 2014 Reto Schneider <code@reto-schneider.ch>
-//
 //===----------------------------------------------------------------------===//
 //
 // This file implements the logic for registering and running MISRA C++ 2008
