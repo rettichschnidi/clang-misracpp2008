@@ -23,7 +23,7 @@ clang-misracpp2008, the following steps are required:
 
 The next time you build LLVM/Clang, clang-misracpp2008 gets picked up and built.
 
-Please note that currently only the CMake build system is supported.
+Please note that only the CMake build system is supported.
 
 Running tests
 =============
