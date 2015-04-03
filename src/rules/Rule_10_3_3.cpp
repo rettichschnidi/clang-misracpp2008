@@ -18,6 +18,7 @@ class Rule_10_3_3 : public RuleCheckerASTContext,
                     public clang::RecursiveASTVisitor<Rule_10_3_3> {
 public:
   Rule_10_3_3() : RuleCheckerASTContext() {}
+
   bool VisitCXXMethodDecl(clang::CXXMethodDecl *decl) {
     if (doIgnore(decl->getLocStart())) {
       return true;
