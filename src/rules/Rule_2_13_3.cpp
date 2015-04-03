@@ -29,77 +29,65 @@ public:
       return true;
     }
 
-    llvm::APSInt result;
-    il->EvaluateAsInt(result, *context, Expr::SE_NoSideEffects);
-    // Decide which logic has to be used
-    if (result.isSigned()) {
-      dealWithSignedInteger(il);
-    } else {
+    if (isUnsignedIntegerLiteral(il)) {
       dealWithUnsignedInteger(il);
     }
 
     return true;
   }
 
-  bool TraverseStmt(Stmt *S) {
-    outerScopes.push_back(S);
-    RecursiveASTVisitor<Rule_2_13_3>::TraverseStmt(S);
-    outerScopes.pop_back();
+  bool VisitImplicitCastExpr(const ImplicitCastExpr *Node) {
+    // Bail out early if this location should not be checked
+    if (doIgnore(Node->getLocStart())) {
+      return true;
+    }
+
+    const IntegerLiteral *il = dyn_cast<IntegerLiteral>(Node->getSubExpr());
+    // Bail out if this node is not an integer literal beeing casted
+    if (!il) {
+      return true;
+    }
+
+    // Bail out if the source is already an unsigned integer
+    if (isUnsignedIntegerLiteral(il)) {
+      return true;
+    }
+
+    // Bail out if this is not an integer to integer casting operation
+    if (Node->getCastKind() != CK_IntegralCast) {
+      return true;
+    }
+
+    // Figure out if the parent is an explicit casting operation which would
+    // legalizes this implicit one.
+    const auto &parents = context->getParents(*Node);
+    assert(parents.size() == 1 && "Expect exactly one parent node.");
+
+    // Bail out if this is not the first if in a if...else-if clause
+    if (parents[0].get<ExplicitCastExpr>() != nullptr) {
+      return true;
+    }
+
+    // At this point we can be fairly sure that this casting is the result of
+    // a rule violation.
+    reportError(il->getLocation());
     return true;
   }
 
 private:
-  std::vector<Stmt *> outerScopes;
-
   static bool isUnsignedType(const CastExpr *ce) {
     if (const Type *type = ce->getType().getTypePtrOrNull()) {
       return type->isSignedIntegerType() == false;
     }
-    assert(false);
+    assert(false &&
+           "The argument to this function is expected to have a type defined.");
     return true;
   }
 
-  /// \brief Make sure the signed integer literal does not get casted to
-  /// unsigned.
-  /// \param il Signed integer literal.
-  /// \todo Simplify this horribly 3:30AM code!
-  void dealWithSignedInteger(const IntegerLiteral *il) {
-    assert(outerScopes.size() > 0 &&
-           "At least the integer literal itself must be on the stack.");
-    // Check if there is just this integral literal on the stack
-    if (outerScopes.size() == 1) {
-      return;
-    }
-    // Check if this integer gets implicitly casted right away. Any other,
-    // explicit cast is is ok.
-    bool isError = false;
-    for (auto RI = outerScopes.rbegin(); RI != outerScopes.rend(); ++RI) {
-      // Check if we have a implicit cast.
-      const auto *ice = dyn_cast<ImplicitCastExpr>(*RI);
-      if (!ice) {
-        continue;
-      }
-
-      if (isUnsignedType(ice)) {
-        isError = true;
-        // There is probably an exlicit cast waiting for us which would
-        // legalize the last one.
-        RI++;
-        if (RI == outerScopes.rend()) {
-          break;
-        }
-
-        if (const auto *outerCe = dyn_cast<CastExpr>(*RI)) {
-          if (isUnsignedType(outerCe)) {
-            isError = false;
-          }
-        }
-      }
-      break;
-    }
-    if (isError) {
-      reportError(il->getLocation());
-    }
+  bool isUnsignedIntegerLiteral(const IntegerLiteral *il) {
+    llvm::APSInt result;
+    il->EvaluateAsInt(result, *context, Expr::SE_NoSideEffects);
+    return result.isUnsigned();
   }
 
   /// \brief Make sure the suffix 'U' exists.
