@@ -31,13 +31,13 @@ class RuleChecker {
 protected:
   clang::CompilerInstance *CI =
       nullptr; ///< Access to the current compiler instance. Rule checkers can
-               ///assume this pointer to direct the correct instance.
+  /// assume this pointer to direct the correct instance.
   clang::DiagnosticsEngine::Level diagLevel =
       clang::DiagnosticsEngine::Error; ///< Level of the emited diagnostic in
-                                       ///case of a
-                                       ///  violation.
-  bool doIgnoreSystemHeaders = true;   ///< Should we skip the system headers?
-  std::string name = "?";              ///< Name of rule this checker enforces.
+  /// case of a
+  ///  violation.
+  bool doIgnoreSystemHeaders = true; ///< Should we skip the system headers?
+  std::string name = "?";            ///< Name of rule this checker enforces.
 
   /// \brief Check whether or not \c loc is within a system header.
   /// \param loc Location within the translation unit to be tested.
@@ -95,7 +95,8 @@ public:
   /// \param name Name of the rule, e.g. "6-2-1".
   void setName(const std::string &name);
 
-  /// \brief Set the compiler instance to be used when a violation gets reported.
+  /// \brief Set the compiler instance to be used when a violation gets
+  /// reported.
   /// \param CI Compiler instance to be used by the checker.
   void setCompilerInstance(clang::CompilerInstance &CI);
 };
@@ -111,6 +112,12 @@ protected:
   /// \param start Starting location of the token to extract.
   /// \return String with the source code for token starting at \c start.
   std::string srcLocToString(const clang::SourceLocation start);
+
+  /// \brief Tell whether \c loc located in the main source or if it was
+  /// included from somewhere else.
+  /// \param loc Location to work with.
+  /// \return True if \c loc is located in the main source file.
+  bool isInMainFile(const clang::SourceLocation loc);
 
 public:
   /// \brief Set the AST context to be working on when calling doWork().

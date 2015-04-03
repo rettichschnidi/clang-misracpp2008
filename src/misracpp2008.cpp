@@ -153,6 +153,7 @@ void dumpActiveCheckers(raw_ostream &OS) {
 class Consumer : public clang::ASTConsumer {
 private:
   clang::CompilerInstance &CI;
+
 public:
   Consumer(clang::CompilerInstance &CI) : CI(CI) {}
   virtual void HandleTranslationUnit(clang::ASTContext &ctx) override {
@@ -285,6 +286,13 @@ std::string RuleCheckerASTContext::srcLocToString(const SourceLocation start) {
       clang::Lexer::MeasureTokenLength(spellingLoc, sm, lopt);
   return std::string(sm.getCharacterData(spellingLoc),
                      sm.getCharacterData(spellingLoc) + tokenLength);
+}
+
+bool RuleCheckerASTContext::isInMainFile(const clang::SourceLocation loc) {
+  const clang::SourceManager &sm = context->getSourceManager();
+  const clang::FullSourceLoc fullSrcLoc = FullSourceLoc(loc, sm);
+  return (fullSrcLoc.isValid() == false) ||
+         (fullSrcLoc.getFileID() == sm.getMainFileID());
 }
 
 void RuleCheckerASTContext::doWork() {
