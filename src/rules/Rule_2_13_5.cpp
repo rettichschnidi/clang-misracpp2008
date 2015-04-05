@@ -16,7 +16,7 @@ using namespace clang;
 namespace misracpp2008 {
 
 class Rule_2_13_5 : public RuleCheckerASTContext,
-                    public clang::RecursiveASTVisitor<Rule_2_13_5> {
+                    public RecursiveASTVisitor<Rule_2_13_5> {
 public:
   Rule_2_13_5() : RuleCheckerASTContext() {}
 
