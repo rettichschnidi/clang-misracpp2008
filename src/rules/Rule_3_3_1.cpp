@@ -9,7 +9,6 @@
 #include "clang/AST/RecursiveASTVisitor.h"
 #include "clang/AST/ASTContext.h"
 #include "clang/Basic/Diagnostic.h"
-#include <string>
 
 using namespace clang;
 
