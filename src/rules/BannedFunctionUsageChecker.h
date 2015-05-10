@@ -47,8 +47,9 @@ public:
   /// macro/function.
   /// \param MacroNameTok Token to be analyzed.
   /// \param Range Start and end location of the handled source code snipped.
-  virtual void MacroExpands(const Token &MacroNameTok, const MacroDirective *,
-                            SourceRange Range, const MacroArgs *) {
+  virtual void MacroExpands(const Token &MacroNameTok,
+                            const MacroDefinition &MD, SourceRange Range,
+                            const MacroArgs *) {
     if (doIgnore(MacroNameTok.getLocation())) {
       return;
     }

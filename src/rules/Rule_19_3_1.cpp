@@ -20,8 +20,9 @@ private:
 
 public:
   // errno is a macro.
-  virtual void MacroExpands(const Token &MacroNameTok, const MacroDirective *MD,
-                            SourceRange Range, const MacroArgs *Args) override {
+  virtual void MacroExpands(const Token &MacroNameTok,
+                            const MacroDefinition &MD, SourceRange Range,
+                            const MacroArgs *Args) override {
     const std::string &name = MacroNameTok.getIdentifierInfo()->getName();
     if (name == illegalMacroName) {
       if (doIgnore(MacroNameTok.getLastLoc())) {
