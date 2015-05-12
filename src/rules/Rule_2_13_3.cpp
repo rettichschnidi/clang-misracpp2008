@@ -58,6 +58,13 @@ public:
       return true;
     }
 
+    // Bail out if the integer simply gets truncated to a smaller integral type
+    // of the same signedness
+    if (Node->getSubExpr()->getType()->isSignedIntegerOrEnumerationType() ==
+        Node->getType()->isSignedIntegerOrEnumerationType()) {
+      return true;
+    }
+
     // Figure out if the parent is an explicit casting operation which would
     // legalizes this implicit one.
     const auto &parents = context->getParents(*Node);
