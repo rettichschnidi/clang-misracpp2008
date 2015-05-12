@@ -17,7 +17,8 @@ Installation
 It is assumed that you have already have compiled LLVM/Clang from SVN. To add
 clang-misracpp2008, the following steps are required:
 
-    cd ~/${LLVM_CHECKOUT_FOLDER}/tools/clang/tools
+    export LLVM_CHECKOUT_FOLDER=~/llvm # Adjust to your situation
+    cd ${LLVM_CHECKOUT_FOLDER}/tools/clang/tools
     git clone https://github.com/rettichschnidi/clang-misracpp2008.git
     echo 'add_subdirectory(clang-misracpp2008)' >>  CMakeLists.txt
 
@@ -38,8 +39,7 @@ Usage
 The OffendingProject included in the examples directory can be built this way:
 
     export LLVM_BUILD_DIR=~/build_llvm # Adjust to your situation
-    cd ~/${LLVM_CHECKOUT_FOLDER}/tools/clang/tools
-    cd clang-misracpp2008/examples/OffendingProject
+    cd ${LLVM_CHECKOUT_FOLDER}/tools/clang/tools/clang-misracpp2008/examples/OffendingProject
     mkdir -p build && cd build
     cmake -DCMAKE_CXX_FLAGS="-Xclang -load -Xclang \
              ${LLVM_BUILD_DIR}/lib/misracpp2008.so -Xclang -add-plugin -Xclang \
