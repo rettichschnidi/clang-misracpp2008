@@ -25,3 +25,10 @@ static int func() {
 int main(int, char **) { // Compliant
   return 0;
 }
+
+static void funcWithLocalClass() {
+  class LocalClass {
+    void method() {} // Compliant
+  };
+}
+

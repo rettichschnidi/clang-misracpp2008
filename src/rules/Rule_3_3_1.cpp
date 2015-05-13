@@ -29,6 +29,11 @@ public:
       return true;
     }
 
+    // C++ methods can not violate this rule
+    if (isa<CXXMethodDecl>(D)) {
+      return true;
+    }
+
     // The main function is allowed to be in global namespace and not having an
     // external declaration
     if (isa<FunctionDecl>(D) && static_cast<FunctionDecl *>(D)->isMain()) {
@@ -53,6 +58,7 @@ public:
 
     if (hasExternalStorageClass<FunctionDecl>(D) ||
         hasExternalStorageClass<VarDecl>(D)) {
+      D->dump();
       reportError(D->getLocation());
     }
     return true;
