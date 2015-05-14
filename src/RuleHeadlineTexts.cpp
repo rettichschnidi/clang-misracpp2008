@@ -97,7 +97,7 @@ extern const RuleHeadlineMap ruleHeadlines = {
 { "3-4-1", R"ruletext(An identifier declared to be an object or type shall be defined in a block that minimizes its visibility.)ruletext" },
 
 // Types
-{ "3-9-1", R"ruletext(If a function has internal linkage then all re-declarations shall include the static storage class specifier.)ruletext" },
+{ "3-9-1", R"ruletext(The types used for an object, a function return type, or a function parameter shall be token-for-token identical in all declarations and re-declarations.)ruletext" },
 { "3-9-2", R"ruletext(typedefs that indicate size and signedness should be used in place of the basic numerical types.)ruletext" },
 { "3-9-3", R"ruletext(The underlying bit representations of floating-point values shall not be used.)ruletext" },
 
