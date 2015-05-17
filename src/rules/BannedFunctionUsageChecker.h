@@ -49,7 +49,7 @@ public:
   /// \param Range Start and end location of the handled source code snipped.
   virtual void MacroExpands(const Token &MacroNameTok,
                             const MacroDefinition &MD, SourceRange Range,
-                            const MacroArgs *) {
+                            const MacroArgs *) override {
     if (doIgnore(MacroNameTok.getLocation())) {
       return;
     }

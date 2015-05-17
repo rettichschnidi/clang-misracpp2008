@@ -209,8 +209,8 @@ protected:
     return std::unique_ptr<ASTConsumer>(new Consumer(CI));
   }
 
-  bool ParseArgs(const clang::CompilerInstance &CI,
-                 const std::vector<std::string> &args) {
+  virtual bool ParseArgs(const clang::CompilerInstance &CI,
+                         const std::vector<std::string> &args) override {
     for (const std::string &currentString : args) {
       // Handle help request
       if (currentString == "--help") {
