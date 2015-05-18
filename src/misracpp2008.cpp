@@ -135,19 +135,15 @@ bool enableChecker(const std::string &checkerName,
 }
 
 void dumpRegisteredCheckers(raw_ostream &OS) {
-  OS << "Registered checks: ";
-  for (const auto &checkerName : getRegisteredCheckerNames()) {
-    OS << checkerName << ", ";
-  }
-  OS << "\n";
+  auto checkers = getRegisteredCheckerNames();
+  OS << "Registered checks: " << llvm::join(std::begin(checkers),
+                                            std::end(checkers), ", ") << "\n";
 }
 
 void dumpActiveCheckers(raw_ostream &OS) {
-  OS << "Active checks: ";
-  for (const auto &checkerName : getEnabledCheckers()) {
-    OS << checkerName << ", ";
-  }
-  OS << "\n";
+  auto checkers = getEnabledCheckers();
+  OS << "Active checks: " << llvm::join(std::begin(checkers),
+                                        std::end(checkers), ", ") << "\n";
 }
 
 class Consumer : public clang::ASTConsumer {
