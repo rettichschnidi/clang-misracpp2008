@@ -38,7 +38,7 @@ public:
 
     std::string funName = expr->getNameInfo().getAsString();
     if (getIllegalFunctions().count(funName)) {
-      reportRuleViolation(expr->getLocStart());
+      reportError(expr->getLocStart());
     }
     return true;
   }
@@ -59,7 +59,7 @@ public:
       if (doIgnore(Range.getBegin())) {
         return;
       }
-      reportRuleViolation(Range.getBegin());
+      reportError(Range.getBegin());
     }
   }
 
@@ -74,10 +74,6 @@ protected:
   /// function/macro names.
   /// \return A set of illegal function/macro names.
   virtual const std::set<std::string> &getIllegalFunctions() const = 0;
-
-  /// \brief To be implemented by the subclass: Reporing an error at \c loc.
-  /// \param loc Location of the illegal function/macro call.
-  virtual void reportRuleViolation(clang::SourceLocation loc) = 0;
 };
 }
 
