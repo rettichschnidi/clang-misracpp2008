@@ -25,17 +25,17 @@ public:
     }
 
     if (const auto *fs = dyn_cast<ForStmt>(S)) {
-      ReportIfNotCompund(fs->getBody());
+      ReportIfNotCompound(fs->getBody());
     } else if (const auto *ds = dyn_cast<DoStmt>(S)) {
-      ReportIfNotCompund(ds->getBody());
+      ReportIfNotCompound(ds->getBody());
     } else if (const auto *ws = dyn_cast<WhileStmt>(S)) {
-      ReportIfNotCompund(ws->getBody());
+      ReportIfNotCompound(ws->getBody());
     }
     return true;
   }
 
 private:
-  void ReportIfNotCompund(const Stmt *S) {
+  void ReportIfNotCompound(const Stmt *S) {
     if (isa<CompoundStmt>(S)) {
       return;
     }
