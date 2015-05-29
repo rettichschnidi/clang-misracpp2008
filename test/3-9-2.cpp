@@ -16,9 +16,9 @@ double nonCompliantDouble; // expected-error {{typedefs that indicate size and s
 long double nonCompliantLongDouble; // expected-error {{typedefs that indicate size and signedness should be used in place of the basic numerical types. (MISRA C++ 2008 rule 3-9-2)}}
 
 typedef char char_t;
-typedef float float32;
-typedef double float64;
-typedef long double float128;
+typedef float float32_t;
+typedef double float64_t;
+typedef long double float128_t;
 namespace mynamespace {
   typedef char char_t;
 }
@@ -30,9 +30,9 @@ uint8_t compliantUint8_t;
 uint16_t compliantUint16_t;
 uint32_t compliantUint32_t;
 uint64_t compliantUint64_t;
-float32 compliantFloat32;
-float64 compliantFloat64;
-float128 compliantFloat128;
+float32_t compliantFloat32;
+float64_t compliantFloat64;
+float128_t compliantFloat128;
 bool compliantBool;
 size_t compliantSize_t;
 const size_t compliantConstSize_t = 1;
