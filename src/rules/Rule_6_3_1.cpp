@@ -36,10 +36,9 @@ public:
 
 private:
   void ReportIfNotCompound(const Stmt *S) {
-    if (isa<CompoundStmt>(S)) {
-      return;
+    if (!isa<CompoundStmt>(S)) {
+      reportError(S->getLocStart());
     }
-    reportError(S->getLocStart());
   }
 
 protected:
