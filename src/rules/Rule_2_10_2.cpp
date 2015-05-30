@@ -69,8 +69,8 @@ public:
       // All hope is lost - we have a shadowing declaration.
       // Report location of the offending and the shadowed declaration.
       reportError(decl->getLocation());
-      reportError(result[0]->getLocation(),
-                  "Previous occurence of identifier '%0'")
+      report(result[0]->getLocation(), "Previous occurence of identifier '%0'",
+             clang::DiagnosticsEngine::Note)
           << declN.getAsString();
     }
     return true;

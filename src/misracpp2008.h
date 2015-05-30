@@ -68,19 +68,27 @@ protected:
   /// \param loc The location to be displayed to the user.
   void reportError(clang::SourceLocation loc);
 
-  /// \brief Auxiliary function for derived checkers to report an arbitrary
-  /// error message.
+  /// \brief Auxiliary function for checkers to report an arbitrary message at a
+  /// specified diagnosis level.
   /// \param loc The location to be displayed to the user.
   /// \param FormatString Error message string. May contain place holders %0,
   /// %1, etc.
   /// \return clang::DiagnosticBuilder, to be fed with values for the place
   /// holders.
   template <unsigned N>
-  clang::DiagnosticBuilder reportError(clang::SourceLocation loc,
-                                       const char (&FormatString)[N]) {
+  clang::DiagnosticBuilder
+  report(const clang::SourceLocation loc, const char (&FormatString)[N],
+         const clang::DiagnosticsEngine::Level diagLevel) {
     clang::DiagnosticsEngine &diagEngine = CI->getDiagnostics();
     unsigned diagId = diagEngine.getCustomDiagID(diagLevel, FormatString);
     return diagEngine.Report(loc, diagId);
+  }
+
+  /// \brief Simplified method for RuleChecker::report()
+  template <unsigned N>
+  clang::DiagnosticBuilder reportError(clang::SourceLocation loc,
+                                       const char (&FormatString)[N]) {
+    return report<N>(loc, FormatString, diagLevel);
   }
 
 public:

@@ -16,6 +16,7 @@
 #include <functional>
 
 using namespace clang;
+using std::string;
 
 namespace misracpp2008 {
 
@@ -24,75 +25,76 @@ class Rule_2_10_1 : public RuleCheckerASTContext,
 public:
   Rule_2_10_1() : RuleCheckerASTContext() {}
 
-  bool VisitNamedDecl(const NamedDecl *decl) {
-    if (doIgnore(decl->getLocation())) {
+  bool VisitNamedDecl(const NamedDecl *D) {
+    if (doIgnore(D->getLocation())) {
       return true;
     }
 
     // If the decl has no name, no collision can happen. Bail out.
-    const std::string ident = decl->getNameAsString();
-    if (ident.empty()) {
+    // This may be the case for constructs like this:
+    // typedef struct { int i; } MyStruct;
+    if (D->getName().empty()) {
       return true;
     }
 
-    const std::string fullQualIdent = decl->getQualifiedNameAsString();
-    const std::string typoUniqIdent = makeTypoUnique(fullQualIdent);
+    const string fullQualIdent = D->getQualifiedNameAsString();
+    const string typoUniqIdent = makeTypoUnique(fullQualIdent);
     if (uniqueIdents.count(typoUniqIdent) != 0) {
+      reportError(D->getLocation());
+
+      // Add notes about ambiguous identifiers
       auto lookalikeDecl = uniqueIdents.equal_range(typoUniqIdent);
-      bool hasError = false;
-      for (str2DeclMultiMap::const_iterator I = lookalikeDecl.first;
+      for (Str2Decls::const_iterator I = lookalikeDecl.first;
            I != lookalikeDecl.second; ++I) {
         const NamedDecl *previousNamedDecl = I->second;
-        if (previousNamedDecl->getNameAsString() == decl->getNameAsString()) {
+        if (previousNamedDecl->getName() == D->getName()) {
           continue;
         }
-        hasError = true;
-        reportError(previousNamedDecl->getLocation(),
-                    "Typographically ambiguous identifier '%0'")
-            << previousNamedDecl->getNameAsString();
-      }
-      if (hasError) {
-        reportError(decl->getLocation());
+        report(previousNamedDecl->getLocation(),
+               "Typographically ambiguous identifier '%0'",
+               clang::DiagnosticsEngine::Note)
+            << previousNamedDecl->getName();
       }
     }
-    uniqueIdents.insert(std::make_pair(typoUniqIdent, decl));
+    uniqueIdents.insert(std::make_pair(typoUniqIdent, D));
 
     return true;
   }
 
 private:
-  std::vector<std::pair<std::string, std::string> > replaceMap = {
-    { "RN", "M" }, // rn (string) to m (letter)
-    { "O", "0" },  // O (letter) to 0 (number)
-    { "L", "1" },  // l (letter) to 1 (number)
-    { "I", "1" },  // I (letter) to 1 (number)
-    { "S", "5" },  // S (letter) to 5 (number)
-    { "Z", "2" },  // Z (letter) to 2 (number)
-    { "N", "H" },  // n (letter) to h (number)
-    { "B", "8" },  // B (letter) to 8 (number)
-    { "_", "" }    // remove the underscore
+  const std::vector<std::pair<string, string>> replaceMap = {
+      {"RN", "M"}, // rn (string) to m (letter)
+      {"O", "0"},  // O (letter) to 0 (number)
+      {"L", "1"},  // l (letter) to 1 (number)
+      {"I", "1"},  // I (letter) to 1 (number)
+      {"S", "5"},  // S (letter) to 5 (number)
+      {"Z", "2"},  // Z (letter) to 2 (number)
+      {"N", "H"},  // n (letter) to h (number)
+      {"B", "8"},  // B (letter) to 8 (number)
+      {"_", ""}    // remove the underscore
   };
-  typedef std::multimap<std::string, const NamedDecl *> str2DeclMultiMap;
-  str2DeclMultiMap uniqueIdents;
+  typedef std::multimap<string, const NamedDecl *> Str2Decls;
+  Str2Decls uniqueIdents;
 
-  static void replaceSubStr(std::string &str, const std::string &from,
-                            const std::string &to) {
-    for (std::string::size_type pos = str.find(from); pos != std::string::npos;
+  static void replaceSubStr(string &str, const string &from, const string &to) {
+    for (string::size_type pos = str.find(from); pos != string::npos;
          pos = str.find(from)) {
       str.replace(pos, from.length(), to);
     }
   }
 
-  std::string makeTypoUnique(const std::string inputStr) {
-    std::string preparedString;
+  string makeTypoUnique(const string inputStr) {
+    string preparedString;
     // Make string uppercase
     std::transform(inputStr.begin(), inputStr.end(),
-                   std::back_inserter(preparedString), toupper);
+                   std::back_inserter(preparedString),
+                   std::bind(&std::toupper<string::value_type>,
+                             std::placeholders::_1, std::locale()));
 
     // Apply substitutions
     for (const auto &replace : replaceMap) {
-      const std::string &from = replace.first;
-      const std::string &to = replace.second;
+      const string &from = replace.first;
+      const string &to = replace.second;
       replaceSubStr(preparedString, from, to);
     }
 
