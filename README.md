@@ -4,12 +4,14 @@ About [![Build Status](https://travis-ci.org/rettichschnidi/clang-misracpp2008.s
 clang-misracpp2008 is a project which tries to create an open source checker for
 the MISRA C++:2008 rules using the LLVM/Clang infrastructure.
 
-Some rules can easily be checked by enabling compiler-provided warnings. For
-those rules we simply name those switches. Other rules require custom logic and
-are therefore realized as plugin.
+Some rules can easily be checked by enabling compiler-provided flags. For those
+rules the suitable switches are listed. Other rules require custom logic which
+is implemented as plugin.
 
 Progress
 ========
+This project is in a early stage and has not yet been tested extensively!
+
 Have a look at the [progress page in the wiki](https://github.com/rettichschnidi/clang-misracpp2008/wiki/Progress).
 
 Installation
@@ -26,11 +28,21 @@ The next time you build LLVM/Clang, clang-misracpp2008 gets picked up and built.
 
 Please note that only the CMake build system is supported.
 
-Running tests
+Bugs
+====
+If you find a bug, please include a code snipped which triggers the flaw.
+
+Contributions
+=============
+To contribute code for a new rule checker, add a file with the test cases to the
+"test" folder and implement the checker logic afterwards. The new checker will
+be detected when explicitly calling cmake in the build directory.
+
+Running Tests
 =============
 `make check-misracpp2008`
 
-Building documentation
+Building Documentation
 ======================
 `make doxygen-misracpp2008`
 
