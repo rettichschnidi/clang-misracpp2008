@@ -30,7 +30,7 @@ Please note that only the CMake build system is supported.
 
 Bugs
 ====
-If you find a bug, please include a code snipped which triggers the flaw.
+When reporting a bug, please include a code snipped which triggers the flaw.
 
 Contributions
 =============
