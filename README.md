@@ -10,7 +10,7 @@ is implemented as plugin.
 
 Progress
 ========
-This project is in a early stage and has not yet been tested extensively!
+This project is in an early stage and has not yet been tested extensively!
 
 Have a look at the [progress page in the wiki](https://github.com/rettichschnidi/clang-misracpp2008/wiki/Progress).
 
