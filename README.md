@@ -5,8 +5,8 @@ clang-misracpp2008 is a project which tries to create an open source checker for
 the MISRA C++:2008 rules using the LLVM/Clang infrastructure.
 
 Some rules can easily be checked by enabling compiler-provided flags. For those
-rules the suitable switches are listed. Other rules require custom logic which
-is implemented as plugin.
+rules the suitable switches are listed. Other rules require custom logic, which
+is implemented as a plugin.
 
 Progress
 ========
@@ -30,13 +30,13 @@ Please note that only the CMake build system is supported.
 
 Bugs
 ====
-When reporting a bug, please include a code snipped which triggers the flaw.
+When reporting a bug, please include a code snippet which triggers the flaw.
 
 Contributions
 =============
 To contribute code for a new rule checker, add a file with the test cases to the
 "test" folder and implement the checker logic afterwards. The new checker will
-be detected when explicitly calling cmake in the build directory.
+get detected when explicitly calling cmake in the build directory.
 
 Running Tests
 =============
