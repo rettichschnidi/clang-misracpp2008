@@ -1,4 +1,4 @@
-// RUN: %clang -fsyntax-only -std=c++11 -ferror-limit=0 -Wno-macro-redefined -Wno-builtin-macro-redefined -Xclang -verify -Xclang -load -Xclang %llvmshlibdir/misracpp2008.so -Xclang -plugin -Xclang misra.cpp.2008 -Xclang -plugin-arg-misra.cpp.2008 -Xclang 17-0-1 %s
+// RUN: %clang -fsyntax-only -std=c++11 -ferror-limit=0 -Wno-macro-redefined -Wno-builtin-macro-redefined -Xclang -verify -Xclang -load -Xclang %llvmshlibdir/misracpp2008%pluginext -Xclang -plugin -Xclang misra.cpp.2008 -Xclang -plugin-arg-misra.cpp.2008 -Xclang 17-0-1 %s
 
 // Some allowed defines
 #define LEGAL_DEFINE

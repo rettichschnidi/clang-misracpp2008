@@ -1,4 +1,4 @@
-// RUN: %clang -fsyntax-only -Xclang -verify -Xclang -load -Xclang %llvmshlibdir/misracpp2008.so -Xclang -plugin -Xclang misra.cpp.2008 -Xclang -plugin-arg-misra.cpp.2008 -Xclang 18-0-5 %s
+// RUN: %clang -fsyntax-only -Xclang -verify -Xclang -load -Xclang %llvmshlibdir/misracpp2008%pluginext -Xclang -plugin -Xclang misra.cpp.2008 -Xclang -plugin-arg-misra.cpp.2008 -Xclang 18-0-5 %s
 #include <cstring>
 void useStrcp(char out[]) {
   strcpy(out, "illegal"); // expected-error {{The unbounded functions of library <cstring> shall not be used. (MISRA C++ 2008 rule 18-0-5)}}
