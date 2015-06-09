@@ -14,6 +14,7 @@
 #include <cstring>
 #include <algorithm>
 #include <functional>
+#include <locale>
 
 using namespace clang;
 using std::string;
