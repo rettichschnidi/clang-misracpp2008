@@ -1,4 +1,4 @@
-// RUN: %clang -cc1 -fsyntax-only -load %llvmshlibdir/misracpp2008.so -plugin misra.cpp.2008 -plugin-arg-misra.cpp.2008 --help %s 2>&1 | %llvmtoolsdir/FileCheck %s
+// RUN: %clang -cc1 -fsyntax-only -load %llvmshlibdir/misracpp2008%pluginext -plugin misra.cpp.2008 -plugin-arg-misra.cpp.2008 --help %s 2>&1 | %llvmtoolsdir/FileCheck %s
 
 // CHECK: Available plugin parameters:
 // CHECK-NEXT: [--help] - show this text

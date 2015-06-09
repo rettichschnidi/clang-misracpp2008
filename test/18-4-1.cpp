@@ -1,4 +1,4 @@
-// RUN: %clang -fsyntax-only -Xclang -verify -Xclang -load -Xclang %llvmshlibdir/misracpp2008.so -Xclang -plugin -Xclang misra.cpp.2008 -Xclang -plugin-arg-misra.cpp.2008 -Xclang 18-4-1 %s
+// RUN: %clang -fsyntax-only -Xclang -verify -Xclang -load -Xclang %llvmshlibdir/misracpp2008%pluginext -Xclang -plugin -Xclang misra.cpp.2008 -Xclang -plugin-arg-misra.cpp.2008 -Xclang 18-4-1 %s
 #include <new> // std::nothrow
 void newPlain() {
   int *i = new int; // expected-error {{Dynamic heap memory allocation shall not be used. (MISRA C++ 2008 rule 18-4-1)}}
