@@ -38,6 +38,10 @@ To contribute code for a new rule checker, add a file with the test cases to the
 "test" folder and implement the checker logic afterwards. The new checker will
 get detected when explicitly calling cmake in the build directory.
 
+Please try to follow the [LLVM Coding Standard](http://llvm.org/docs/CodingStandards.html).
+At the very least format your code (sans testing code) with clang-format using
+the LLVM coding style.
+
 Running Tests
 =============
 `make check-misracpp2008`
