@@ -1,4 +1,4 @@
-// RUN: %clang -fsyntax-only -std=c++11 -w -ferror-limit=0 -Xclang -verify -Xclang -load -Xclang %llvmshlibdir/misracpp2008.so -Xclang -plugin -Xclang misra.cpp.2008 -Xclang -plugin-arg-misra.cpp.2008 -Xclang all %s
+// RUN: %clang -fsyntax-only -std=c++11 -w -ferror-limit=0 -Xclang -verify -Xclang -load -Xclang %llvmshlibdir/misracpp2008%pluginext -Xclang -plugin -Xclang misra.cpp.2008 -Xclang -plugin-arg-misra.cpp.2008 -Xclang all %s
 // expected-no-diagnostics
 
 #include <cassert>
