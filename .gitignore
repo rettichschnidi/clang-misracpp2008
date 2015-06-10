@@ -6,3 +6,4 @@ vanilla-examples
 *user
 examples/OffendingProject/build/
 *.autosave
+.ycm_extra_conf.py*
