@@ -1,4 +1,4 @@
-// RUN: %clang -fsyntax-only -std=c++11 -ferror-limit=0 -Wno-shift-count-negative -Wno-shift-count-overflow -Xclang -verify -Xclang -load -Xclang %llvmshlibdir/misracpp2008.so -Xclang -plugin -Xclang misra.cpp.2008 -Xclang -plugin-arg-misra.cpp.2008 -Xclang 5-8-1 %s
+// RUN: %clang -fsyntax-only -std=c++11 -ferror-limit=0 -Wno-shift-count-negative -Wno-shift-count-overflow -Xclang -verify -Xclang -load -Xclang %llvmshlibdir/misracpp2008%pluginext -Xclang -plugin -Xclang misra.cpp.2008 -Xclang -plugin-arg-misra.cpp.2008 -Xclang 5-8-1 %s
 
 #include <cstdint>
 #include <iostream>
