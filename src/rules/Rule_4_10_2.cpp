@@ -1,4 +1,4 @@
-//===-  Rule_4_10_2.cpp - Checker for MISRA C++ 2008 rule 4-10-2-------------===//
+//===-  Rule_4_10_2.cpp - Checker for MISRA C++ 2008 rule  4-10-2----------===//
 //
 // This file is distributed under the University of Illinois Open Source
 // License. See LICENSE.TXT for details.
@@ -20,17 +20,16 @@ class Rule_4_10_2 : public RuleCheckerASTContext,
 public:
   Rule_4_10_2() : RuleCheckerASTContext() {}
 
-  bool VisitCastExpr(CastExpr *ce)
-  {
+  bool VisitCastExpr(CastExpr *ce) {
     if (doIgnore(ce->getLocStart())) {
       return true;
     }
     // If casting from null ptr constant to pointer
     // and constant has integer type report error
     if (ce->getCastKind() == clang::CK_NullToPointer) {
-        if (ce->getSubExpr() && ce->getSubExpr()->getType()->isIntegerType()) {
-            reportError(ce->getLocStart());
-        }
+      if (ce->getSubExpr() && ce->getSubExpr()->getType()->isIntegerType()) {
+        reportError(ce->getLocStart());
+      }
     }
     return true;
   }
