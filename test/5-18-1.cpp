@@ -1,4 +1,4 @@
-// RUN: %clang -fsyntax-only -std=c++11 -ferror-limit=0 -Xclang -verify -Wno-unused-value -Xclang -load -Xclang %llvmshlibdir/misracpp2008%pluginext -Xclang -plugin -Xclang misra.cpp.2008 -Xclang -plugin-arg-misra.cpp.2008 -Xclang 5-18-1 %s
+// RUN: %clang -fsyntax-only -ferror-limit=0 -Xclang -verify -Wno-unused-value -Xclang -load -Xclang %llvmshlibdir/misracpp2008%pluginext -Xclang -plugin -Xclang misra.cpp.2008 -Xclang -plugin-arg-misra.cpp.2008 -Xclang 5-18-1 %s
 
 #include <iostream> // Comma operator gets used in here A LOT but it should still not trigger an error
 

@@ -1,4 +1,4 @@
-// RUN: %clang -fsyntax-only -std=c++11 -Wno-empty-body -ferror-limit=0 -Xclang -verify -Xclang -load -Xclang %llvmshlibdir/misracpp2008%pluginext -Xclang -plugin -Xclang misra.cpp.2008 -Xclang -plugin-arg-misra.cpp.2008 -Xclang 6-4-1 %s
+// RUN: %clang -fsyntax-only -Wno-empty-body -ferror-limit=0 -Xclang -verify -Xclang -load -Xclang %llvmshlibdir/misracpp2008%pluginext -Xclang -plugin -Xclang misra.cpp.2008 -Xclang -plugin-arg-misra.cpp.2008 -Xclang 6-4-1 %s
 
 void compliant(int x, int y, int z) {
   if (x) {

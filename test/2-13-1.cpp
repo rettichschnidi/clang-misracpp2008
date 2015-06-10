@@ -1,4 +1,4 @@
-// RUN: %clang -fsyntax-only -std=c++11 -Werror -Xclang -verify %s
+// RUN: %clang -fsyntax-only -Werror -Xclang -verify %s
 
 char newline = '\n';
 char hTab = '\n';
