@@ -16,6 +16,7 @@ using namespace clang;
 
 namespace misracpp2008 {
 
+// TODO:  4-5-* rules probably could share some code!
 class Rule_4_5_1 : public RuleCheckerASTContext,
                    public RecursiveASTVisitor<Rule_4_5_1> {
 public:
