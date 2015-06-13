@@ -5,8 +5,8 @@ int abc; // expected-note {{Typographically ambiguous identifier 'abc'}}
 int aBc; // expected-error {{Different identifiers shall be typographically unambiguous. (MISRA C++ 2008 rule 2-10-1)}}
 
 // Only difference is the underscore
-int b_b_; // expected-note {{Typographically ambiguous identifier 'b_b_'}} // expected-note {{Typographically ambiguous identifier 'b_b_'}}
-int bb; // expected-error {{Different identifiers shall be typographically unambiguous. (MISRA C++ 2008 rule 2-10-1)}} // expected-note {{Typographically ambiguous identifier 'bb'}}
+int b_b_;  // expected-note {{Typographically ambiguous identifier 'b_b_'}} // expected-note {{Typographically ambiguous identifier 'b_b_'}}
+int bb;    // expected-error {{Different identifiers shall be typographically unambiguous. (MISRA C++ 2008 rule 2-10-1)}} // expected-note {{Typographically ambiguous identifier 'bb'}}
 int b___b; // expected-error {{Different identifiers shall be typographically unambiguous. (MISRA C++ 2008 rule 2-10-1)}}
 
 int c0; // expected-note {{Typographically ambiguous identifier 'c0'}}
@@ -31,7 +31,7 @@ int iB; // expected-note {{Typographically ambiguous identifier 'iB'}}
 int i8; // expected-error {{Different identifiers shall be typographically unambiguous. (MISRA C++ 2008 rule 2-10-1)}}
 
 int jrn; // expected-note {{Typographically ambiguous identifier 'jrn'}}
-int jm; // expected-error {{Different identifiers shall be typographically unambiguous. (MISRA C++ 2008 rule 2-10-1)}}
+int jm;  // expected-error {{Different identifiers shall be typographically unambiguous. (MISRA C++ 2008 rule 2-10-1)}}
 
 // Regression test: Typedefs of an anoymous type should not get reported.
 typedef enum {
@@ -42,7 +42,7 @@ typedef enum {
   ENUM2_ENTRY_ONE
 } myEnum2;
 
-void func (int aVariable, int _anotherVariable) { // expected-note {{Typographically ambiguous identifier 'aVariable'}}  { // expected-note {{Typographically ambiguous identifier '_anotherVariable'}}
-  int a_Variable; // expected-error {{Different identifiers shall be typographically unambiguous. (MISRA C++ 2008 rule 2-10-1)}}
-  int anotherVariable; // expected-error {{Different identifiers shall be typographically unambiguous. (MISRA C++ 2008 rule 2-10-1)}}
+void func(int aVariable, int _anotherVariable) { // expected-note {{Typographically ambiguous identifier 'aVariable'}}  { // expected-note {{Typographically ambiguous identifier '_anotherVariable'}}
+  int a_Variable;                                // expected-error {{Different identifiers shall be typographically unambiguous. (MISRA C++ 2008 rule 2-10-1)}}
+  int anotherVariable;                           // expected-error {{Different identifiers shall be typographically unambiguous. (MISRA C++ 2008 rule 2-10-1)}}
 }

@@ -10,7 +10,8 @@ public:
   void f(int *p);
 };
 
-template <typename T> void tf(T *);
+template <typename T>
+void tf(T *);
 
 void test_function() {
   f1(0);
@@ -18,13 +19,13 @@ void test_function() {
   f3(0); // expected-error {{Literal zero (0) shall not be used as the null-pointer-constant. (MISRA C++ 2008 rule 4-10-2)}}
 
   T t;
-  t.f(0); // expected-error {{Literal zero (0) shall not be used as the null-pointer-constant. (MISRA C++ 2008 rule 4-10-2)}}
+  t.f(0);     // expected-error {{Literal zero (0) shall not be used as the null-pointer-constant. (MISRA C++ 2008 rule 4-10-2)}}
   tf<int>(0); // expected-error {{Literal zero (0) shall not be used as the null-pointer-constant. (MISRA C++ 2008 rule 4-10-2)}}
   f4(0, 0);   // expected-error {{Literal zero (0) shall not be used as the null-pointer-constant. (MISRA C++ 2008 rule 4-10-2)}}
 
   f2(nullptr);
-  f4(0,nullptr);
+  f4(0, nullptr);
 
-  int *a = 0; // expected-error {{Literal zero (0) shall not be used as the null-pointer-constant. (MISRA C++ 2008 rule 4-10-2)}}
+  int *a = 0;      // expected-error {{Literal zero (0) shall not be used as the null-pointer-constant. (MISRA C++ 2008 rule 4-10-2)}}
   bool b = a == 0; // expected-error {{Literal zero (0) shall not be used as the null-pointer-constant. (MISRA C++ 2008 rule 4-10-2)}}
 }

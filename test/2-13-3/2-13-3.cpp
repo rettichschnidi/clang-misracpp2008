@@ -33,15 +33,15 @@ unsigned char k = 1; // expected-error {{A "U " suffix shall be applied to all o
 unsigned long l = 1; // expected-error {{A "U " suffix shall be applied to all octal or hexadecimal integer literals of unsigned type. (MISRA C++ 2008 rule 2-13-3)}}
 
 enum UnsignedEnum {
-    ENUM_UNSIGNED_ENTRY_ONE = 10, // expected-error {{A "U " suffix shall be applied to all octal or hexadecimal integer literals of unsigned type. (MISRA C++ 2008 rule 2-13-3)}}
-    ENUM_UNSIGNED_ENTRY_TWO = 20  // expected-error {{A "U " suffix shall be applied to all octal or hexadecimal integer literals of unsigned type. (MISRA C++ 2008 rule 2-13-3)}}
+  ENUM_UNSIGNED_ENTRY_ONE = 10, // expected-error {{A "U " suffix shall be applied to all octal or hexadecimal integer literals of unsigned type. (MISRA C++ 2008 rule 2-13-3)}}
+  ENUM_UNSIGNED_ENTRY_TWO = 20  // expected-error {{A "U " suffix shall be applied to all octal or hexadecimal integer literals of unsigned type. (MISRA C++ 2008 rule 2-13-3)}}
 };
 
 enum SignedEnum {
-    ENUM_SIGNED_ENTRY_ONE =  10, // Compliant
-    ENUM_SIGNED_ENTRY_TWO = -20  // Compliant
+  ENUM_SIGNED_ENTRY_ONE = 10, // Compliant
+  ENUM_SIGNED_ENTRY_TWO = -20 // Compliant
 };
 
 int multiDimensionalArray[2][3][4];
-static_assert( 4U == sizeof(multiDimensionalArray[0U][0U])/sizeof(multiDimensionalArray[0U][0U][0U]), "");
-static_assert( 4U == sizeof(multiDimensionalArray[0][0])/sizeof(multiDimensionalArray[0][0][0]), "");
+static_assert(4U == sizeof(multiDimensionalArray[0U][0U]) / sizeof(multiDimensionalArray[0U][0U][0U]), "");
+static_assert(4U == sizeof(multiDimensionalArray[0][0]) / sizeof(multiDimensionalArray[0][0][0]), "");

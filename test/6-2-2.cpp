@@ -20,10 +20,10 @@ void simpleViolations(float a, float b) {
 }
 
 void obfuscatedViolationsViaArray(float a, float b, float c) {
-  const float limit[2] = { a, b };
-  if ((c > limit[0]) && (c < limit[1]) ) { // Compliant
+  const float limit[2] = {a, b};
+  if ((c > limit[0]) && (c < limit[1])) { // Compliant
   }
-  if ((c > limit[0]) && (c < limit[0]) ) {  // expected-error {{Floating-point expressions shall not be directly or indirectly tested for equality or inequality. (MISRA C++ 2008 rule 6-2-2)}}
+  if ((c > limit[0]) && (c < limit[0])) { // expected-error {{Floating-point expressions shall not be directly or indirectly tested for equality or inequality. (MISRA C++ 2008 rule 6-2-2)}}
   }
 
   if (c == limit[1]) { // expected-error {{Floating-point expressions shall not be directly or indirectly tested for equality or inequality. (MISRA C++ 2008 rule 6-2-2)}}

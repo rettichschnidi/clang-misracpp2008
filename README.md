@@ -39,8 +39,9 @@ To contribute code for a new rule checker, add a file with the test cases to the
 get detected when explicitly calling cmake in the build directory.
 
 Please try to follow the [LLVM Coding Standard](http://llvm.org/docs/CodingStandards.html).
-At the very least format your code (sans testing code) with clang-format using
-the LLVM coding style.
+At least format your code with clang-format using the LLVM coding style.
+
+For testing code feel free to lift the restrictions as necessary.
 
 Running Tests
 =============

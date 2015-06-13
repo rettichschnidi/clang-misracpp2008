@@ -1,18 +1,18 @@
 // RUN: %clang -fsyntax-only -ferror-limit=0 -Xclang -verify -Xclang -load -Xclang %llvmshlibdir/misracpp2008%pluginext -Xclang -plugin -Xclang misra.cpp.2008 -Xclang -plugin-arg-misra.cpp.2008 -Xclang 3-3-1 %s
 #include "3-3-1.hpp"
 
-int integerExtern; // Compliant, as declared extern in header
+int integerExtern;               // Compliant, as declared extern in header
 void functionExplicitExtern() {} // Compliant, as declared extern in header
 void functionImplicitExtern() {} // Compliant, as declared extern in header
 
-static int integerLocalStatic; // Compliant
+static int integerLocalStatic;    // Compliant
 static int functionLocalStatic(); // Compliant
 
 namespace {
 int integerInAnonymousNamespace;
 void functionInAnonymousNamespace() {}
 }
-int integerLocalNonStatic; // expected-error {{Objects or functions with external linkage shall be declared in a header file. (MISRA C++ 2008 rule 3-3-1)}}
+int integerLocalNonStatic;    // expected-error {{Objects or functions with external linkage shall be declared in a header file. (MISRA C++ 2008 rule 3-3-1)}}
 int functionLocalNonStatic(); // expected-error {{Objects or functions with external linkage shall be declared in a header file. (MISRA C++ 2008 rule 3-3-1)}}
 
 const int constImpliesStatic = 1; // Compliant
@@ -31,4 +31,3 @@ static void funcWithLocalClass() {
     void method() {} // Compliant
   };
 }
-
