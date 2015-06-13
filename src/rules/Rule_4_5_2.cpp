@@ -25,8 +25,8 @@ public:
       return true;
     }
 
-    if (BO->getLHS()->IgnoreCasts()->getType()->isEnumeralType() &&
-        BO->getRHS()->IgnoreCasts()->getType()->isEnumeralType() &&
+    if (BO->getLHS()->IgnoreImpCasts()->getType()->isEnumeralType() &&
+        BO->getRHS()->IgnoreImpCasts()->getType()->isEnumeralType() &&
         legalBinaryOperators.count(BO->getOpcode()) == 0) {
       reportError(BO->getLocStart());
     }
@@ -39,7 +39,7 @@ public:
       return true;
     }
 
-    if (UO->getSubExpr()->IgnoreCasts()->getType()->isEnumeralType() &&
+    if (UO->getSubExpr()->IgnoreImpCasts()->getType()->isEnumeralType() &&
         legalUnaryOperators.count(UO->getOpcode()) == 0) {
       reportError(UO->getLocStart());
     }

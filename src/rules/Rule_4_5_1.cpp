@@ -27,8 +27,8 @@ public:
       return true;
     }
 
-    if (O->getLHS()->IgnoreCasts()->getType()->isBooleanType() &&
-        O->getRHS()->IgnoreCasts()->getType()->isBooleanType() &&
+    if (O->getLHS()->IgnoreImpCasts()->getType()->isBooleanType() &&
+        O->getRHS()->IgnoreImpCasts()->getType()->isBooleanType() &&
         legalBinaryOperators.count(O->getOpcode()) == 0) {
       reportError(O->getLocStart());
     }
@@ -41,7 +41,7 @@ public:
       return true;
     }
 
-    if (O->getSubExpr()->IgnoreCasts()->getType()->isBooleanType() &&
+    if (O->getSubExpr()->IgnoreImpCasts()->getType()->isBooleanType() &&
         legalUnaryOperators.count(O->getOpcode()) == 0) {
       reportError(O->getLocStart());
     }
