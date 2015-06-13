@@ -6,10 +6,10 @@
 //===----------------------------------------------------------------------===//
 
 #include "misracpp2008.h"
-#include "clang/AST/RecursiveASTVisitor.h"
 #include "clang/AST/ASTContext.h"
-#include "clang/Basic/Diagnostic.h"
 #include "clang/AST/OperationKinds.h"
+#include "clang/AST/RecursiveASTVisitor.h"
+#include "clang/Basic/Diagnostic.h"
 
 using namespace clang;
 
@@ -20,14 +20,24 @@ class Rule_4_10_2 : public RuleCheckerASTContext,
 public:
   Rule_4_10_2() : RuleCheckerASTContext() {}
 
-  bool VisitCastExpr(CastExpr *ce) {
+  bool VisitCastExpr(const CastExpr *ce) {
     if (doIgnore(ce->getLocStart())) {
       return true;
     }
-    // If casting from null ptr constant to pointer
-    // and constant has integer type report error
-    if (ce->getCastKind() == clang::CK_NullToPointer) {
-      if (ce->getSubExpr() && ce->getSubExpr()->getType()->isIntegerType()) {
+
+    // Bail out if this expression is neither a null-to-pointer nor a
+    // null-to-member-pointer cast
+    const CastKind castKind = ce->getCastKind();
+    if (castKind != clang::CK_NullToPointer &&
+        castKind != clang::CK_NullToMemberPointer) {
+      return true;
+    }
+
+    // Report error if null-pointer-constant is based on a literal zero.
+    if (const Expr *subExpr = ce->getSubExpr()->IgnoreImpCasts()) {
+      if (subExpr->isNullPointerConstant(*this->context,
+                                         Expr::NPC_NeverValueDependent) ==
+          Expr::NPCK_ZeroLiteral) {
         reportError(ce->getLocStart());
       }
     }
