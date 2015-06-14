@@ -25,12 +25,6 @@ endif()
 aux_source_directory(src/rules SRC_RULE_LIST)
 aux_source_directory(src/ SRC_MAIN_LIST)
 
-#Add our include directories
-include_directories(
-  src/
-  src/rules/
-  )
-
 #When building with clang, warn about faulty Doxygen comments.
 if(CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wdocumentation")
@@ -49,6 +43,8 @@ set(SRC_LIST
   ${SRC_MAIN_LIST}
   )
 add_llvm_loadable_module(misracpp2008 ${SRC_LIST})
+#Add our include directories
+target_include_directories(misracpp2008 PRIVATE src/ src/rules/)
 
 #Add our tests directory
 add_subdirectory(test)
