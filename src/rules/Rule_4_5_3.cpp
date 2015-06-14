@@ -26,13 +26,12 @@ public:
       return true;
     }
 
-    // Bail out if both of the operands are not characters or if the operator is
-    // explicitly whitelisted
+    // Bail out if neither of the operands is a plain character or if the
+    // operator is explicitly whitelisted
     const Expr *exprLeft = BO->getLHS()->IgnoreImpCasts();
     const Expr *exprRight = BO->getRHS()->IgnoreImpCasts();
     const BinaryOperator::Opcode opCode = BO->getOpcode();
-    if ((!exprLeft->getType()->isAnyCharacterType() &&
-         !exprRight->getType()->isAnyCharacterType()) ||
+    if ((!isPlainCharType(exprLeft) && !isPlainCharType(exprRight)) ||
         legalBinaryOperators.count(opCode) > 0) {
       return true;
     }
@@ -68,7 +67,7 @@ public:
       return true;
     }
 
-    if (UO->getSubExpr()->IgnoreImpCasts()->getType()->isAnyCharacterType() &&
+    if (isPlainCharType(UO->getSubExpr()->IgnoreImpCasts()) &&
         legalUnaryOperators.count(UO->getOpcode()) == 0) {
       reportError(UO->getLocStart());
     }
@@ -77,9 +76,24 @@ public:
   }
 
 private:
-  std::set<UnaryOperator::Opcode> legalUnaryOperators = {clang::UO_AddrOf};
-  std::set<BinaryOperator::Opcode> legalBinaryOperators = {
+  const std::set<UnaryOperator::Opcode> legalUnaryOperators = {
+      clang::UO_AddrOf};
+  const std::set<BinaryOperator::Opcode> legalBinaryOperators = {
       clang::BO_Assign, clang::BO_EQ, clang::BO_NE};
+  const std::set<std::string> plainCharTypeNames = {
+      "char",     "unsigned char", "signed char", "char_t", "wchar_t",
+      "char16_t", "char32_t",      "__wchar_t"}; ///< TODO: Is there a better
+                                                 /// way to bann all the plain
+                                                 /// char types?
+
+  bool isPlainCharType(const Expr *expr) {
+    const QualType t = expr->getType();
+
+    if (!t->isAnyCharacterType()) {
+      return false;
+    }
+    return plainCharTypeNames.find(t.getAsString()) != plainCharTypeNames.end();
+  }
 
 protected:
   virtual void doWork() override {
