@@ -35,13 +35,21 @@ When reporting a bug, please include a code snippet which triggers the flaw.
 Contributions
 =============
 To contribute code for a new rule checker, add a file with the test cases to the
-"test" folder and implement the checker logic afterwards. The new checker will
-get detected when explicitly calling cmake in the build directory.
+`test` folder and implement the checker logic afterwards. The new checker will
+get detected when explicitly calling `cmake` in the build directory.
 
-Please try to follow the [LLVM Coding Standard](http://llvm.org/docs/CodingStandards.html).
-At least format your code with clang-format using the LLVM coding style.
+In case you figure that you can not come up with some usable checker logic,
+instead of hiding away or deleting your test code, please move it from `test` to
+`test-wishlist` where it can be picked up by someone else.
 
-For testing code feel free to lift the restrictions as necessary.
+Coding Style
+============
+This project follows (tries to...) the [LLVM Coding Standard](http://llvm.org/docs/CodingStandards.html).
+At the very least the code has to be formatted using clang-format and the LLVM
+coding style.
+
+For testing code feel free to lift the restrictions as necessary. For example by
+using the `.clang-format` file in the test directory.
 
 Running Tests
 =============
@@ -53,7 +61,7 @@ Building Documentation
 
 Usage
 =====
-The OffendingProject included in the examples directory can be built this way:
+The OffendingProject included in the `examples` directory can be built this way:
 
     export LLVM_BUILD_DIR=~/build_llvm # Adjust to your situation
     cd ${LLVM_CHECKOUT_FOLDER}/tools/clang/tools/clang-misracpp2008/examples/OffendingProject
