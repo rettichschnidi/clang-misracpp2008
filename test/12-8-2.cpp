@@ -1,5 +1,7 @@
 // RUN: %clang -fsyntax-only -ferror-limit=0 -Xclang -verify -Xclang  -load -Xclang %llvmshlibdir/misracpp2008%pluginext -Xclang -plugin -Xclang misra.cpp.2008 -Xclang -plugin-arg-misra.cpp.2008 -Xclang 12-8-2 %s
 
+struct MyForwardDeclaredStruct;
+
 class B1 {
 public:
   B1();

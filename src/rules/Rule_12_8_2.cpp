@@ -24,6 +24,11 @@ public:
       return true;
     }
 
+    // Forward declarations can not violate this rule
+    if (!decl->hasDefinition()) {
+      return true;
+    }
+
     // If a class is not abstract skip it
     if (!decl->isAbstract()) {
       return true;
