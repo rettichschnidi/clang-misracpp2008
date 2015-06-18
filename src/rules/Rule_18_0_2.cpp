@@ -5,12 +5,12 @@
 //
 //===----------------------------------------------------------------------===//
 
-#include "misracpp2008.h"
-#include "clang/AST/RecursiveASTVisitor.h"
 #include "clang/AST/ASTContext.h"
+#include "clang/AST/RecursiveASTVisitor.h"
 #include "clang/Basic/Diagnostic.h"
-#include <string>
+#include "misracpp2008.h"
 #include <set>
+#include <string>
 
 using namespace clang;
 
@@ -41,8 +41,8 @@ protected:
   }
 };
 
-const std::set<std::string> Rule_18_0_2::illegalFunctions = { "atof", "atoi",
-                                                              "atol" };
+const std::set<std::string> Rule_18_0_2::illegalFunctions = {"atof", "atoi",
+                                                             "atol"};
 
 static RuleCheckerASTContextRegistry::Add<Rule_18_0_2> X("18-0-2", "");
 }

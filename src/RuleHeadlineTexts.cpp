@@ -11,9 +11,6 @@
 //===----------------------------------------------------------------------===//
 
 #include "RuleHeadlineTexts.h"
-#include <cstring>
-#include <iostream>
-#include <cassert>
 
 namespace misracpp2008 {
 

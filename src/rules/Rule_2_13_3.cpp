@@ -5,14 +5,14 @@
 //
 //===----------------------------------------------------------------------===//
 
-#include "misracpp2008.h"
-#include "clang/AST/RecursiveASTVisitor.h"
 #include "clang/AST/ASTContext.h"
+#include "clang/AST/RecursiveASTVisitor.h"
 #include "clang/Basic/Diagnostic.h"
-#include "llvm/ADT/APInt.h"
 #include "clang/Lex/Lexer.h"
-#include <sstream>
+#include "llvm/ADT/APInt.h"
+#include "misracpp2008.h"
 #include <algorithm>
+#include <sstream>
 
 using namespace clang;
 

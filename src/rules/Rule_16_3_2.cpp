@@ -5,10 +5,10 @@
 //
 //===----------------------------------------------------------------------===//
 
-#include "misracpp2008.h"
-#include "clang/Lex/Token.h"
 #include "clang/Basic/IdentifierTable.h"
 #include "clang/Lex/MacroInfo.h"
+#include "clang/Lex/Token.h"
+#include "misracpp2008.h"
 #include <string>
 
 using namespace clang;

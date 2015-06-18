@@ -5,9 +5,9 @@
 //
 //===----------------------------------------------------------------------===//
 
-#include "misracpp2008.h"
 #include "clang/AST/ASTContext.h"
 #include "clang/Lex/PPCallbacks.h"
+#include "misracpp2008.h"
 #include <string>
 
 using namespace clang;
@@ -35,7 +35,7 @@ public:
   }
 };
 
-const std::set<std::string> Rule_18_0_4::illegalIncludes = { "ctime" };
+const std::set<std::string> Rule_18_0_4::illegalIncludes = {"ctime"};
 
 static RuleCheckerPreprocessorRegistry::Add<Rule_18_0_4> X("18-0-4", "");
 }

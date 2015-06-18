@@ -5,13 +5,13 @@
 //
 //===----------------------------------------------------------------------===//
 
-#include "misracpp2008.h"
-#include "clang/AST/RecursiveASTVisitor.h"
 #include "clang/AST/ASTContext.h"
-#include <string>
+#include "clang/AST/RecursiveASTVisitor.h"
 #include "clang/Basic/SourceLocation.h"
 #include "clang/Basic/SourceManager.h"
 #include "clang/Lex/LiteralSupport.h"
+#include "misracpp2008.h"
+#include <string>
 
 using namespace clang;
 

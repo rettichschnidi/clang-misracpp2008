@@ -5,9 +5,9 @@
 //
 //===----------------------------------------------------------------------===//
 
-#include "misracpp2008.h"
-#include "clang/Lex/Token.h"
 #include "clang/Basic/IdentifierTable.h"
+#include "clang/Lex/Token.h"
+#include "misracpp2008.h"
 #include <string>
 
 using namespace clang;
@@ -53,19 +53,17 @@ public:
 };
 
 const std::set<std::string> Rule_17_0_1::explicitlyIllegalMacroNames = {
-  "__cplusplus",                      "__DATE__",
-  "__FILE__",                         "__LINE__",
-  "__STDC_HOSTED__",                  "__TIME__",
-  "__STDC__",                         "__STDC_MB_MIGHT_NEQ_WC__",
-  "__STDC_VERSION__",                 "__STDC_ISO_10646__",
-  "__STDCPP_STRICT_POINTER_SAFETY__", "__STDCPP_THREADS__",
-  "define",                           "errno",
-  "assert"
-};
+    "__cplusplus",                      "__DATE__",
+    "__FILE__",                         "__LINE__",
+    "__STDC_HOSTED__",                  "__TIME__",
+    "__STDC__",                         "__STDC_MB_MIGHT_NEQ_WC__",
+    "__STDC_VERSION__",                 "__STDC_ISO_10646__",
+    "__STDCPP_STRICT_POINTER_SAFETY__", "__STDCPP_THREADS__",
+    "define",                           "errno",
+    "assert"};
 
 const std::set<std::string> Rule_17_0_1::explicitlyLegalMacroNames = {
-  "__STDC_FORMAT_MACROS", "__STDC_LIMIT_MACROS"
-};
+    "__STDC_FORMAT_MACROS", "__STDC_LIMIT_MACROS"};
 
 static RuleCheckerPreprocessorRegistry::Add<Rule_17_0_1> X("17-0-1", "");
 }

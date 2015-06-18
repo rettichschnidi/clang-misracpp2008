@@ -5,8 +5,8 @@
 //
 //===----------------------------------------------------------------------===//
 
-#include "misracpp2008.h"
 #include "clang/Basic/SourceManager.h"
+#include "misracpp2008.h"
 #include <string>
 
 using namespace clang;
@@ -34,7 +34,7 @@ public:
   }
 };
 
-const std::set<std::string> Rule_27_0_1::illegalIncludes = { "cstdio" };
+const std::set<std::string> Rule_27_0_1::illegalIncludes = {"cstdio"};
 
 static RuleCheckerPreprocessorRegistry::Add<Rule_27_0_1> X("27-0-1", "");
 }

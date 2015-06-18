@@ -4,15 +4,14 @@
 // License. See LICENSE.TXT for details.
 //
 //===----------------------------------------------------------------------===//
-
 #ifndef ILLEGAL_FUNCTION_USAGE_CHECKER_H
 #define ILLEGAL_FUNCTION_USAGE_CHECKER_H
 
-#include "misracpp2008.h"
-#include "clang/AST/RecursiveASTVisitor.h"
 #include "clang/AST/ASTContext.h"
+#include "clang/AST/RecursiveASTVisitor.h"
 #include "clang/Basic/Diagnostic.h"
 #include "clang/Lex/Token.h"
+#include "misracpp2008.h"
 #include <string>
 #include <set>
 

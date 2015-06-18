@@ -5,16 +5,16 @@
 //
 //===----------------------------------------------------------------------===//
 
-#include "misracpp2008.h"
-#include "clang/AST/RecursiveASTVisitor.h"
 #include "clang/AST/ASTContext.h"
+#include "clang/AST/RecursiveASTVisitor.h"
 #include "clang/Basic/Diagnostic.h"
-#include <map>
-#include <string>
-#include <cstring>
+#include "misracpp2008.h"
 #include <algorithm>
+#include <cstring>
 #include <functional>
 #include <locale>
+#include <map>
+#include <string>
 
 using namespace clang;
 using std::string;

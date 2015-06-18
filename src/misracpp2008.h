@@ -4,13 +4,12 @@
 // License. See LICENSE.TXT for details.
 //
 //===----------------------------------------------------------------------===//
-
 #ifndef MISRA_CPP_2008_H
 #define MISRA_CPP_2008_H
 
 #include "clang/Basic/Diagnostic.h"
-#include "clang/Lex/PPCallbacks.h"
 #include "clang/Frontend/CompilerInstance.h"
+#include "clang/Lex/PPCallbacks.h"
 #include "llvm/Support/Registry.h"
 #include "RuleHeadlineTexts.h"
 

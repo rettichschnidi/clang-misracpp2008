@@ -11,22 +11,22 @@
 //===----------------------------------------------------------------------===//
 
 #include "misracpp2008.h"
-#include "clang/Frontend/FrontendPluginRegistry.h"
-#include "clang/AST/AST.h"
 #include "clang/AST/ASTConsumer.h"
+#include "clang/AST/AST.h"
 #include "clang/Frontend/CompilerInstance.h"
-#include "llvm/Support/raw_ostream.h"
-#include "llvm/ADT/StringExtras.h"
-#include "llvm/Support/Regex.h"
+#include "clang/Frontend/FrontendPluginRegistry.h"
 #include "clang/Lex/Preprocessor.h"
+#include "llvm/ADT/StringExtras.h"
+#include "llvm/Support/raw_ostream.h"
+#include "llvm/Support/Regex.h"
 #include <cassert>
+#include <list>
 #include <map>
+#include <memory>
 #include <set>
 #include <sstream>
-#include <utility>
 #include <string>
-#include <list>
-#include <memory>
+#include <utility>
 
 using namespace clang;
 using namespace llvm;
