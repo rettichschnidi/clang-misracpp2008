@@ -34,7 +34,7 @@ public:
     // If the decl has no name, no collision can happen. Bail out.
     // This may be the case for constructs like this:
     // typedef struct { int i; } MyStruct;
-    if (D->getName().empty()) {
+    if (!D->getIdentifier() || D->getName().empty()) {
       return true;
     }
 
