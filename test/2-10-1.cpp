@@ -54,9 +54,7 @@ void anotherFunc(int aVariable, int _anotherVariable) { // Compliant - does not 
 }
 
 template <typename FuncReturnType>
-FuncReturnType templatedFunction() {
-  return FuncReturnType{0};
-}
+FuncReturnType templatedFunction();
 int i1 = templatedFunction<int>();
 float i2 = templatedFunction<float>();
 
