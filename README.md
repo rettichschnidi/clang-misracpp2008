@@ -44,9 +44,16 @@ When reporting a bug, please include a code snippet which triggers the flaw.
 
 Contributions
 =============
-To contribute code for a new rule checker, add a file with the test cases to the
-`test` folder and implement the checker logic afterwards. The new checker will
-get detected when explicitly calling `cmake` in the build directory.
+1. Make sure the rule is not [yet covered](https://github.com/rettichschnidi/clang-misracpp2008/wiki/Progress).
+2. Check the `test-wishlist` folder for already existing test code
+3. Move/Add a file with the test cases to the `test` folder
+4. Implement checker logic - [Dumping the AST](http://clang.llvm.org/docs/IntroductionToTheClangAST.html#examining-the-ast)
+of your test code may help you
+5. Call `cmake` in the build directory to get the new rule detected
+6. Call `make check-misracpp2008` in the build directory to run the tests
+7. Optional, if possible: Let the new checker run on your embedded project(s) to
+make sure it works as intended, update your tests and fix detected bugs
+8. Commit and create a pull request
 
 In case you figure that you can not come up with some usable checker logic,
 instead of hiding away or deleting your test code, please move it from `test` to
