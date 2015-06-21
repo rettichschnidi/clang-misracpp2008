@@ -1,4 +1,4 @@
-//===-  Rule_4_10_2.cpp - Checker for MISRA C++ 2008 rule  4-10-2----------===//
+//===-  Rule_4_10_2.cpp - Checker for MISRA C++ 2008 rule 4-10-2-----------===//
 //
 // This file is distributed under the University of Illinois Open Source
 // License. See LICENSE.TXT for details.
