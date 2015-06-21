@@ -26,10 +26,30 @@ class Rule_2_10_1 : public RuleCheckerASTContext,
 public:
   Rule_2_10_1() : RuleCheckerASTContext() {}
 
+  bool TraverseDecl(Decl *D) {
+    const DeclContext *DC = dyn_cast_or_null<DeclContext>(D);
+    const bool isNewContext = DC && !DC->isTransparentContext();
+
+    if (isNewContext) {
+      str2decls.emplace_back(Str2Decls());
+    }
+
+    const bool retVal = RecursiveASTVisitor<Rule_2_10_1>::TraverseDecl(D);
+
+    if (isNewContext) {
+      str2decls.pop_back();
+    }
+
+    return retVal;
+  }
+
   bool VisitNamedDecl(const NamedDecl *D) {
     if (doIgnore(D->getLocation())) {
       return true;
     }
+
+    assert(!str2decls.empty() &&
+           "At least one DeclContext must be on the stack!");
 
     // If the decl has no name, no collision can happen. Bail out.
     // This may be the case for constructs like this:
@@ -38,26 +58,43 @@ public:
       return true;
     }
 
-    const string fullQualIdent = D->getQualifiedNameAsString();
-    const string typoUniqIdent = makeTypoUnique(fullQualIdent);
-    if (uniqueIdents.count(typoUniqIdent) != 0) {
-      reportError(D->getLocation());
+    // FunctionDecl which belong to a FunctionTemplateDecl should not be
+    // checked separately
+    if (const FunctionDecl *FD = dyn_cast<FunctionDecl>(D)) {
+      if (FD->getTemplatedKind() != FunctionDecl::TK_NonTemplate) {
+        return true;
+      }
+    }
 
+    const string fullQualIdent = D->getQualifiedNameAsString();
+    const string normalizedIdent = normalizeIdent(fullQualIdent);
+
+    bool reportedError = false;
+    for (const Str2Decls &s2d : str2decls) {
+      auto lookalikeIdentifiers = s2d.equal_range(normalizedIdent);
       // Add notes about ambiguous identifiers
-      auto lookalikeDecl = uniqueIdents.equal_range(typoUniqIdent);
-      for (Str2Decls::const_iterator I = lookalikeDecl.first;
-           I != lookalikeDecl.second; ++I) {
+      for (Str2Decls::const_iterator I = lookalikeIdentifiers.first;
+           I != lookalikeIdentifiers.second; ++I) {
         const NamedDecl *previousNamedDecl = I->second;
+        // Do not report errors on identifiers with exact the same name, e.g.
+        // overloads
         if (previousNamedDecl->getName() == D->getName()) {
           continue;
         }
+        // Report error just once, even when multiple typographically close
+        // identifiers are in one of the parent decl contextes.
+        if (!reportedError) {
+          reportError(D->getLocation());
+          reportedError = true;
+        }
         report(previousNamedDecl->getLocation(),
-               "Typographically ambiguous identifier '%0'",
+               "Typographically too close to '%0'",
                clang::DiagnosticsEngine::Note)
-            << previousNamedDecl->getName();
+            << D->getName();
       }
     }
-    uniqueIdents.insert(std::make_pair(typoUniqIdent, D));
+
+    str2decls.back().insert(std::make_pair(normalizedIdent, D));
 
     return true;
   }
@@ -74,8 +111,8 @@ private:
       {"B", "8"},  // B (letter) to 8 (number)
       {"_", ""}    // remove the underscore
   };
-  typedef std::multimap<string, const NamedDecl *> Str2Decls;
-  Str2Decls uniqueIdents;
+  using Str2Decls = std::multimap<string, const NamedDecl *>;
+  std::vector<Str2Decls> str2decls;
 
   static void replaceSubStr(string &str, const string &from, const string &to) {
     for (string::size_type pos = str.find(from); pos != string::npos;
@@ -84,7 +121,7 @@ private:
     }
   }
 
-  string makeTypoUnique(const string inputStr) {
+  string normalizeIdent(const string inputStr) {
     string preparedString;
     // Make string uppercase
     std::transform(inputStr.begin(), inputStr.end(),
