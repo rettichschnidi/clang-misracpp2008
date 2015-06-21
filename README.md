@@ -14,6 +14,16 @@ This project is in an early stage and has not yet been tested extensively!
 
 Have a look at the [progress page in the wiki](https://github.com/rettichschnidi/clang-misracpp2008/wiki/Progress).
 
+Work plan
+=========
+Work to do, not necessarly in the listed order:
+
+- Implement/Cover as many rules as possible as Clang plugin/options
+- Implement as many of the remaining rules as possible as custom Clang Static Analyzer checkers
+- Implement as many of the remaining rules by other means
+- Integrate all checkers into a unified web front end that supports the user with the creation of all the necessary documentation (compliance matrix, deviations, sign-offs, etc.)  to achieve MISRA compliance
+- Repeat everything for MISRA C:2012
+
 Installation
 ============
 It is assumed that you have already have compiled LLVM/Clang from SVN. To add
