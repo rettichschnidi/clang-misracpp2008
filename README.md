@@ -19,9 +19,12 @@ Work plan
 Work to do, not necessarly in the listed order:
 
 - Implement/Cover as many rules as possible as Clang plugin/options
-- Implement as many of the remaining rules as possible as custom Clang Static Analyzer checkers
+- Implement as many of the remaining rules as possible as custom Clang Static
+Analyzer checkers
 - Implement as many of the remaining rules by other means
-- Integrate all checkers into a unified web front end that supports the user with the creation of all the necessary documentation (compliance matrix, deviations, sign-offs, etc.)  to achieve MISRA compliance
+- Integrate all checkers into a unified web front end that supports the user
+with the creation of all the necessary documentation (compliance matrix,
+deviations, sign-offs, etc.)  to achieve MISRA compliance
 - Repeat everything for MISRA C:2012
 
 Installation
@@ -65,8 +68,8 @@ This project follows (tries to...) the [LLVM Coding Standard](http://llvm.org/do
 At the very least the code has to be formatted using clang-format and the LLVM
 coding style.
 
-For testing code feel free to lift the restrictions as necessary. For example by
-using the `.clang-format` file in the test directory.
+For testing code feel free to lift the restrictions as necessary. For example,
+by using the `.clang-format` file in the test directory.
 
 Running Tests
 =============
