@@ -24,12 +24,12 @@ public:
       return true;
     }
 
-    // Bail out if the length of the array is known.
-    if (isa<ConstantArrayType>(D->getType())) {
-      return true;
-    }
+    const QualType declType = D->getType();
 
-    reportError(D->getLocation());
+    // Report error if this is an array type of unknown length
+    if (isa<ArrayType>(declType) && !isa<ConstantArrayType>(declType)) {
+      reportError(D->getLocation());
+    }
 
     return true;
   }
