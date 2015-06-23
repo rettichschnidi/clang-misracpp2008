@@ -14,6 +14,7 @@
 
 using namespace clang;
 
+namespace {
 template <typename T> Stmt *searchStmt(Stmt *S) {
 
   Stmt *b{nullptr};
@@ -32,6 +33,7 @@ template <typename T> Stmt *searchStmt(Stmt *S) {
   }
 
   return b;
+}
 }
 
 namespace misracpp2008 {
