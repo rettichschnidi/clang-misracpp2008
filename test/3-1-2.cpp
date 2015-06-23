@@ -8,3 +8,10 @@ void regularFunction() {
 class C {
   void method() { void localFunction(); } // expected-error {{Functions shall not be declared at block scope. (MISRA C++ 2008 rule 3-1-2)}}
 };
+
+// Regression tests: Methods within local classes are permitted
+void f() {
+  struct S {
+    S() {}
+  };
+}

@@ -9,6 +9,7 @@
 #include "clang/AST/RecursiveASTVisitor.h"
 #include "clang/Basic/Diagnostic.h"
 #include "misracpp2008.h"
+#include <vector>
 
 using namespace clang;
 
@@ -23,13 +24,13 @@ public:
     bool retVal = true;
     if (D) {
       const bool isFuncDecl = isa<FunctionDecl>(D);
-      if (m_FuncDecls > 0 && isFuncDecl && !doIgnore(D->getLocStart())) {
+      if (inFunc.back() && isFuncDecl && !doIgnore(D->getLocStart())) {
         reportError(D->getLocation());
       }
 
-      m_FuncDecls += isFuncDecl;
+      inFunc.push_back(isFuncDecl);
       retVal = RecursiveASTVisitor<Rule_3_1_2>::TraverseDecl(D);
-      m_FuncDecls -= isFuncDecl;
+      inFunc.pop_back();
     }
     return retVal;
   }
@@ -41,7 +42,7 @@ protected:
   }
 
 private:
-  unsigned long m_FuncDecls = 0;
+  std::vector<int> inFunc = {false};
 };
 
 static RuleCheckerASTContextRegistry::Add<Rule_3_1_2> X("3-1-2", "");
