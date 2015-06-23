@@ -52,11 +52,10 @@ Contributions
 3. Move/Add a file with the test cases to the `test` folder
 4. Implement checker logic - [Dumping the AST](http://clang.llvm.org/docs/IntroductionToTheClangAST.html#examining-the-ast)
 of your test code may help you
-5. Call `cmake` in the build directory to get the new rule detected
-6. Call `make check-misracpp2008` in the build directory to run the tests
-7. Optional, if possible: Let the new checker run on your embedded project(s) to
+5. Call `make check-misracpp2008` in the build directory to run the tests
+6. Optional, if possible: Let the new checker run on your embedded project(s) to
 make sure it works as intended, update your tests and fix detected bugs
-8. Commit and create a pull request
+7. Commit and create a pull request
 
 In case you figure that you can not come up with some usable checker logic,
 instead of hiding away or deleting your test code, please move it from `test` to

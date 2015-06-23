@@ -21,10 +21,6 @@ if(DOXYGEN_FOUND)
   endif()
 endif()
 
-#Glob all sources files.
-aux_source_directory(src/rules SRC_RULE_LIST)
-aux_source_directory(src/ SRC_MAIN_LIST)
-
 #When building with clang, warn about faulty Doxygen comments.
 if(CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wdocumentation")
@@ -37,12 +33,58 @@ else()
   message(FATAL_ERROR "Unknown (and therefore untested) compiler!")
 endif()
 
-#Register the source code files to the LLVM build system
-set(SRC_LIST
-  ${SRC_RULE_LIST}
-  ${SRC_MAIN_LIST}
-  )
-add_llvm_loadable_module(misracpp2008 ${SRC_LIST})
+add_llvm_loadable_module(misracpp2008
+  src/misracpp2008.cpp
+  src/misracpp2008.h
+  src/RuleHeadlineTexts.cpp
+  src/RuleHeadlineTexts.h
+  src/rules/BannedFunctionUsageChecker.h
+  src/rules/Rule_2_10_1.cpp
+  src/rules/Rule_2_10_2.cpp
+  src/rules/Rule_2_13_3.cpp
+  src/rules/Rule_2_13_4.cpp
+  src/rules/Rule_2_13_5.cpp
+  src/rules/Rule_3_1_2.cpp
+  src/rules/Rule_3_1_3.cpp
+  src/rules/Rule_3_3_1.cpp
+  src/rules/Rule_3_3_2.cpp
+  src/rules/Rule_3_4_1.cpp
+  src/rules/Rule_3_9_2.cpp
+  src/rules/Rule_4_10_2.cpp
+  src/rules/Rule_4_5_1.cpp
+  src/rules/Rule_4_5_2.cpp
+  src/rules/Rule_4_5_3.cpp
+  src/rules/Rule_5_0_5.cpp
+  src/rules/Rule_5_14_1.cpp
+  src/rules/Rule_5_18_1.cpp
+  src/rules/Rule_5_8_1.cpp
+  src/rules/Rule_6_2_1.cpp
+  src/rules/Rule_6_2_2.cpp
+  src/rules/Rule_6_2_3.cpp
+  src/rules/Rule_6_3_1.cpp
+  src/rules/Rule_6_4_1.cpp
+  src/rules/Rule_6_4_2.cpp
+  src/rules/Rule_9_5_1.cpp
+  src/rules/Rule_10_3_2.cpp
+  src/rules/Rule_10_3_3.cpp
+  src/rules/Rule_11_0_1.cpp
+  src/rules/Rule_12_8_2.cpp
+  src/rules/Rule_15_5_1.cpp
+  src/rules/Rule_16_3_1.cpp
+  src/rules/Rule_16_3_2.cpp
+  src/rules/Rule_17_0_1.cpp
+  src/rules/Rule_17_0_5.cpp
+  src/rules/Rule_18_0_1.cpp
+  src/rules/Rule_18_0_2.cpp
+  src/rules/Rule_18_0_3.cpp
+  src/rules/Rule_18_0_4.cpp
+  src/rules/Rule_18_0_5.cpp
+  src/rules/Rule_18_2_1.cpp
+  src/rules/Rule_18_4_1.cpp
+  src/rules/Rule_18_7_1.cpp
+  src/rules/Rule_19_3_1.cpp
+  src/rules/Rule_27_0_1.cpp
+)
 #Add our include directories
 target_include_directories(misracpp2008 PRIVATE src/ src/rules/)
 
