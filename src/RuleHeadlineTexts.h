@@ -18,4 +18,4 @@ using RuleHeadlineMap = std::map<std::string, std::string>;
 extern const RuleHeadlineMap ruleHeadlines;
 }
 
-#endif // RULE_HEADLINE_TEXTS_H
+#endif
