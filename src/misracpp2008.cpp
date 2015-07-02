@@ -33,7 +33,7 @@ using namespace llvm;
 
 namespace misracpp2008 {
 
-typedef std::map<std::string, clang::DiagnosticsEngine::Level> DiagLevelMap;
+using DiagLevelMap = std::map<std::string, clang::DiagnosticsEngine::Level>;
 DiagLevelMap &getDiagnosticLevels();
 std::set<std::string> &getEnabledCheckers();
 std::set<std::string> &getRegisteredCheckerNames();

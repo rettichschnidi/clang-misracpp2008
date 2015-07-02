@@ -76,7 +76,7 @@ protected:
   /// holders.
   template <unsigned N>
   clang::DiagnosticBuilder
-  report(const clang::SourceLocation loc, const char (&FormatString)[N],
+  report(const clang::SourceLocation loc, const char(&FormatString)[N],
          const clang::DiagnosticsEngine::Level diagLevel) {
     clang::DiagnosticsEngine &diagEngine = CI->getDiagnostics();
     unsigned diagId = diagEngine.getCustomDiagID(diagLevel, FormatString);
@@ -86,7 +86,7 @@ protected:
   /// \brief Simplified method for RuleChecker::report()
   template <unsigned N>
   clang::DiagnosticBuilder reportError(clang::SourceLocation loc,
-                                       const char (&FormatString)[N]) {
+                                       const char(&FormatString)[N]) {
     return report<N>(loc, FormatString, diagLevel);
   }
 
@@ -136,7 +136,7 @@ public:
 };
 
 /// \brief A global registry to register RuleCheckerASTContext-derived checkers.
-typedef llvm::Registry<RuleCheckerASTContext> RuleCheckerASTContextRegistry;
+using RuleCheckerASTContextRegistry = llvm::Registry<RuleCheckerASTContext>;
 
 /// \brief Base class for all rule checkers that work on the preprocessing
 /// stage.
@@ -145,7 +145,7 @@ class RuleCheckerPPCallback : public virtual RuleChecker,
 
 /// \brief A global registry to register RuleCheckerPreprocessor-derived
 /// checkers.
-typedef llvm::Registry<RuleCheckerPPCallback> RuleCheckerPreprocessorRegistry;
+using RuleCheckerPreprocessorRegistry = llvm::Registry<RuleCheckerPPCallback>;
 }
 
 #endif

@@ -126,7 +126,7 @@ private:
       return this < &other;
     }
   };
-  typedef std::set<FloatEmiter> FloatEmiterSet;
+  using FloatEmiterSet = std::set<FloatEmiter>;
 
   bool extractAPInt(const Expr *expr, llvm::APInt &aPInt) const {
     Expr::EvalResult evalResult;

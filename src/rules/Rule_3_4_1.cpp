@@ -69,7 +69,7 @@ protected:
   }
 
 private:
-  typedef std::multimap<const ValueDecl *, const DeclContext *> ValRefMapType;
+  using ValRefMapType = std::multimap<const ValueDecl *, const DeclContext *>;
   ValRefMapType m_varDecls;
   std::stack<const DeclContext *> m_CurDeclContext;
 };
