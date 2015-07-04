@@ -4,7 +4,13 @@ int squareNatural(int value) {
   int square = value * value; // expected-error {{An identifier declared to be an object or type shall be defined in a block that minimizes its visibility. (MISRA C++ 2008 rule 3-4-1)}}
 
   if (value >= 0) {
-    return square;
+    struct A {
+      int i;
+      int func();
+    };
+
+    A a = {square};
+    return a.i;
   }
 
   return 0;
