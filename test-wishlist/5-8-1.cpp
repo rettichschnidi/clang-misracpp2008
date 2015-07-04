@@ -2,12 +2,12 @@
 
 #pragma pack(push, 1)
 struct BitFieldStruct {
-  unsigned int a: 10;
-  unsigned int b: 4;
-} ;
+  unsigned int a : 10;
+  unsigned int b : 4;
+};
 #pragma pack(pop)
 
-static_assert( sizeof(BitFieldStruct) == 2U, "");
+static_assert(sizeof(BitFieldStruct) == 2U, "");
 
 void sub8bitIntegers() {
   BitFieldStruct bfs;
