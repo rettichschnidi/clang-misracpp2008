@@ -48,7 +48,6 @@ add_llvm_loadable_module(misracpp2008
   src/rules/Rule_3_1_3.cpp
   src/rules/Rule_3_3_1.cpp
   src/rules/Rule_3_3_2.cpp
-  src/rules/Rule_3_4_1.cpp
   src/rules/Rule_3_9_2.cpp
   src/rules/Rule_4_10_2.cpp
   src/rules/Rule_4_5_1.cpp
